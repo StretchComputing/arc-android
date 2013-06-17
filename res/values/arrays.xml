@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="color_names">
+        <item>Red</item>
+        <item>Green</item>
+        <item>Blue</item>
+        <item>White</item>
+        <item>Black</item>
+    </string-array>
+    
+    <!-- Array of puppy resource IDs -->
+    <string-array name="puppies_array">
+        <item>@drawable/untitled</item>
+        <item>@drawable/union</item>
+        <item>@drawable/rockit</item>
+    </string-array>
+  
+    
+</resources>

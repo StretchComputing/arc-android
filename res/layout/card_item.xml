@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/carousel_item"
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    android:orientation="vertical"
+    android:background="#FFc7c1b7">
+
+	<TextView
+	    android:id="@+id/cardType"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:paddingLeft="10dp"
+	    android:paddingRight="10dp"
+	    android:textSize="20sp"
+	    android:textStyle="bold"
+	    android:lines="1"	
+	    android:gravity="center|left"
+	    android:textColor="#FF000000"/>
+	
+	<TextView
+	    android:id="@+id/cardNumber"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:paddingLeft="10dp"
+	    android:paddingRight="10dp"
+	    android:textSize="14sp"
+	    android:lines="1"	
+	    android:gravity="center|left"
+	    android:textColor="#FF000000" />
+	
+	<TextView
+	    android:id="@+id/expiration"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:paddingLeft="10dp"
+	    android:paddingRight="10dp"
+	    android:textSize="14sp"
+	    android:lines="1"	
+	    android:gravity="center|left"
+	    android:textColor="#FF000000"/>
+
+
+</LinearLayout>

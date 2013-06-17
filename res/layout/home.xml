@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/home_layout"
+    style="@style/ParentView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activities.Home" >
+
+    <TextView
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"
+        android:id="@+id/title"
+        style="@style/ViewTitle"
+        android:text="@string/welcome" 		android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    
+    <HorizontalScrollView android:id="@+id/scroll"
+        	android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none">
+
+        <LinearLayout android:id="@+id/carousel"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:orientation="horizontal"/>
+
+    </HorizontalScrollView>
+    
+    <TextView
+        android:id="@+id/selected_venue"
+        style="@style/ViewTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    
+    <Button
+        android:id="@+id/pay_bill_button"
+        style="@style/CustomButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onPayBillClick"
+        android:layout_marginBottom="20dp"
+        android:text="@string/pay_bill" />
+    
+    <Button
+        android:id="@+id/explore_button"
+        style="@style/CustomButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onExploreClick"
+        android:text="@string/explore" />
+
+</LinearLayout>

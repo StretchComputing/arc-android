@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/funds_layout"
+    style="@style/ParentView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activities.Funds" >
+    
+    <LinearLayout 
+    android:id="@+id/add_card_success_layout"
+    style="@style/ParentView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center"
+    >
+    
+     <TextView
+     android:id="@+id/add_card_success"
+     android:layout_width="wrap_content"
+     android:layout_height="match_parent"
+     android:padding="10dp"
+     android:gravity="center"
+     android:visibility="gone" />
+     
+     <TextView
+     android:id="@+id/add_card_success_msg"
+     android:layout_width="wrap_content"
+     android:layout_height="match_parent"
+     android:padding="10dp"
+     android:gravity="center"
+     android:visibility="gone" />
+     
+     <TextView
+     android:id="@+id/add_card_success_lock"
+     android:layout_width="wrap_content"
+     android:layout_height="match_parent"
+     android:padding="10dp"
+     android:gravity="center"
+     android:visibility="gone" />
+        
+        
+    </LinearLayout>
+    
+
+    <Button
+        android:id="@+id/add_card_button"
+        style="@style/CustomButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onAddCardClick"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="50dp"
+        android:text="@string/add_card"/>
+    
+    <ScrollView android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+	    <LinearLayout 
+	    android:id="@+id/stored_cards_layout"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="vertical">
+	    </LinearLayout>
+	 </ScrollView>
+     
+  
+    
+</LinearLayout>

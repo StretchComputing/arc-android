@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/get_check_layout"
+    style="@style/ParentView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activities.GetCheck" >
+    
+    <LinearLayout 
+    android:id="@+id/add_card_success_layout"
+    style="@style/ParentView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center">
+    
+     <TextView
+     android:id="@+id/title"
+     android:layout_width="wrap_content"
+     android:layout_height="match_parent"
+     android:padding="10dp"
+     android:textStyle="bold"
+     android:textSize="25sp"
+     android:gravity="center"/>
+     
+     <TextView
+     android:layout_width="wrap_content"
+     android:layout_height="match_parent"
+     android:padding="10dp"
+     android:text="Enter your check number"
+     android:textStyle="bold"
+     android:textSize="18sp"
+     android:gravity="center"/>
+     
+     <EditText
+     android:id="@+id/invoice"
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"
+     android:padding="10dp"
+     android:textStyle="bold"
+     android:inputType="numberSigned"
+     android:digits="0123456789"
+     android:textSize="25sp"
+     android:gravity="center"/>
+     
+      <Button
+        android:id="@+id/get_invoice_button"
+        style="@style/CustomButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onViewBillClick"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:text="@string/view_bill" />
+
+        
+    </LinearLayout>
+    
+    
+</LinearLayout>
