@@ -46,6 +46,7 @@
         android:layout_gravity="center"
         android:layout_marginBottom="20dp"
         android:onClick="onPayBillClick"
+        android:padding="10dp"
         android:text="@string/pay_bill" />
     
     <Button
@@ -55,6 +56,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:onClick="onExploreClick"
+        android:padding="10dp"
         android:text="@string/explore" />
 
 </LinearLayout>

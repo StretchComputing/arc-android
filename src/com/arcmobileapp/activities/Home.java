@@ -1,6 +1,7 @@
 package com.arcmobileapp.activities;
 
 import java.util.UUID;
+import java.util.ArrayList;
 
 import android.content.Context;
 import android.content.Intent;
@@ -37,6 +38,7 @@ public class Home extends BaseActivity {
 	private Button btnPayBill;
 	private Button btnExplore;
 	private HorizontalScrollView scrollView;
+	private ArrayList<String> merchants;
 
 
 	private static final float INITIAL_ITEMS_COUNT = 2.5F;
@@ -69,7 +71,6 @@ public class Home extends BaseActivity {
 		btnExplore = (Button) findViewById(R.id.explore_button);
 		btnPayBill.setVisibility(View.VISIBLE);
 		btnExplore.setVisibility(View.VISIBLE);
-		initCarousel();
 	}
 	
 	protected void getTokensFromWeb() {
@@ -108,6 +109,13 @@ public class Home extends BaseActivity {
 			@Override
 			protected void onPostExecute(Void result) {
 				super.onPostExecute(result);
+				merchants = new ArrayList<String>();
+				merchants = getMerchants();
+				
+				if (merchants.size() > 0){
+					initCarousel();
+				}
+
 			}
 			
 		};
@@ -163,9 +171,10 @@ public class Home extends BaseActivity {
         // Get the array of puppy resources
         final TypedArray puppyResourcesTypedArray = getResources().obtainTypedArray(R.array.puppies_array);
 
+ 
         // Populate the carousel with items
         ImageView imageItem;
-        for (int i = 0 ; i < puppyResourcesTypedArray.length(); i++) {
+        for (int i = 0 ; i < merchants.size(); i++) {
             // Create new ImageView
         	final int pos = i;
             imageItem = new ImageView(this);
@@ -174,8 +183,21 @@ public class Home extends BaseActivity {
             imageItem.setBackgroundResource(R.drawable.shadow_nine);
 
             // Set the image view resource
-            imageItem.setImageResource(puppyResourcesTypedArray.getResourceId(i, -1));
+           // imageItem.setImageResource(puppyResourcesTypedArray.getResourceId(0, -1));
 
+            String imageName = "";
+            
+            Logger.d("Name " + merchants.get(i));
+            
+            if (merchants.get(i).equalsIgnoreCase("Isis Lab")){
+            	imageName = "untitled";
+            }else{
+            	imageName = "union";
+            }
+            
+            int id = getResources().getIdentifier("com.arcmobileapp:drawable/" + imageName, null, null);
+            imageItem.setImageResource(id);
+            
             // Set the size of the image view to the previously computed value
             imageItem.setLayoutParams(new LinearLayout.LayoutParams(imageWidth, imageWidth));
 
@@ -184,13 +206,7 @@ public class Home extends BaseActivity {
 //            mCarouselContainer.addView(imageItem);
             
             String title = "hello";
-            if(i == 0) {
-            	title = "Untitled";
-            } else if(i == 1) {
-            	title = "Union Sushi";
-            } else if(i == 2) {
-            	title = "rockit";
-            }
+            title = merchants.get(i);
             
             View carouselItem = createCarouselItem(imageItem, title);
             
@@ -215,8 +231,8 @@ public class Home extends BaseActivity {
     }
 	
 	protected void touchCarousel() {
-		btnPayBill.setVisibility(View.GONE);
-		btnExplore.setVisibility(View.GONE);
+		btnPayBill.setVisibility(View.VISIBLE);
+		btnExplore.setVisibility(View.VISIBLE);
 	}
 	
 	public RelativeLayout createCarouselItem(ImageView image, String title) {
