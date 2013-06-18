@@ -3,7 +3,7 @@
 <resources xmlns:tools="https://schemas.android.com/tools" tools:ignore="TypographyDashes">
 
   <!--Tracking ID (replace before release)-->
-  <string name="ga_trackingId">UA-40006118-1</string>
+  <string name="ga_trackingId">UA-280128-6</string>
   
   <!-- Uncomment the settings below for a full release -->
   <!-- <bool name="ga_anonymizeIp">true</bool> -->
