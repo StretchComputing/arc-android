@@ -2,7 +2,7 @@ package com.arcmobileapp.utils;
 
 public final class Constants {
 	
-	public static final String MY_CARDIO_APP_TOKEN = "37ad8140ee464b629f9524dc5ad76188";
+	public static final String MY_CARDIO_APP_TOKEN = "54bb17d6425a400194570cefaeaf5219";
 	public static final String SALT = "56lknrmab0vne0rvna034vnafdklngb3q4gmgna";
 	public static final int SCAN_REQUEST_CODE = 666;
 	

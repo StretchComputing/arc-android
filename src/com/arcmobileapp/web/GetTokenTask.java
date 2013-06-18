@@ -22,6 +22,7 @@ public class GetTokenTask extends AsyncTask<Void, Void, Void> {
 	private Context mContext;
 	private String mDevResponse;
 	private String mProdResponse;
+	private String mGuestKey;
 	
 	public GetTokenTask(String login, String password, boolean isGuest, Context context) {
 		super();
@@ -36,6 +37,7 @@ public class GetTokenTask extends AsyncTask<Void, Void, Void> {
 		mContext = context;
 		mDevResponse = null;
 		mProdResponse = null;
+		mGuestKey = "Forgetmenot00";
 	}
 	
 	@Override

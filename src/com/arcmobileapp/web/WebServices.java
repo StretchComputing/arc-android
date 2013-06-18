@@ -120,6 +120,9 @@ public class WebServices {
 			json.put(WebKeys.LOGIN,login);
 			json.put(WebKeys.PASSWORD,password);
 			json.put(WebKeys.IS_GUEST, isGuest);
+			if (isGuest){
+				json.put("GuestKey", "Forgetmenot00");
+			}
 			
 			resp = this.getResponse(url, json.toString(), null);
 			Logger.d("|arc-web-services|", "GET TOKEN RESP = " + resp);

@@ -38,11 +38,15 @@ public class ArcPreferences {
     
 	// if it's never been setup, return the dev server
 	public String getServer() {
+		return URLs.DEV_SERVER;
+
+		/*
 		String server = getString(Keys.SERVER);
 		if(server == null || server.equalsIgnoreCase("")) {
 			return URLs.DEV_SERVER;
 		}
 		return server;
+		*/
 	}
 
     /**
