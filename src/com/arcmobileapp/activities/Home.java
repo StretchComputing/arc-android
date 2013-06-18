@@ -67,8 +67,8 @@ public class Home extends BaseActivity {
 		
 		btnPayBill = (Button) findViewById(R.id.pay_bill_button);
 		btnExplore = (Button) findViewById(R.id.explore_button);
-		btnPayBill.setVisibility(View.GONE);
-		btnExplore.setVisibility(View.GONE);
+		btnPayBill.setVisibility(View.VISIBLE);
+		btnExplore.setVisibility(View.VISIBLE);
 		initCarousel();
 	}
 	

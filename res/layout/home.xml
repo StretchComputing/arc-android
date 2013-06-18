@@ -9,13 +9,16 @@
     tools:context=".activities.Home" >
 
     <TextView
-        android:layout_marginTop="15dp"
-        android:layout_marginBottom="15dp"
         android:id="@+id/title"
         style="@style/ViewTitle"
-        android:text="@string/welcome" 		android:textStyle="bold"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="15dp"
+        android:gravity="center"
+        android:text="@string/home_dining"
+        android:textSize="15dp"
+        android:textStyle="bold" />
     
     <HorizontalScrollView android:id="@+id/scroll"
         	android:layout_width="match_parent"
@@ -34,21 +37,23 @@
         style="@style/ViewTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
-    
+
     <Button
         android:id="@+id/pay_bill_button"
         style="@style/CustomButton"
-        android:layout_width="match_parent"
+        android:layout_width="204dp"
         android:layout_height="wrap_content"
-        android:onClick="onPayBillClick"
+        android:layout_gravity="center"
         android:layout_marginBottom="20dp"
+        android:onClick="onPayBillClick"
         android:text="@string/pay_bill" />
     
     <Button
         android:id="@+id/explore_button"
         style="@style/CustomButton"
-        android:layout_width="match_parent"
+        android:layout_width="178dp"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:onClick="onExploreClick"
         android:text="@string/explore" />
 
