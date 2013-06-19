@@ -10,13 +10,14 @@ import android.os.AsyncTask;
 
 import com.arcmobileapp.utils.ArcPreferences;
 import com.arcmobileapp.utils.Logger;
+import com.arcmobileapp.utils.MerchantObject;
 
 public class GetMerchantsTask extends AsyncTask<Void, Void, Void> {
 	
 	private String mResponse;
 	private Boolean mSuccess;
 	private Context mContext;
-	private ArrayList<String> mMerchantList;
+	private ArrayList<MerchantObject> mMerchantList;
 	
 	public GetMerchantsTask(Context context) {
 		super();
@@ -62,9 +63,12 @@ public class GetMerchantsTask extends AsyncTask<Void, Void, Void> {
 		// GET MERCHANTS RESP = {"Success":true,"Results":[{"Id":12,"Name":"Isis Lab","Street":"111 Kidzie St.","City":"Chicago","State":"IL","Zipcode":"60654","Latitude":41.889456,"Longitude":-87.6317749999,"PaymentAccepted":"VNMADZ","TwitterHandler":"@IsisLab","GeoDistance":-1.0,"Status":"A","Accounts":[],"Cards":[]}],"ErrorCodes":[]}
 		JSONArray results = json.getJSONArray(WebKeys.RESULTS);  // get an array of returned results
 		//Logger.d("Results: " + results);
-		mMerchantList = new ArrayList<String>();
+		mMerchantList = new ArrayList<MerchantObject>();
 
 		for(int i = 0; i < results.length(); i++) {
+			
+			MerchantObject myMerchant = new MerchantObject();
+			
 			JSONObject result = results.getJSONObject(i);
 			String name = result.getString(WebKeys.NAME);
 			String street = result.getString(WebKeys.STREET);
@@ -78,7 +82,10 @@ public class GetMerchantsTask extends AsyncTask<Void, Void, Void> {
 			String merchantId = result.getString(WebKeys.GET_MERCHANT_ID);
 			double geoDistance = result.getDouble(WebKeys.GEO_DISTANCE);
 
-			mMerchantList.add(name);
+			myMerchant.merchantName = name;
+			myMerchant.merchantId = merchantId;
+			
+			mMerchantList.add(myMerchant);
 			
 			Logger.d(name + " | " + merchantId + " | "  + street + " | " + city + " | " + state + " | " + zip + " | " + lat + " | " + lon + " | " + paymentsAccepted + " | " + twitterHandle + " | " + geoDistance);
 		}
@@ -88,7 +95,7 @@ public class GetMerchantsTask extends AsyncTask<Void, Void, Void> {
 		return mResponse;
 	}	
 	
-	public ArrayList<String> getMerchants(){
+	public ArrayList<MerchantObject> getMerchants(){
 		return mMerchantList;
 	}
 	

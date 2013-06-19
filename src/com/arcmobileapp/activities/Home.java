@@ -6,8 +6,10 @@ import java.util.ArrayList;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -28,6 +30,8 @@ import com.arcmobileapp.R;
 import com.arcmobileapp.utils.Constants;
 import com.arcmobileapp.utils.Keys;
 import com.arcmobileapp.utils.Logger;
+import com.arcmobileapp.utils.MerchantObject;
+
 import com.arcmobileapp.web.GetMerchantsTask;
 import com.arcmobileapp.web.GetTokenTask;
 
@@ -38,10 +42,9 @@ public class Home extends BaseActivity {
 	private Button btnPayBill;
 	private Button btnExplore;
 	private HorizontalScrollView scrollView;
-	private ArrayList<String> merchants;
+	private ArrayList<MerchantObject> merchants;
 
 
-	private static final float INITIAL_ITEMS_COUNT = 2.5F;
 	private LinearLayout mCarouselContainer;
 
 	public Home() {
@@ -65,12 +68,13 @@ public class Home extends BaseActivity {
 		
 		txtTitle = (TextView) findViewById(R.id.title);
 		txtTitle.setFocusable(true);
+		txtTitle.setTextColor(Color.rgb(128,128,128));
 //		txtTitle.setTypeface(getModernPicsTypeface()); 
 		
 		btnPayBill = (Button) findViewById(R.id.pay_bill_button);
 		btnExplore = (Button) findViewById(R.id.explore_button);
 		btnPayBill.setVisibility(View.VISIBLE);
-		btnExplore.setVisibility(View.VISIBLE);
+		btnExplore.setVisibility(View.GONE);
 	}
 	
 	protected void getTokensFromWeb() {
@@ -109,9 +113,10 @@ public class Home extends BaseActivity {
 			@Override
 			protected void onPostExecute(Void result) {
 				super.onPostExecute(result);
-				merchants = new ArrayList<String>();
-				merchants = getMerchants();
+				merchants = new ArrayList<MerchantObject>();
 				
+				merchants = getMerchants();
+
 				if (merchants.size() > 0){
 					initCarousel();
 				}
@@ -137,26 +142,16 @@ public class Home extends BaseActivity {
 	}
 	
 	protected void clickCarousel(int pos){
-		String rest = "";
+		String name = "";
+		String theId = "";
 		
-		if(pos == 0) {
-			rest = "UNTITLED";
-			toastShort(rest);
-		} else if(pos ==1) {
-			rest = "UNION";
-			toastShort(rest);
-		} else if(pos ==2) {
-			rest = "ROCKIT";
-			toastShort(rest);
-		} else {
-			toastShort("Clicked " + pos);
-		}
-//		btnPayBill.setVisibility(View.VISIBLE);
-//		btnExplore.setVisibility(View.VISIBLE);
+		name = merchants.get(pos).merchantName;
+		theId = merchants.get(pos).merchantId;
+
 		
 		Intent viewCheck = new Intent(getApplicationContext(), GetCheck.class);
-		viewCheck.putExtra(Constants.VENUE, rest);
-		viewCheck.putExtra(Constants.VENUE_ID, "12"); // TODO remove hard-coded value
+		viewCheck.putExtra(Constants.VENUE, name);
+		viewCheck.putExtra(Constants.VENUE_ID, theId); 
 		startActivity(viewCheck);
 	}
 	
@@ -166,14 +161,12 @@ public class Home extends BaseActivity {
         // Compute the width of a carousel item based on the screen width and number of initial items.
         final DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        final int imageWidth = (int) (displayMetrics.widthPixels / INITIAL_ITEMS_COUNT);
+        final int imageWidth = (int) (displayMetrics.widthPixels / 2.0);
 
-        // Get the array of puppy resources
-        final TypedArray puppyResourcesTypedArray = getResources().obtainTypedArray(R.array.puppies_array);
-
- 
         // Populate the carousel with items
         ImageView imageItem;
+        mCarouselContainer.removeAllViews();
+        
         for (int i = 0 ; i < merchants.size(); i++) {
             // Create new ImageView
         	final int pos = i;
@@ -187,9 +180,8 @@ public class Home extends BaseActivity {
 
             String imageName = "";
             
-            Logger.d("Name " + merchants.get(i));
             
-            if (merchants.get(i).equalsIgnoreCase("Isis Lab")){
+            if (merchants.get(i).merchantName.equalsIgnoreCase("Isis Lab")){
             	imageName = "untitled";
             }else{
             	imageName = "union";
@@ -206,7 +198,7 @@ public class Home extends BaseActivity {
 //            mCarouselContainer.addView(imageItem);
             
             String title = "hello";
-            title = merchants.get(i);
+            title = merchants.get(i).merchantName;
             
             View carouselItem = createCarouselItem(imageItem, title);
             
@@ -232,7 +224,7 @@ public class Home extends BaseActivity {
 	
 	protected void touchCarousel() {
 		btnPayBill.setVisibility(View.VISIBLE);
-		btnExplore.setVisibility(View.VISIBLE);
+		btnExplore.setVisibility(View.GONE);
 	}
 	
 	public RelativeLayout createCarouselItem(ImageView image, String title) {
@@ -244,11 +236,26 @@ public class Home extends BaseActivity {
 		
 		TextView itemText = (TextView) rLayout.findViewById(R.id.itemText);
 		itemText.setText(title);
+		itemText.setGravity(Gravity.CENTER | Gravity.BOTTOM);
 		return rLayout;
 	}
 
 	public void onPayBillClick(View v) {
-		toastShort("Pay Bill");
+		
+		int scrollPosX = scrollView.getScrollX();
+		Logger.d("Scroll Pos: " + scrollPosX);
+		
+		final DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        final int imageWidth = (int) (displayMetrics.widthPixels / 2.0);
+        
+		
+
+        int index = scrollPosX/ (imageWidth/merchants.size());
+        
+		Logger.d("Index: " + index);
+
+        this.clickCarousel(index);
 	}
 	
 	public void onExploreClick(View v) {
