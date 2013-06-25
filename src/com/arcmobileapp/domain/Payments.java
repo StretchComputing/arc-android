@@ -21,7 +21,9 @@ public class Payments implements Serializable {
     private String mAccount;
     private ArrayList<PaidItems> mPaidItems;
     
-    public class PaidItems {
+    public class PaidItems  implements Serializable  {
+    	
+    	private static final long serialVersionUID = -4713105430942212783L;
     	int mItemId;
     	double mPaymentAmount;
     	double mPercentPaid;

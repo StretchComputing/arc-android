@@ -14,10 +14,15 @@ public class Check implements Serializable {
     private String mMerchantId;
     private Double mBaseAmount;
     private Double mTaxAmount;
+    private Double mServiceCharge;
+    private Double mDiscount;
     private String mDateCreated;
     private String mLastUpdated;
     private String mExpiration;
     private Double mAmountPaid;
+    private Double myBasePayment;
+    private Double myTip;
+    
     private ArrayList<LineItem> mItems;
     private ArrayList<Payments> mPayments;
         
@@ -36,6 +41,8 @@ public class Check implements Serializable {
     	setAmountPaid(amtPaid);
     	setItems(items);
     	setPayments(payments);
+    	setServiceCharge(0.0);
+    	setDiscount(0.0);
     }
 
 	public int getId() {
@@ -93,6 +100,24 @@ public class Check implements Serializable {
 	public void setBaseAmount(Double baseAmount) {
 		this.mBaseAmount = baseAmount;
 	}
+	
+	public Double getServiceCharge() {
+		return mServiceCharge;
+	}
+
+	public void setServiceCharge(Double serviceCharge) {
+		this.mServiceCharge = serviceCharge;
+	}
+	
+	public Double getDiscount() {
+		return mDiscount;
+	}
+
+	public void setDiscount(Double discount) {
+		this.mDiscount = discount;
+	}
+	
+	
 
 	public Double getTaxAmount() {
 		return mTaxAmount;
@@ -149,4 +174,104 @@ public class Check implements Serializable {
 	public void setPayments(ArrayList<Payments> payments) {
 		this.mPayments = payments;
 	}
+
+	
+	public Double getMyBasePayment() {
+		return myBasePayment;
+	}
+
+	public void setMyBasePayment(Double basePayment) {
+		this.myBasePayment = basePayment;
+	}
+	
+	
+	public Double getMyTip() {
+		return myTip;
+	}
+
+	public void setMyTip(Double tip) {
+		this.myTip = tip;
+	}
+	
+	
+	/*
+	 @Override
+	    public int describeContents()
+	    {
+	        // TODO Auto-generated method stub
+	        return 0;
+	    }
+	 
+	    @Override
+	    public void writeToParcel(Parcel dest, int flag)
+	    {
+	        // TODO Auto-generated method stub
+	        //dest.writeString(Name);
+	        //dest.writeString(Address);
+	        //dest.writeInt(Age);
+	    	dest.writeInt(mId);
+	    	dest.writeDouble(mBaseAmount);
+	    	dest.writeDouble(mTaxAmount);
+	    	dest.writeDouble(mAmountPaid);
+
+	    	dest.writeString(mStatus);
+	    	dest.writeString(mNumber);
+	    	dest.writeString(mTableNumber);
+	    	dest.writeString(mWaiterRef);
+	    	dest.writeString(mMerchantId);
+	    	dest.writeString(mLastUpdated);
+	    	dest.writeString(mExpiration);
+	    	dest.writeString(mDateCreated);
+	    	dest.writeTypedList(mPayments);
+	    	dest.writeTypedList(mItems);
+
+
+
+	    
+	        
+	        
+	    }
+	    public Check(Parcel in)
+	    {
+	        //this.Name = in.readString();
+	        //this.Address = in.readString();
+	       // this.Age = in.readInt();
+	    	this.mId = in.readInt();
+	    	this.mBaseAmount = in.readDouble();
+	    	this.mTaxAmount = in.readDouble();
+	    	this.mAmountPaid = in.readDouble();
+	    	
+	    	this.mStatus = in.readString();
+	    	this.mNumber = in.readString();
+	    	this.mTableNumber = in.readString();
+	    	this.mWaiterRef = in.readString();
+	    	this.mMerchantId = in.readString();
+	    	this.mLastUpdated = in.readString();
+	    	this.mExpiration = in.readString();
+	    	this.mDateCreated = in.readString();
+
+
+	    	
+	    	in.readTypedList(mPayments, Payments.Creator);
+	    	in.readTypedList(mItems, LineItem.Creator);
+
+
+	    }
+	 
+	    @SuppressWarnings("unchecked")
+	    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+	        public Check createFromParcel(Parcel in)
+	        {
+	            return new Check(in);
+	        }
+	 
+	        public Check[] newArray(int size)
+	        {
+	            return new Check[size];
+	        }
+	    };
+	    
+	    */
+	    
+    
 }

@@ -1,63 +1,224 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/get_invoice_layout"
-    style="@style/ParentView"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".activities.ViewCheck" >
-    
-    <ScrollView android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-    
-    <LinearLayout 
-    android:id="@+id/view_check_layout"
-    style="@style/ParentView"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:gravity="center">
-    
-     <TextView
-     android:id="@+id/title"
-     android:layout_width="wrap_content"
-     android:layout_height="match_parent"
-     android:padding="10dp"
-     android:textStyle="bold"
-     android:textSize="25sp"
-     android:gravity="center"/>
-     
-      <Button
-        android:id="@+id/view_payments_button"
-        style="@style/CustomButton"
-        android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <Button
+        android:id="@+id/splitDollarButton"
+        style="@style/BlueButton"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="onViewPaymentsClick"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:text="@string/view_payments" />
-      
-       <Button
-        android:id="@+id/make_payments_button"
-        style="@style/CustomButton"
-        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:minWidth="48dp"
+        android:padding="0dp"
+        android:text="@string/invoiceDollarSplit" />
+
+    <Button
+        android:id="@+id/splitPercentButton"
+        style="@style/BlueButton"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="onMakePaymentClick"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:text="@string/make_payment" />
-     
-     <TextView
-     android:id="@+id/check_details"
-     android:layout_width="wrap_content"
-     android:layout_height="match_parent"
-     android:padding="10dp"
-     android:textStyle="bold"
-     android:textSize="15sp"
-     android:gravity="center"/>
+        android:layout_alignBaseline="@+id/splitDollarButton"
+        android:layout_alignBottom="@+id/splitDollarButton"
+        android:layout_alignParentBottom="true"
         
-    </LinearLayout>
-    </ScrollView>
-    
-</LinearLayout>
+        android:layout_alignParentRight="true"
+        android:layout_centerHorizontal="true"
+        android:minWidth="48dp"
+        android:padding="0dp"
+        android:text="@string/invoicePercentSplit" />
+
+    <TextView
+        android:id="@+id/myTotalTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/invoice_pay_button"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="5dp"
+        android:gravity="center"
+        android:text="Large Text"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="28sp"
+        android:textStyle="bold" />
+
+    <ListView
+        android:id="@+id/invoiceItemList"
+        android:layout_width="match_parent"
+        android:layout_height="170dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:divider="@null"
+        android:dividerHeight="0dp" >
+
+    </ListView>
+
+    <RelativeLayout
+        android:id="@+id/invoice_bottom_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/myTotalTextView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/invoiceItemList"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:paddingBottom="20dp" >
+
+        <TextView
+            android:id="@+id/text_total_payment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:text="@string/invoice_divider"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/text_subtotal_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/text_total_payment"
+            android:paddingLeft="20dp"
+            android:text="@string/invoice_subtotal"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/text_tax_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/text_subtotal_name"
+            android:paddingLeft="20dp"
+            android:text="@string/invoice_tax"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/text_service_charge_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/text_tax_name"
+            android:paddingLeft="20dp"
+            android:text="@string/invoice_service_charge"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/text_discount_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/text_service_charge_name"
+            android:paddingLeft="20dp"
+            android:text="@string/invoice_discount"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/text_subtotal_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/text_subtotal_name"
+            android:layout_alignBottom="@+id/text_subtotal_name"
+            android:layout_alignParentRight="true"
+            android:gravity="right"
+            android:paddingRight="20dp"
+            android:text="Medium Text"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/text_tax_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/text_tax_name"
+            android:layout_alignBottom="@+id/text_tax_name"
+            android:layout_alignParentRight="true"
+            android:gravity="right"
+            android:paddingRight="20dp"
+            android:text="Medium Text"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/text_service_charge_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/text_service_charge_name"
+            android:layout_alignBottom="@+id/text_service_charge_name"
+            android:layout_alignParentRight="true"
+            android:gravity="right"
+            android:paddingRight="20dp"
+            android:text="Medium Text"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/text_discount_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/text_discount_name"
+            android:layout_alignBottom="@+id/text_discount_name"
+            android:layout_alignParentRight="true"
+            android:gravity="right"
+            android:paddingRight="20dp"
+            android:text="Medium Text"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/text_amount_due_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:gravity="right"
+            android:paddingRight="20dp"
+            android:text="Medium Text"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/text_amount_due_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:paddingLeft="20dp"
+            android:text="@string/invoice_amount_due"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/text_already_paid_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/text_amount_due_name"
+            android:layout_alignParentLeft="true"
+            android:paddingLeft="20dp"
+            android:text="@string/invoice_already_paid"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/red" />
+
+        <TextView
+            android:id="@+id/text_already_paid_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/text_amount_due_value"
+            android:layout_alignParentRight="true"
+            android:paddingRight="20dp"
+            android:text="Medium Text"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/red" />
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/invoice_pay_button"
+        style="@style/CustomButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="18dp"
+        android:minWidth="136dp"
+        android:text="@string/invoicePayString" />
+
+</RelativeLayout>

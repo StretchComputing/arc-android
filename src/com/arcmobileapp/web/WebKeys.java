@@ -36,6 +36,9 @@ public final class WebKeys {
 	public static final String LAST_UPDATED = "LastUpdated";
 	public static final String EXPIRATION = "Expiration";
 	public static final String AMOUNT_PAID = "AmountPaid";
+	public static final String DISCOUNT = "Discount";
+	public static final String SERVICE_CHARGE = "ServiceCharge";
+
 	public static final String ITEMS = "Items";
 	public static final String PAYMENTS = "Payments";
 	

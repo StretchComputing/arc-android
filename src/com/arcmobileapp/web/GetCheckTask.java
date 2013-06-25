@@ -95,13 +95,28 @@ public class GetCheckTask extends AsyncTask<Void, Void, Void> {
 		JSONObject result = json.getJSONObject(WebKeys.RESULTS);
 		
 		double amountPaid = 0.0;
+		double discount = 0.0;
+		double serviceCharge = 0.0;
 		
 		try{
 			amountPaid = result.getDouble(WebKeys.AMOUNT_PAID);
 		}catch(Exception e){
-			
 		}
+		
+		try{
+			discount = result.getDouble(WebKeys.DISCOUNT);
+		}catch(Exception e){
+		}
+		
+		try{
+			serviceCharge = result.getDouble(WebKeys.SERVICE_CHARGE);
+		}catch(Exception e){
+		}
+		
 		theBill = new Check(result.getInt(WebKeys.ID), result.getString(WebKeys.MERCHANT_ID), result.getString(WebKeys.INVOICE_NUMBER), result.getString(WebKeys.TABLE_NUMBER), result.getString(WebKeys.STATUS), result.getString(WebKeys.WAITER_REF), result.getDouble(WebKeys.BASE_AMOUNT), result.getDouble(WebKeys.TAX), result.getString(WebKeys.DATE_CREATED), result.getString(WebKeys.LAST_UPDATED), result.getString(WebKeys.EXPIRATION), amountPaid, null, null);
+		theBill.setDiscount(discount);
+		theBill.setServiceCharge(serviceCharge);
+		
 		ArrayList<LineItem> lineItems = new ArrayList<LineItem>();
 		JSONArray items = result.getJSONArray(WebKeys.ITEMS);  // get an array of returned results
 		for(int i = 0; i < items.length(); i++) {

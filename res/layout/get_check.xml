@@ -33,6 +33,11 @@
      android:textStyle="bold"
      android:textSize="18sp"
      android:gravity="center"/>
+
+     <ProgressBar
+         android:id="@+id/activityBar"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content" />
      
      <EditText
      android:id="@+id/invoice"

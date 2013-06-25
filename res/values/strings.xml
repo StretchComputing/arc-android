@@ -12,23 +12,31 @@
     <string name="remember_me">Remember me</string>
     <string name="start">Start</string>
     <string name="stop">Stop</string>
-    
     <string name="welcome">explore</string>
-    
     <string name="add_card">Add card</string>
     <string name="pay_bill">Pay bill</string>
     <string name="view_bill">View bill</string>
     <string name="view_payments">View payments</string>
     <string name="make_payment">Make a payment</string>
     <string name="explore">Explore</string>
-    
     <string name="anim_zoom">Zoom</string>
     <string name="anim_scale">Scale</string>
     <string name="anim_fold">Fold</string>
     <string name="anim_slide">Slide Up</string>
-    
     <string name="responsive_ui">Responsive UI</string>
-    
     <string name="home_dining">Where are you dining today?</string>
+    <string name="invoicePayString">Pay Bill</string>
+    <string name="invoiceDollarSplit">$</string>
+    <string name="invoicePercentSplit">÷</string>
+    <string name="invoice_divider">************</string>
+    <string name="invoice_subtotal">Sub Total</string>
+    <string name="invoice_tax">Tax</string>
+    <string name="invoice_service_charge">Service Charge</string>
+    <string name="invoice_discount">Discount</string>
+    <string name="invoice_amount_due">Amount Due</string>
+    <string name="invoice_already_paid">Already Paid</string>
+    <string name="title_activity_additional_tip">AdditionalTip</string>
+    <string name="additional_tip_my_total">My Total:</string>
+    <string name="additional_tip_my_tip">Tip:</string>
 
 </resources>

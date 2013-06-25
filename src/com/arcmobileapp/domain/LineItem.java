@@ -13,6 +13,7 @@ public class LineItem implements Serializable {
     private Boolean mDisplay;
     private String mDescription;
     private Double mValue;
+    private Boolean isSelected;
     
     public LineItem(int id, String posKey, Double amount, Boolean display, String description, Double value) {
     	setId(id);
@@ -54,6 +55,17 @@ public class LineItem implements Serializable {
 	public void setDisplay(Boolean display) {
 		this.mDisplay = display;
 	}
+	
+	public Boolean getIsSelected() {
+		return isSelected;
+	}
+
+	public void setIsSelected(Boolean selected) {
+		this.isSelected = selected;
+	}
+	
+	
+	
 
 	public String getDescription() {
 		return mDescription;
