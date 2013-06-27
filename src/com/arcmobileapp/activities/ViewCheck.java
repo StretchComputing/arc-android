@@ -167,6 +167,8 @@ public class ViewCheck extends BaseActivity {
 		super.onResume();
 	}
 
+	
+	
 	protected void displayBill(){
 		
 		String check = "";

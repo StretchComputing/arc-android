@@ -38,5 +38,9 @@
     <string name="title_activity_additional_tip">AdditionalTip</string>
     <string name="additional_tip_my_total">My Total:</string>
     <string name="additional_tip_my_tip">Tip:</string>
+    <string name="continueString">Continue</string>
+    <string name="eighteen_percent_text">18%</string>
+    <string name="twenty_percent_text">20%</string>
+    <string name="twentytwo_percent_text">22%</string>
 
 </resources>

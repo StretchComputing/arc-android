@@ -20,24 +20,12 @@
         android:text="Medium Text"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
-    <EditText
-        android:id="@+id/editText1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/textView2"
-        android:layout_alignRight="@+id/text_total_payment"
-        android:ems="10"
-        android:gravity="right|center_vertical"
-        android:inputType="numberDecimal"
-        android:maxWidth="100dp"
-        android:width="80dp" />
-
     <TextView
         android:id="@+id/TextView01"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/editText1"
-        android:layout_toLeftOf="@+id/editText1"
+        android:layout_alignBottom="@+id/my_tip_text"
+        android:layout_toLeftOf="@+id/my_tip_text"
         android:gravity="right"
         android:text="@string/invoiceDollarSplit"
         android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -60,17 +48,71 @@
         android:layout_height="wrap_content"
         android:layout_alignRight="@+id/textView1"
         android:layout_below="@+id/textView1"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="26dp"
         android:gravity="right"
         android:text="@string/additional_tip_my_tip"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <Button
         android:id="@+id/button1"
+        style="@style/BlueButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="Button" />
+        android:layout_marginBottom="215dp"
+        android:minHeight="48dp"
+        android:onClick="onContinueButtonClicked"
+        android:text="@string/continueString"
+        android:width="150dp" />
+
+    <RadioGroup
+        android:id="@+id/tip_radio_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/my_tip_text"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="24dp"
+        android:orientation="horizontal" >
+
+        <RadioButton
+            android:id="@+id/radio_eightteen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:text="@string/eighteen_percent_text"
+            android:onClick="onRadioButtonClicked"/>
+            
+
+        <RadioButton
+            android:id="@+id/radio_twenty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:text="@string/twenty_percent_text" 
+            android:onClick="onRadioButtonClicked"/>
+            
+
+        <RadioButton
+            android:id="@+id/radio_twenty_two"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/twentytwo_percent_text"
+            android:onClick="onRadioButtonClicked"/>
+        
+    </RadioGroup>
+
+    <EditText
+        android:id="@+id/my_tip_text"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_alignBottom="@+id/textView2"
+        android:layout_alignRight="@+id/text_total_payment"
+        android:ems="10"
+        android:gravity="right|center_vertical"
+        android:inputType="numberDecimal"
+        android:maxWidth="100dp"
+        android:width="80dp" />
 
 </RelativeLayout>

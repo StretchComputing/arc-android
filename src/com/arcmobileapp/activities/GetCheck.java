@@ -1,7 +1,6 @@
 package com.arcmobileapp.activities;
 
-import java.util.ArrayList;
-
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -14,8 +13,6 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.arcmobileapp.BaseActivity;
 import com.arcmobileapp.R;
 import com.arcmobileapp.domain.Check;
-import com.arcmobileapp.domain.LineItem;
-import com.arcmobileapp.domain.Payments;
 import com.arcmobileapp.utils.Constants;
 import com.arcmobileapp.utils.Logger;
 import com.arcmobileapp.web.GetCheckTask;
@@ -27,6 +24,7 @@ public class GetCheck extends BaseActivity {
 	private EditText invoice;
 	private String venueName;
 	private String merchantId;
+	private ProgressDialog loadingDialog;
 	
 	public GetCheck() {
 		super();
@@ -42,12 +40,19 @@ public class GetCheck extends BaseActivity {
 		setContentView(R.layout.get_check);
 		invoice = (EditText) findViewById(R.id.invoice);
 		title = (TextView) findViewById(R.id.title);
-		activityBar = (ProgressBar) findViewById(R.id.activityBar);
-		activityBar.setVisibility(View.INVISIBLE);
+		//activityBar = (ProgressBar) findViewById(R.id.activityBar);
+		//activityBar.setVisibility(View.INVISIBLE);
 		
 		venueName = getIntent().getStringExtra(Constants.VENUE);
 		merchantId = getIntent().getStringExtra(Constants.VENUE_ID);
 		title.setText(venueName);
+		
+		loadingDialog = new ProgressDialog(GetCheck.this);
+		loadingDialog.setTitle("Getting Invoice");
+		loadingDialog.setMessage("Please Wait...");
+		loadingDialog.setCancelable(false);
+		
+		
 	}
 	
 	public void onViewBillClick(View v) {
@@ -61,8 +66,10 @@ public class GetCheck extends BaseActivity {
 		viewCheck.putExtra(Constants.CHECK_NUM, checkNum);
 		viewCheck.putExtra(Constants.VENUE_ID, merchantId);
 		
-		activityBar.setVisibility(View.VISIBLE);
+		//.setVisibility(View.VISIBLE);
 
+		loadingDialog.show();
+		
 		getInvoice();
 
 	}
@@ -83,13 +90,14 @@ public class GetCheck extends BaseActivity {
 					super.onPostExecute(result);
 					
 
+					loadingDialog.hide();
 					if (getSuccess()) {
 
 						Check theBill = getTheBill();
 
 						if (theBill == null || theBill.getItems().size() == 0) {
 							toastShort("Could not locate your check");
-							activityBar.setVisibility(View.INVISIBLE);
+							//.setVisibility(View.INVISIBLE);
 							return;
 						}else{
 						
@@ -103,7 +111,7 @@ public class GetCheck extends BaseActivity {
 		
 					} else {
 						toastShort("Could not find your check");
-						activityBar.setVisibility(View.INVISIBLE);
+						//.setVisibility(View.INVISIBLE);
 
 					}
 				}

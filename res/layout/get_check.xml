@@ -17,13 +17,14 @@
     android:gravity="center">
     
      <TextView
-     android:id="@+id/title"
-     android:layout_width="wrap_content"
-     android:layout_height="match_parent"
-     android:padding="10dp"
-     android:textStyle="bold"
-     android:textSize="25sp"
-     android:gravity="center"/>
+         android:id="@+id/title"
+         android:layout_width="wrap_content"
+         android:layout_height="match_parent"
+         android:gravity="center"
+         android:paddingLeft="10dp"
+         android:paddingRight="10dp"
+         android:textSize="25sp"
+         android:textStyle="bold" />
      
      <TextView
      android:layout_width="wrap_content"
@@ -34,10 +35,7 @@
      android:textSize="18sp"
      android:gravity="center"/>
 
-     <ProgressBar
-         android:id="@+id/activityBar"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content" />
+
      
      <EditText
      android:id="@+id/invoice"
@@ -45,21 +43,21 @@
      android:layout_height="match_parent"
      android:padding="10dp"
      android:textStyle="bold"
-     android:inputType="numberSigned"
+     android:inputType="phone"
      android:digits="0123456789"
      android:textSize="25sp"
      android:gravity="center"/>
      
       <Button
-        android:id="@+id/get_invoice_button"
-        style="@style/CustomButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="onViewBillClick"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
-        android:text="@string/view_bill" />
-
+          android:id="@+id/get_invoice_button"
+          style="@style/CustomButton"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginBottom="20dp"
+          android:layout_marginTop="20dp"
+          android:minHeight="48dp"
+          android:onClick="onViewBillClick"
+          android:text="@string/view_bill" />
         
     </LinearLayout>
     
