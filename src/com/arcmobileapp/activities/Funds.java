@@ -12,13 +12,19 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputFilter;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -29,7 +35,9 @@ import com.arcmobileapp.db.controllers.DBController;
 import com.arcmobileapp.domain.Cards;
 import com.arcmobileapp.utils.Constants;
 import com.arcmobileapp.utils.Enums.ModernPicTypes;
+import com.arcmobileapp.utils.CurrencyFilter;
 import com.arcmobileapp.utils.Logger;
+import com.arcmobileapp.utils.Security;
 import com.arcmobileapp.utils.Utils;
 
 public class Funds extends BaseActivity {
@@ -39,6 +47,9 @@ public class Funds extends BaseActivity {
 	private TextView addCardSuccess;
 	private TextView addCardSuccessMsg;
 	private TextView addCardSuccessLock;
+	private String myPIN;
+	private AlertDialog pinDialog;
+	private Cards enteredCard;
 
 	public Funds() {
 		super();
@@ -79,12 +90,14 @@ public class Funds extends BaseActivity {
 		Logger.d("PRINT CARD INFO");
 		storedCardsView.removeAllViews();  //clear any views in this object
 		ArrayList<Cards> cards = DBController.getCards(getContentProvider());
+		
 		for(Cards card:cards) {
 			LinearLayout addMe = createCardLayout(card);
 			storedCardsView.addView(addMe);
 			storedCardsView.addView(createSpace());
-			Logger.d(card.getNumber() + " | " + card.getExpirationMonth()  + " | " + card.getExpirationYear() + " | " + card.getCardId()  + " | " + card.getCardLabel());
+			//Logger.d(card.getNumber() + " | "  + card.getExpirationMonth()  + " | " + card.getExpirationYear() + " | " + card.getCardId()  + " | " + card.getCardLabel());
 		}
+		
 	}
 	
 	public LinearLayout createSpace() {
@@ -97,18 +110,14 @@ public class Funds extends BaseActivity {
 		LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE); 
 		LinearLayout rLayout = (LinearLayout) inflater.inflate(R.layout.card_item, null);
 		
-		String safePrint = "";
-		for(int i = 0; i < card.getNumber().length() - 4; i++) {
-			safePrint += "*";
-		}
-		safePrint += card.getNumber().substring(card.getNumber().length() -4, card.getNumber().length());
+		
 		
 		
 		TextView tvCardType = (TextView) rLayout.findViewById(R.id.cardType);
 		tvCardType.setText(card.getCardLabel());
 		
 		TextView tvCardNumber = (TextView) rLayout.findViewById(R.id.cardNumber);
-		tvCardNumber.setText(safePrint);
+		tvCardNumber.setText(card.getCardId());
 		
 		String expiration = card.getExpirationMonth() + "/" + card.getExpirationYear();
 		TextView tvExpiration = (TextView) rLayout.findViewById(R.id.expiration);
@@ -246,7 +255,8 @@ public class Funds extends BaseActivity {
 					resultDisplayStr += "Zip: " + scanResult.zip + "\n";
 				}
 				
-				saveCard(scanResult.getFormattedCardNumber(), String.valueOf(scanResult.expiryMonth), String.valueOf(scanResult.expiryYear), scanResult.zip, scanResult.cvv, String.valueOf(scanResult.getCardType().ordinal()), scanResult.getCardType().name());
+				saveTemp(scanResult.getFormattedCardNumber(), String.valueOf(scanResult.expiryMonth), String.valueOf(scanResult.expiryYear), scanResult.zip, scanResult.cvv, String.valueOf(scanResult.getCardType().ordinal()), scanResult.getCardType().name());
+				showPinDialog();
 				
 			} else {
 				resultDisplayStr = "\nScan was canceled.\n";
@@ -255,23 +265,34 @@ public class Funds extends BaseActivity {
 			}
 		}
 
-		showSuccessMessage(resultDisplayStr);
+		//showSuccessMessage(resultDisplayStr);
 		//toastLong(resultDisplayStr);
 //		showInfoDialog(resultDisplayStr);
 		// else handle other activity results
 	}
 	
-	protected void saveCard(String number, String month, String year, String zip, String cvv, String typeId, String typeLabel) {
-		Cards newCard = new Cards(number, month, year, zip, cvv, typeId, typeLabel, null);
-		ArrayList<Cards> cards = DBController.getCards(getContentProvider());
+	protected void saveTemp(String number, String month, String year, String zip, String cvv, String typeId, String typeLabel) {
+		
+		enteredCard = new Cards(number, month, year, zip, cvv, "****" + number.substring(number.length() - 4), typeLabel, null);
+
+	}
+	
+	
+	protected void saveCard() {
+		
+		
+		//ArrayList<Cards> cards = DBController.getCards(getContentProvider());
+		
+		/*
 		for(Cards card: cards) {
 			if(card.getNumber().equalsIgnoreCase(newCard.getNumber())) {
 				toastLong("You've already saved this credit card. You can edit or delete the card if you'd like to make a change");
 				return;
 			}
-		}
-		DBController.saveCreditCard(getContentProvider(), newCard);
-		showInfoDialog(DBController.getCardCount(getContentProvider()) + "Card added");
+		}*/
+		
+		DBController.saveCreditCard(getContentProvider(), enteredCard);
+		//showInfoDialog(DBController.getCardCount(getContentProvider()) + "Card added");
 	}
 	
 	private void showInfoDialog(String display) {
@@ -296,4 +317,88 @@ public class Funds extends BaseActivity {
 		});
 		builder.create().show();
 	}
+	
+	
+	public String encryptCardNumber(String cardNumber){	
+	
+		myPIN = "1302";
+		Security s = new Security("1302");
+        String encrypted = s.encrypt(cardNumber);
+       
+        Logger.d("ENCRYPTED: " + encrypted);
+        
+        return encrypted;
+        
+        
+        
+	}
+	
+	
+	private void showPinDialog() {
+		pinDialog = null;
+
+		
+		LayoutInflater factory = LayoutInflater.from(this);
+		final View makePaymentView = factory.inflate(R.layout.payment_dialog, null);
+		final EditText input = (EditText) makePaymentView.findViewById(R.id.paymentInput);
+		TextView paymentTitle = (TextView) makePaymentView.findViewById(R.id.paymentTitle);
+		paymentTitle.setText("Please create a PIN");
+		input.setGravity(Gravity.CENTER | Gravity.BOTTOM);
+
+		input.setFilters(new InputFilter[] { new CurrencyFilter() });
+		TextView remainingBalance = (TextView) makePaymentView.findViewById(R.id.paymentRemaining);
+		remainingBalance.setVisibility(View.GONE);
+		
+		
+		AlertDialog.Builder builder = new AlertDialog.Builder(Funds.this);
+		builder.setTitle(getString(R.string.app_dialog_title));
+		builder.setView(makePaymentView);
+		//builder.setIcon(R.drawable.logo);
+		builder.setCancelable(false);
+		builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+
+			}
+		});
+		
+		builder.setOnCancelListener(new OnCancelListener() {
+
+			@Override
+			public void onCancel(DialogInterface dialog) {
+			}
+		});
+		pinDialog = builder.create();
+		pinDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+
+			@Override
+			public void onShow(DialogInterface dialog) {
+
+				Button b = pinDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+				b.setOnClickListener(new View.OnClickListener() {
+
+					@Override
+					public void onClick(View view) {
+						myPIN = input.getText().toString();
+						pinDialog.dismiss();
+						Funds.this.refreshList();
+					}
+				});
+			}
+		});
+		pinDialog.show();
+	}
+	
+	public void refreshList(){
+		
+		//encrypt it
+		enteredCard.setNumber(encryptCardNumber(enteredCard.getNumber()));
+		//save it
+		saveCard();
+		
+		//refresh list
+		initStoredCards();
+	}
+	
 }

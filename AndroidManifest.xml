@@ -110,6 +110,26 @@
             android:name="com.arcmobileapp.activities.AdditionalTip"
             android:label="@string/title_activity_additional_tip" >
         </activity>
+        <activity
+            android:name="com.arcmobileapp.activities.ConfirmPayment"
+            android:label="@string/title_activity_confirm_payment" >
+        </activity>
+        <activity
+            android:name="com.arcmobileapp.MainActivity"
+            android:label="@string/title_activity_main"
+            android:parentActivityName="com.arcmobileapp.BaseActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.arcmobileapp.BaseActivity" />
+        </activity>
+        <activity
+            android:name="com.arcmobileapp.activities.Review"
+            android:label="@string/title_activity_review"
+            android:parentActivityName="com.arcmobileapp.BaseActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.arcmobileapp.BaseActivity" />
+        </activity>
     </application>
 
 </manifest>

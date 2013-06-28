@@ -42,5 +42,17 @@
     <string name="eighteen_percent_text">18%</string>
     <string name="twenty_percent_text">20%</string>
     <string name="twentytwo_percent_text">22%</string>
+    <string name="title_activity_confirm_payment">ConfirmPayment</string>
+    <string name="confirm_pin_string">Please enter your PIN</string>
+    <string name="confirm_make_payment">Make Payment</string>
+    <string name="confirm_total">Total:</string>
+    <string name="confirm_payment">Payment:</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_review">Review</string>
+    <string name="review_default_title">Please give the restaurant some feedback:</string>
+    <string name="review_star_text">Click a star to rate your experience</string>
+    <string name="revew_skip_text">Skip</string>
+    <string name="review_submit">Submit</string>
+    <string name="review_hint">Additional Comments:</string>
 
 </resources>

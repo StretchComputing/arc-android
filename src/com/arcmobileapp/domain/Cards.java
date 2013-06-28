@@ -15,6 +15,7 @@ public class Cards implements Serializable {
 	private static final long serialVersionUID = 1936138445318344457L;
 	private int mId;
     private String mNumber;
+
     private String mExpirationMonth;
     private String mExpirationYear;
     private String mZip;
@@ -23,9 +24,10 @@ public class Cards implements Serializable {
     private String mCardLabel;
     private String mPIN;
     
-    public Cards(int id, String number, String month, String year, String zip, String cvv, String cardId, String cardLabel, String pin) {
-        setId(id);
-        setNumber(number);
+    public Cards(int id, String mNumber, String month, String year, String zip, String cvv, String cardId, String cardLabel, String pin) {
+       
+    	setId(id);
+    	setNumber(mNumber);
         setExpirationMonth(month);
         setExpirationYear(year);
         setZip(zip);
@@ -35,8 +37,8 @@ public class Cards implements Serializable {
         setPIN(pin);
     }
     
-    public Cards(String number, String month, String year, String zip, String cvv, String cardId, String cardLabel, String pin) {
-        this(-1,  number,  month,  year,  zip,  cvv,  cardId,  cardLabel, pin);
+    public Cards(String mNumber, String month, String year, String zip, String cvv, String cardId, String cardLabel, String pin) {
+        this(-1,  mNumber,  month,  year,  zip,  cvv,  cardId,  cardLabel, pin);
     }
  
     public Cards(Cursor cursor) {
@@ -46,7 +48,9 @@ public class Cards implements Serializable {
         mId = CursorUtilities.getInt(cursor, FundsColumns._ID);
         
         if (CursorUtilities.getString(cursor, FundsColumns.NUMBER) != null)
-            mNumber = decrypt(CursorUtilities.getString(cursor, FundsColumns.NUMBER));
+        	//mNumber = decrypt(CursorUtilities.getString(cursor, FundsColumns.NUMBER));
+        
+        	mNumber = CursorUtilities.getString(cursor, FundsColumns.NUMBER);
         
         if (CursorUtilities.getString(cursor, FundsColumns.EXPIRATION_MONTH) != null)
             mExpirationMonth = decrypt(CursorUtilities.getString(cursor, FundsColumns.EXPIRATION_MONTH));
@@ -83,7 +87,8 @@ public class Cards implements Serializable {
         }
 
         if (mNumber != null) {
-            values.put(FundsColumns.NUMBER, encrypt(mNumber));
+           // values.put(FundsColumns.NUMBER, encrypt(mNumber));
+        	values.put(FundsColumns.NUMBER, mNumber);
         } else {
             values.putNull(FundsColumns.NUMBER);
         }
@@ -148,6 +153,10 @@ public class Cards implements Serializable {
 	public void setNumber(String number) {
 		this.mNumber = number;
 	}
+	
+
+	
+	
 	
 	public String getExpirationMonth() {
 		return mExpirationMonth;
@@ -215,6 +224,7 @@ public class Cards implements Serializable {
 
 	protected String decrypt(String encrypted) {
 		return getEncrypter().unpackString(encrypted);
+		
 	}
 
 	protected String encrypt(String data) {

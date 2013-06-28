@@ -19,6 +19,7 @@ public class MakePaymentTask extends AsyncTask<Void, Void, Void> {
 	private Boolean mSuccess;
 	private Context mContext;
 	private String mResponseTicket;
+	private Boolean finalSuccess;
 	
 	public MakePaymentTask(String token, CreatePayment payment, Context context) {
 		super();
@@ -28,6 +29,7 @@ public class MakePaymentTask extends AsyncTask<Void, Void, Void> {
 		mResponse = null;
 		mSuccess = false;
 		mResponseTicket = null;
+		finalSuccess = false;
 	}
 	
 	@Override
@@ -51,13 +53,15 @@ public class MakePaymentTask extends AsyncTask<Void, Void, Void> {
 		WebServices webService = new WebServices(new ArcPreferences(mContext).getServer());
 		mResponse = webService.createPayment(mToken, mPayment);
 		try {
+
 			JSONObject json =  new JSONObject(mResponse);
+
 			mSuccess = json.getBoolean(WebKeys.SUCCESS);
 			if(mSuccess) {
 				mResponseTicket = json.getString(WebKeys.RESULTS);
 				//6, 2, 2, 3, 4, 5, 6, 7, 8, 9, and 10
-				if(!checkPaymentConfirmation(200)) {
-					if(!checkPaymentConfirmation(1000)) {
+				if(!checkPaymentConfirmation(6000)) {
+					if(!checkPaymentConfirmation(2000)) {
 						if(!checkPaymentConfirmation(3000)) {
 							if(!checkPaymentConfirmation(3000)) {
 								if(!checkPaymentConfirmation(3000)) {
@@ -85,28 +89,23 @@ public class MakePaymentTask extends AsyncTask<Void, Void, Void> {
 	}
 	
 	protected boolean checkPaymentConfirmation(int sleep) {
-		Logger.d("ATTEMPTING PAYMENT CONFIRMATION: " + sleep);
 		try{
 			Thread.sleep(sleep);
 			WebServices webService = new WebServices(new ArcPreferences(mContext).getServer());
 			mResponse = webService.confirmPayment(mToken, getResponseTicket());
 			try {
 				JSONObject json =  new JSONObject(mResponse);
+				JSONObject result = json.getJSONObject(WebKeys.RESULTS);
 				mSuccess = json.getBoolean(WebKeys.SUCCESS);
-				if(mSuccess) {
-					Logger.d("SUCCESSFULLY GOT THE PAYMENT CONFIRMATION");
+
+				if (result == null){
+
+					return false;
+				}else{
+					finalSuccess = true;
 					return true;
-					
-//						"Results": {
-//						    "PaymentId": <Integer>,     // Id of the payment made by the customer
-//						    "TipPaid": <double>,        // Amount of the Tip that was paid
-//						    "AmountPaid": <double>,     // Amount of the Tip that was paid
-//						    "InvoicePaid": <boolean>,   // Check if the invoice was completely paid or covered
-//						    "Points":<single>,          // Points Awarded by the payment
-//						    "Confirmation": <string>,  	// Payment Confirmation
-//						    "DateCreated": <date> 	// Datestamp created by the Server
-						 
 				}
+				
 			} catch (JSONException exc) {
 				Logger.e("Error getting confirmation, JSON Exception: " + exc.getMessage());
 			}
@@ -122,6 +121,9 @@ public class MakePaymentTask extends AsyncTask<Void, Void, Void> {
 		
 	}
 	
+	public Boolean getFinalSuccess(){
+		return finalSuccess;
+	}
 	public String getResponse() {
 		return mResponse;
 	}

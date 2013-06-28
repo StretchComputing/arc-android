@@ -179,7 +179,20 @@ public class ViewCheck extends BaseActivity {
 		}
 		
 		invoiceId = String.valueOf(theBill.getId());
-		totalBill = myPayment = theBill.getBaseAmount() + theBill.getTaxAmount();
+		if (theBill.getServiceCharge() == null){
+			theBill.setServiceCharge(0.0);
+		}
+		
+		if (theBill.getDiscount() == null){
+			theBill.setDiscount(0.0);
+		}
+		
+		if (theBill.getAmountPaid() == null){
+			theBill.setAmountPaid(0.0);
+		}
+				
+		
+		totalBill = myPayment = theBill.getBaseAmount() + theBill.getTaxAmount() + theBill.getServiceCharge() - theBill.getDiscount() - theBill.getAmountPaid();
 		amountPaid = theBill.getAmountPaid();
 		
 		taxPercent = theBill.getTaxAmount() / theBill.getBaseAmount();
@@ -232,7 +245,7 @@ public class ViewCheck extends BaseActivity {
 		textAmountDueValue.setText(String.format("$%.2f", totalBill));
 
 
-		myTotalTextView.setText("My Total: $" + totalBill);
+		myTotalTextView.setText(String.format("My Total: $%.2f", totalBill));
 		
 
 		ArrayList<Payments> payments = theBill.getPayments();
@@ -315,7 +328,8 @@ public class ViewCheck extends BaseActivity {
 		}
 		
 		adapter.notifyDataSetChanged();
-		myTotalTextView.setText("My Total: $" + totalBill);
+		myTotalTextView.setText(String.format("My Total: $%.2f", totalBill));
+
 
 	}
 	
@@ -425,7 +439,7 @@ public class ViewCheck extends BaseActivity {
 		String token = getString(Keys.DEV_TOKEN);
 		String customerId = getString(Keys.DEV_CUSTOMER_ID);
 
-		String account = useFirstCard.getNumber().replace(" ", "");
+		String account = ""; //useFirstCard.getNumber().replace(" ", "");
 		String month = useFirstCard.getExpirationMonth();
 		if (month.length() == 1) {
 			month = "0" + month;
