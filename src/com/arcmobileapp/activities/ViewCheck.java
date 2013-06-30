@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.InputFilter;
+import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
+
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -200,11 +202,21 @@ public class ViewCheck extends BaseActivity {
 		textSubtotalValue.setText(String.format("%.2f", theBill.getBaseAmount()));
 		textTaxValue.setText(String.format("%.2f", theBill.getTaxAmount()));
 		
+		
+		int nextAboveIdLeft = textTaxName.getId();
+		int nextAboveIdRight = textTaxValue.getId();
+		
+		
 		int added = 0;
 		if (theBill.getServiceCharge() > 0){
 			added += 40;
 			textServiceChargeValue.setText(String.format("%.2f", theBill.getServiceCharge()));
 
+			setServiceChargeLayout(nextAboveIdLeft, nextAboveIdRight);
+			nextAboveIdLeft = textServiceChargeName.getId();
+			nextAboveIdRight = textServiceChargeValue.getId();
+			
+			
 		}else{
 			textServiceChargeName.setVisibility(View.GONE);
 			textServiceChargeValue.setVisibility(View.GONE);
@@ -216,6 +228,11 @@ public class ViewCheck extends BaseActivity {
 
 			textDiscountValue.setText(String.format("%.2f", theBill.getDiscount()));
 
+			setDiscountLayout(nextAboveIdLeft, nextAboveIdRight);
+			nextAboveIdLeft = textDiscountName.getId();
+			nextAboveIdRight = textDiscountValue.getId();
+			
+			
 		}else{
 			textDiscountName.setVisibility(View.GONE);
 			textDiscountValue.setVisibility(View.GONE);
@@ -229,14 +246,25 @@ public class ViewCheck extends BaseActivity {
 
 			textAlreadyPaidValue.setText(String.format("- %.2f", theBill.getAmountPaid()));
 
+			setAlreadyPaidLayout(nextAboveIdLeft, nextAboveIdRight);
+			nextAboveIdLeft = textAlreadyPaidName.getId();
+			nextAboveIdRight = textAlreadyPaidValue.getId();
 		}else{
 			textAlreadyPaidName.setVisibility(View.GONE);
 			textAlreadyPaidValue.setVisibility(View.GONE);
 
 		}
 		
+		setAmountDueLayout(nextAboveIdLeft, nextAboveIdRight);
+
 		
-		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, 170 + added);
+	   // RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+	    //p.addRule(RelativeLayout.ALIGN_BOTTOM, tv.getId());
+		
+		
+		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		//RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, 170 + added);
+
 		params.addRule(RelativeLayout.BELOW, list.getId());
 		//params.addRule(RelativeLayout.ABOVE, myTotalTextView.getId());
 		params.setMargins(0, 10, 0, 20);
@@ -461,6 +489,7 @@ public class ViewCheck extends BaseActivity {
 	}
 
 	private void showPayAmountDialog() {
+		Logger.d("SHOWING");
 		payDialog = null;
 
 		deselectAllRows();
@@ -475,8 +504,17 @@ public class ViewCheck extends BaseActivity {
 		input.setFilters(new InputFilter[] { new CurrencyFilter() });
 		final TextView remainingBalance = (TextView) makePaymentView.findViewById(R.id.paymentRemaining);
 	
+		int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+	
+		
+		//Set colors
+		if (currentapiVersion <= android.os.Build.VERSION_CODES.GINGERBREAD_MR1){
 
-		final Double remainingBill = totalBill - amountPaid;
+			paymentTitle.setTextColor(getResources().getColor(R.color.white));
+			remainingBalance.setTextColor(getResources().getColor(R.color.white));
+		}
+
+		final Double remainingBill = totalBill;
 		remainingBalance.setText("Remaining balance: " + money.format(remainingBill));
 		AlertDialog.Builder builder = new AlertDialog.Builder(ViewCheck.this);
 		builder.setTitle(getString(R.string.app_dialog_title));
@@ -556,7 +594,7 @@ public class ViewCheck extends BaseActivity {
 		final TextView remainingBalance = (TextView) makePaymentView.findViewById(R.id.paymentRemaining);
 	
 
-		final Double remainingBill = totalBill - amountPaid;
+		final Double remainingBill = totalBill;
 		remainingBalance.setText("Remaining balance: " + money.format(remainingBill));
 		AlertDialog.Builder builder = new AlertDialog.Builder(ViewCheck.this);
 		builder.setTitle(getString(R.string.app_dialog_title));
@@ -657,5 +695,49 @@ public class ViewCheck extends BaseActivity {
 	}
 	
 	
+	private void setServiceChargeLayout(int aboveIdLeft, int aboveIdRight){
+		
+	}
+	
+	private void setDiscountLayout(int aboveIdLeft, int aboveIdRight){
+		
+	}
+	
+	
+	private void setAlreadyPaidLayout(int aboveIdLeft, int aboveIdRight){
+
+		RelativeLayout.LayoutParams nameparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+		nameparams.addRule(RelativeLayout.BELOW, aboveIdLeft);
+		nameparams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+		textAlreadyPaidName.setLayoutParams(nameparams);	
+		
+		
+		RelativeLayout.LayoutParams valueparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+		valueparams.addRule(RelativeLayout.BELOW, aboveIdRight);
+		valueparams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+		textAlreadyPaidValue.setLayoutParams(valueparams);
+		
+		
+		
+	}
+	
+	private void setAmountDueLayout(int aboveIdLeft, int aboveIdRight){
+
+		
+		RelativeLayout.LayoutParams nameparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+		nameparams.addRule(RelativeLayout.BELOW, aboveIdLeft);
+		nameparams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+		textAmountDueName.setLayoutParams(nameparams);	
+		
+		
+		RelativeLayout.LayoutParams valueparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+		valueparams.addRule(RelativeLayout.BELOW, aboveIdRight);
+		valueparams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+		textAmountDueValue.setLayoutParams(valueparams);
+		
+		
+		
+		
+	}
 	
 }

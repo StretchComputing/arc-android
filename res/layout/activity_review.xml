@@ -9,7 +9,7 @@
     tools:context=".Review" >
 
     <RatingBar
-        android:id="@+id/ratingBar1"
+        android:id="@+id/star_rating"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView1"
@@ -29,7 +29,7 @@
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/ratingBar1"
+        android:layout_below="@+id/star_rating"
         android:layout_centerHorizontal="true"
         android:text="@string/review_star_text"
         android:textAppearance="?android:attr/textAppearanceSmall"

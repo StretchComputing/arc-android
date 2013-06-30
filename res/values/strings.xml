@@ -44,7 +44,7 @@
     <string name="twentytwo_percent_text">22%</string>
     <string name="title_activity_confirm_payment">ConfirmPayment</string>
     <string name="confirm_pin_string">Please enter your PIN</string>
-    <string name="confirm_make_payment">Make Payment</string>
+    <string name="confirm_make_payment">Confirm Payment</string>
     <string name="confirm_total">Total:</string>
     <string name="confirm_payment">Payment:</string>
     <string name="title_activity_main">MainActivity</string>
@@ -54,5 +54,14 @@
     <string name="revew_skip_text">Skip</string>
     <string name="review_submit">Submit</string>
     <string name="review_hint">Additional Comments:</string>
+    <string name="title_activity_init">InitActivity</string>
+    <string name="init_continue_string">By continuing you agree to the:</string>
+    <string name="terms_string">Terms of Use</string>
+    <string name="privacy_string">Privacy Policy</string>
+    <string name="start_using_string">Start Using Dutch!</string>
+    <string name="welcome_string">Welcome to Dutch!</string>
+    <string name="step_one_text">1. Enter your check number.</string>
+    <string name="step_two_text">2. View the bill.</string>
+    <string name="step_three_text">3. Split the check!</string>
 
 </resources>

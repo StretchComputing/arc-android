@@ -321,9 +321,8 @@ public class Funds extends BaseActivity {
 	
 	public String encryptCardNumber(String cardNumber){	
 	
-		myPIN = "1302";
-		Security s = new Security("1302");
-        String encrypted = s.encrypt(cardNumber);
+		Security s = new Security();
+        String encrypted = s.encrypt(myPIN, cardNumber);
        
         Logger.d("ENCRYPTED: " + encrypted);
         

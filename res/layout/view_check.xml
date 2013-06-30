@@ -220,7 +220,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="18dp"
         android:minHeight="48dp"
-        android:minWidth="136dp"
+        android:minWidth="146dp"
         android:text="@string/invoicePayString" />
 
 </RelativeLayout>

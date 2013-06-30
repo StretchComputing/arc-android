@@ -101,8 +101,8 @@ public class ConfirmPayment extends BaseActivity {
 	private String decryptCreditCardNumber(String encryptedNumber){
 		
 		
-		Security s = new Security(myPinText.getText().toString());
-        String decrypted = s.decrypt(encryptedNumber);
+		Security s = new Security();
+        String decrypted = s.decrypt(myPinText.getText().toString(), encryptedNumber);
         
 		
 
@@ -143,7 +143,9 @@ public class ConfirmPayment extends BaseActivity {
 				if (getFinalSuccess()) {
 
 	
+					theBill.setPaymentId(getPaymentId());
 					Intent goReview = new Intent(getApplicationContext(), Review.class);
+					goReview.putExtra(Constants.INVOICE, theBill);
 					startActivity(goReview);
 					
 					

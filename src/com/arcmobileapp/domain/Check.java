@@ -7,6 +7,7 @@ public class Check implements Serializable {
 
 	private static final long serialVersionUID = 6406815055461255727L;
 	private int mId;
+	private int mPaymentId;
     private String mStatus;
     private String mNumber;
     private String mTableNumber;
@@ -43,6 +44,7 @@ public class Check implements Serializable {
     	setPayments(payments);
     	setServiceCharge(0.0);
     	setDiscount(0.0);
+    	setPaymentId(0);
     }
 
 	public int getId() {
@@ -52,6 +54,16 @@ public class Check implements Serializable {
 	public void setId(int id) {
 		this.mId = id;
 	}
+	
+	public int getPaymentId() {
+		return mPaymentId;
+	}
+
+	public void setPaymentId(int id) {
+		this.mPaymentId = id;
+	}
+	
+	
 
 	public String getStatus() {
 		return mStatus;

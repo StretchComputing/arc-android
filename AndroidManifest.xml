@@ -130,6 +130,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.arcmobileapp.BaseActivity" />
         </activity>
+        <activity
+            android:name="com.arcmobileapp.activities.InitActivity"
+            android:label="@string/title_activity_init" >
+        </activity>
     </application>
 
 </manifest>

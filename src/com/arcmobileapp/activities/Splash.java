@@ -10,6 +10,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
 import com.arcmobileapp.R;
+import com.arcmobileapp.utils.ArcPreferences;
+import com.arcmobileapp.utils.Keys;
 
 public class Splash extends Activity {
 	
@@ -33,8 +35,20 @@ public class Splash extends Activity {
 			}
 			
 			public void onAnimationEnd(Animation animation) {
+				
 				logo.setVisibility(View.GONE);
-				startActivity(new Intent(getApplicationContext(), Home.class));
+
+				ArcPreferences myPrefs = new ArcPreferences(getApplicationContext());
+				String token = myPrefs.getString(Keys.DEV_TOKEN);
+				if(token == null){
+					//Go to initPage
+					startActivity(new Intent(getApplicationContext(), InitActivity.class));
+
+				}else{
+					//Go Home
+					startActivity(new Intent(getApplicationContext(), Home.class));
+
+				}
 				overridePendingTransition(0, 0);
 				finish();
 			}

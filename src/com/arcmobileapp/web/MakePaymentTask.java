@@ -20,7 +20,8 @@ public class MakePaymentTask extends AsyncTask<Void, Void, Void> {
 	private Context mContext;
 	private String mResponseTicket;
 	private Boolean finalSuccess;
-	
+	private int mPaymentId;
+
 	public MakePaymentTask(String token, CreatePayment payment, Context context) {
 		super();
 		mToken = token;
@@ -30,6 +31,8 @@ public class MakePaymentTask extends AsyncTask<Void, Void, Void> {
 		mSuccess = false;
 		mResponseTicket = null;
 		finalSuccess = false;
+		mPaymentId = 0;
+
 	}
 	
 	@Override
@@ -103,6 +106,8 @@ public class MakePaymentTask extends AsyncTask<Void, Void, Void> {
 					return false;
 				}else{
 					finalSuccess = true;
+					mPaymentId = result.getInt(WebKeys.PAYMENT_ID);
+
 					return true;
 				}
 				
@@ -138,5 +143,9 @@ public class MakePaymentTask extends AsyncTask<Void, Void, Void> {
 	
 	public String getResponseTicket() {
 		return mResponseTicket;
+	}
+	
+	public int getPaymentId(){
+		return mPaymentId;
 	}
 }

@@ -13,6 +13,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONObject;
 
 import com.arcmobileapp.domain.CreatePayment;
+import com.arcmobileapp.domain.CreateReview;
 import com.arcmobileapp.utils.Logger;
 
 public class WebServices {
@@ -163,7 +164,7 @@ public class WebServices {
 			JSONObject json = new JSONObject();
 			json.put(WebKeys.INVOICE_AMOUNT, newPayment.getTotalAmount());
 			json.put(WebKeys.AMOUNT, newPayment.getPayingAmount());
-			//json.put(WebKeys.GRATUITY, newPayment.getGratuity());
+			json.put(WebKeys.GRATUITY, newPayment.getGratuity());
 			json.put(WebKeys.FUND_SOURCE_ACCOUNT, newPayment.getAccount());
 			json.put(WebKeys.MERCHANT_ID, newPayment.getMerchantId());
 			json.put(WebKeys.INVOICE_ID, newPayment.getInvoiceId());
@@ -208,4 +209,41 @@ public class WebServices {
 			return resp;
 		}
 	}
+	
+	public String createReview(String token, CreateReview newReview) {
+		String resp = "";
+		try {
+
+			String url = this.serverAddress + URLs.CREATE_REVIEW;
+			Logger.d("|arc-web-services|", "CREATE REVIEW URL  = " + url);
+			
+			JSONObject json = new JSONObject();
+			
+			json.put(WebKeys.INVOICE_ID, newReview.getInvoiceId());
+			json.put(WebKeys.CUSTOMER_ID, newReview.getCustomerId());
+			json.put(WebKeys.PAYMENT_ID, newReview.getPaymentId());
+			json.put(WebKeys.COMMENTS, newReview.getAdditionalComments());
+
+			json.put(WebKeys.DRINKS, newReview.getReviewRating());
+			json.put(WebKeys.FOOD, newReview.getReviewRating());
+			json.put(WebKeys.PRICE, newReview.getReviewRating());
+			json.put(WebKeys.SERVICE, newReview.getReviewRating());
+			json.put(WebKeys.FOOD, newReview.getReviewRating());
+
+		
+
+
+			
+			Logger.d("CREATE PAYMENT JSON =\n\n" + json.toString());
+			
+			resp = this.getResponse(url, json.toString(), token);
+			Logger.d("|arc-web-services|", "CREATE PAYMENT RESP = " + resp);
+			return resp;
+		} catch (Exception e) {
+			setError(e.getMessage());
+			return resp;
+		}
+	}
+	
+	
 }

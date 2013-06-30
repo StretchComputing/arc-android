@@ -75,4 +75,12 @@ public final class WebKeys {
 	
 	public static final String TICKET_ID = "TicketId";
 	
+	//Review
+	public static final String COMMENTS = "Comments";
+	public static final String DRINKS = "Drinks";
+	public static final String PRICE = "Price";
+	public static final String FOOD = "Food";
+	public static final String SERVICE = "Service";
+	public static final String MOOD = "Mood";
+
 }

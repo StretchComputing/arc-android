@@ -17,4 +17,7 @@ public final class URLs {
 	public static final String CREATE_PAYMENT = "/rest/v1/payments/create";
 	public static final String CONFIRM_PAYMENT = "/rest/v1/payments/confirm";
 	
+	public static final String CREATE_REVIEW = "/rest/v1/reviews/new";
+
+	
 }

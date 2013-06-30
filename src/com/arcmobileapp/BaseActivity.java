@@ -360,9 +360,9 @@ public class BaseActivity extends SlidingFragmentActivity {
 			showOkDialog("What is Arc?", "simply puy, Arc speeds up the checkout process.\n\n" + "1.tell us which restaurant you're at\n" + "2.input your check number\n" + "3.split and pay your portion\n\n\n" + "we'll send the payment straight from your phone to the point of sale\n\n\n" + "wasn't that easy?\n", null);
 			break;
 
-		case R.id.changeServer:
-			showChangeServerDialog();
-			break;
+		//case R.id.changeServer:
+		//	showChangeServerDialog();
+		//	break;
 		}
 		return super.onOptionsItemSelected(item);
 	}

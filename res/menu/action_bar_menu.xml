@@ -9,9 +9,6 @@
             <item
                 android:id="@+id/whatIsArc"
                 android:title="What is Arc?"/>
-            <item
-                android:id="@+id/changeServer"
-                android:title="Change Server"/>
         </menu>
     </item>
 
