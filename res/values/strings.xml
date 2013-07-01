@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Arc</string>
+    <string name="app_name">dutch</string>
     <string name="app_dialog_title">Arc Mobile</string>
     <string name="version">2</string>
     <string name="action_settings">Settings</string>

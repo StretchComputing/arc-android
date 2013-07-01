@@ -3,6 +3,7 @@ package com.arcmobileapp.activities;
 import java.util.UUID;
 import java.util.ArrayList;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -42,6 +43,7 @@ public class Home extends BaseActivity {
 	private Button btnExplore;
 	private HorizontalScrollView scrollView;
 	private ArrayList<MerchantObject> merchants;
+	private ProgressDialog loadingDialog;
 
 
 	private LinearLayout mCarouselContainer;
@@ -74,6 +76,13 @@ public class Home extends BaseActivity {
 		btnExplore = (Button) findViewById(R.id.explore_button);
 		btnPayBill.setVisibility(View.VISIBLE);
 		btnExplore.setVisibility(View.GONE);
+		
+		loadingDialog = new ProgressDialog(Home.this);
+		loadingDialog.setTitle("Finding Nearby Merchants");
+		loadingDialog.setMessage("Please Wait...");
+		loadingDialog.setCancelable(false);
+		loadingDialog.show();
+		
 	}
 	
 	protected void getTokensFromWeb() {
@@ -116,6 +125,7 @@ public class Home extends BaseActivity {
 				
 				merchants = getMerchants();
 
+				loadingDialog.hide();
 				if (merchants.size() > 0){
 					initCarousel();
 				}
@@ -129,7 +139,7 @@ public class Home extends BaseActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		getTokensFromWeb();
+		//getTokensFromWeb();
 		getMerchantsFromWeb();
 	}
 

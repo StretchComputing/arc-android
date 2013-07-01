@@ -31,7 +31,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/text_enter_pin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/text_total_payment"
@@ -46,8 +46,8 @@
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/textView1"
-        android:layout_below="@+id/textView1"
+        android:layout_alignRight="@+id/text_enter_pin"
+        android:layout_below="@+id/text_enter_pin"
         android:layout_marginTop="26dp"
         android:gravity="right"
         android:text="@string/additional_tip_my_tip"

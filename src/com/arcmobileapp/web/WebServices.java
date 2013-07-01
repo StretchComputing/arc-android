@@ -134,7 +134,7 @@ public class WebServices {
 		}
 	}
 	
-	public String getCheck(String token, String merchantId, String invoiceNumber) {
+	public String getCheck(String token, String merchantId, String invoiceNumber, String requestId) {
 		String resp = "";
 		try {
 
@@ -144,6 +144,15 @@ public class WebServices {
 			JSONObject json = new JSONObject();
 			json.put(WebKeys.MERCHANT_ID, merchantId);
 			json.put(WebKeys.INVOICE_NUMBER, invoiceNumber);
+			json.put(WebKeys.POS, true);
+			
+			if (requestId.length() > 0){
+				json.put(WebKeys.REQUEST_ID, requestId);
+				json.put(WebKeys.PROCESS, false);
+			}else{
+				json.put(WebKeys.PROCESS, true);
+
+			}
 			
 			resp = this.getResponse(url, json.toString(), token);
 			Logger.d("|arc-web-services|", "GET CHECK RESP = " + resp);

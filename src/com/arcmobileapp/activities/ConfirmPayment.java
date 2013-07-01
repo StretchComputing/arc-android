@@ -34,8 +34,9 @@ public class ConfirmPayment extends BaseActivity {
     private TextView myTotalPayment;
     private TextView myPaymentUsed;
 	private ProgressDialog loadingDialog;
-
+	private boolean justAddedCard;
     private EditText myPinText;
+    private TextView textEnterPin;
    
     
 	@Override
@@ -45,10 +46,12 @@ public class ConfirmPayment extends BaseActivity {
 		
 		theBill =  (Check) getIntent().getSerializableExtra(Constants.INVOICE);
 		selectedCard =  (Cards) getIntent().getSerializableExtra(Constants.SELECTED_CARD);
-
+		justAddedCard = getIntent().getBooleanExtra(Constants.JUST_ADD_CARD, false);
 		
 		myTotalPayment = (TextView) findViewById(R.id.my_total_payment);
 		myPaymentUsed = (TextView) findViewById(R.id.my_payment_used);
+		textEnterPin = (TextView) findViewById(R.id.text_enter_pin);
+
 		myPinText = (EditText) findViewById(R.id.confirm_pin_text);
 
 		
@@ -57,6 +60,10 @@ public class ConfirmPayment extends BaseActivity {
 		loadingDialog.setMessage("Please Wait...");
 		loadingDialog.setCancelable(false);
 		
+		if (justAddedCard){
+			textEnterPin.setVisibility(View.GONE);
+			myPinText.setVisibility(View.GONE);
+		}
 
 		setLabels();
 
@@ -73,18 +80,25 @@ public class ConfirmPayment extends BaseActivity {
 	public void onMakePaymentClicked(View view) {
 		
 		String cardNumber = "";
-		try{
-			cardNumber = decryptCreditCardNumber(selectedCard.getNumber());
-
-		}catch(Exception e){
+		
+		if (justAddedCard){
 			
+			cardNumber = selectedCard.getNumber();
+		}else{
+			try{
+				cardNumber = decryptCreditCardNumber(selectedCard.getNumber());
+
+			}catch(Exception e){
+				
+			}
 		}
+		
 		
 		if (cardNumber.length() > 0){
 			
 			makePayment();
 		}else{
-			toastShort("Invali PIN, please try again");
+			toastShort("Invalid PIN, please try again");
 		}
 		
 		

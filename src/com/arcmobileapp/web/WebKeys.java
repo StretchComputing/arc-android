@@ -9,6 +9,12 @@ public final class WebKeys {
 	
 	public static final String MERCHANT_ID = "MerchantId";
 	public static final String INVOICE_NUMBER = "Number";
+	public static final String REQUEST_ID = "RequestId";
+	public static final String POS = "POS";
+	public static final String PROCESS = "Process";
+
+
+
 	public static final String GET_MERCHANT_ID = "Id";
 	
 	public static final String SUCCESS = "Success";

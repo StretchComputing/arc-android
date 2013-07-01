@@ -327,15 +327,12 @@ public class Funds extends BaseActivity {
         Logger.d("ENCRYPTED: " + encrypted);
         
         return encrypted;
-        
-        
-        
+                
 	}
 	
 	
 	private void showPinDialog() {
 		pinDialog = null;
-
 		
 		LayoutInflater factory = LayoutInflater.from(this);
 		final View makePaymentView = factory.inflate(R.layout.payment_dialog, null);
@@ -347,6 +344,16 @@ public class Funds extends BaseActivity {
 		input.setFilters(new InputFilter[] { new CurrencyFilter() });
 		TextView remainingBalance = (TextView) makePaymentView.findViewById(R.id.paymentRemaining);
 		remainingBalance.setVisibility(View.GONE);
+		
+		
+        int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+		
+		//Set colors
+		if (currentapiVersion <= android.os.Build.VERSION_CODES.GINGERBREAD_MR1){
+
+			paymentTitle.setTextColor(getResources().getColor(R.color.white));
+		}
+		
 		
 		
 		AlertDialog.Builder builder = new AlertDialog.Builder(Funds.this);

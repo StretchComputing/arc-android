@@ -26,6 +26,7 @@ public class GetCheckTask extends AsyncTask<Void, Void, Void> {
 	private Boolean mSuccess;
 	private Context mContext;
 	private Check theBill;
+	private String mRequestId;
 	
 	public GetCheckTask(String token, String merchantId, String invoiceNumber, Context context) {
 		super();
@@ -57,20 +58,84 @@ public class GetCheckTask extends AsyncTask<Void, Void, Void> {
 	
 	protected boolean performTask() {
 		WebServices webService = new WebServices(new ArcPreferences(mContext).getServer());
-		mResponse = webService.getCheck(mToken, mMerchantId, mInvoiceNumber);
-		// TODO - check if the the invoice is ready or if it needs called again
-//		try {
-//			JSONObject json =  new JSONObject(mResponse);
-//			mSuccess = json.getBoolean(WebKeys.SUCCESS);
-//			if(mSuccess) {
-//				
-//				parseJSON(json);
-//			}
+		mResponse = webService.getCheck(mToken, mMerchantId, mInvoiceNumber, "");
+		Logger.d("FINAL GET CHECK RESPONSE: " + mResponse);
+		
+		
+		try {
+
+			JSONObject json =  new JSONObject(mResponse);
+
+			mSuccess = json.getBoolean(WebKeys.SUCCESS);
+			if(mSuccess) {
+				mRequestId = json.getJSONObject(WebKeys.RESULTS).getString(WebKeys.REQUEST_ID);
+
+				Logger.d("FOUND A REQUEST ID: " + mRequestId);
+				
+				//4, 2, 2, 3, 4, 5, 6, 7, 8, 9, and 10
+				if(!checkInvoiceConfirmation(2000)) {
+					if(!checkInvoiceConfirmation(2000)) {
+						if(!checkInvoiceConfirmation(3000)) {
+							if(!checkInvoiceConfirmation(3000)) {
+								if(!checkInvoiceConfirmation(3000)) {
+									if(!checkInvoiceConfirmation(4000)) {
+										if(!checkInvoiceConfirmation(5000)) {
+											if(!checkInvoiceConfirmation(6000)) {
+												return false;
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+				// if we successfulyl got a response ticket, we need to query with the confirm 
+				// call to know if it was successful or not
+			}
+		} catch (JSONException exc) {
+			Logger.e("Error creating payment, JSON Exception: " + exc.getMessage());
+		}
 		
 		
 		
 		return true;
 	}
+	
+	
+	protected boolean checkInvoiceConfirmation(int sleep) {
+		try{
+			Thread.sleep(sleep);
+			WebServices webService = new WebServices(new ArcPreferences(mContext).getServer());
+			mResponse = webService.getCheck(mToken, mMerchantId, mInvoiceNumber, mRequestId);
+			
+			Logger.d("INVOICE SECOND RESPONSE " + mResponse);
+			
+			try {
+				JSONObject json =  new JSONObject(mResponse);
+				JSONObject result = json.getJSONObject(WebKeys.RESULTS);
+				mSuccess = json.getBoolean(WebKeys.SUCCESS);
+
+				if (mSuccess){
+					String invoiceId = result.getString(WebKeys.ID);
+					
+					if (invoiceId.length() > 0){
+						return true;
+					}else{
+						return false;
+					}
+				}else{
+					return false;
+				}
+				
+			} catch (JSONException exc) {
+				return false;
+			}
+			
+		}catch (Exception exc){}
+		return false;
+	}
+	
 	
 	protected void performPostExec() {
 		

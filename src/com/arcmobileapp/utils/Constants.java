@@ -13,6 +13,8 @@ public final class Constants {
 	public static final String CHECK_NUM = "CHECK_NUM";
 	public static final String INVOICE = "INVOICE";
 	public static final String SELECTED_CARD = "SELECTED_CARD";
+	public static final String JUST_ADD_CARD = "JUST_ADD_CARD";
+
 
 
 	

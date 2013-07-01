@@ -58,6 +58,7 @@ public class AdditionalTip extends BaseActivity {
     private RadioGroup radiogroup1;
     private boolean didChooseRadio;
     private ArrayList<Cards> cards;
+    private boolean justAddedCard;
 	
     @Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -248,10 +249,11 @@ public class AdditionalTip extends BaseActivity {
 					resultDisplayStr += "Zip: " + scanResult.zip + "\n";
 				}
 				
-				toastShort("Scan Successful: " + scanResult.getFormattedCardNumber());
+				toastShort("Scan Successful");
 				
 				Cards newCard = new Cards( scanResult.getFormattedCardNumber(), String.valueOf(scanResult.expiryMonth), String.valueOf(scanResult.expiryYear), scanResult.zip, scanResult.cvv, "****" + scanResult.getFormattedCardNumber().substring(scanResult.getFormattedCardNumber().length() - 4), scanResult.getCardType().name(), null);
 				selectedCard = newCard;
+				justAddedCard = true;
 				goConfirmPayment();
 				
 			} else {
@@ -327,6 +329,7 @@ public class AdditionalTip extends BaseActivity {
 		Intent confirmPayment = new Intent(getApplicationContext(), ConfirmPayment.class);
 		confirmPayment.putExtra(Constants.SELECTED_CARD, selectedCard);
 		confirmPayment.putExtra(Constants.INVOICE, theBill);
+		confirmPayment.putExtra(Constants.JUST_ADD_CARD, justAddedCard);
 
 		startActivity(confirmPayment);
 	}
