@@ -82,7 +82,7 @@
         android:text="@string/start_using_string" />
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/item_you_pay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView2"

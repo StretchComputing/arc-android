@@ -71,5 +71,8 @@
     <string name="dutch_email">support@arcmobileapp.com</string>
     <string name="call_string">Call Now</string>
     <string name="dutch_phone">(708) 320-9272</string>
+    <string name="receipt_description">Receipt Image</string>
+    <string name="funds_secure_text">Dutch is 100% secure.  Your card information is encrypted with your personal PIN, and can only be accessed for purchases with your approval.</string>
+    
 
 </resources>

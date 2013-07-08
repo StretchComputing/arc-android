@@ -14,6 +14,7 @@ public class LineItem implements Serializable {
     private String mDescription;
     private Double mValue;
     private Boolean isSelected;
+    private Double mMyPayment;
     
     public LineItem(int id, String posKey, Double amount, Boolean display, String description, Double value) {
     	setId(id);
@@ -22,6 +23,7 @@ public class LineItem implements Serializable {
     	setDisplay(display);
     	setDescription(description);
     	setValue(value);
+    	setMyPayment(0.0);
     }
     
     public int getId() {
@@ -64,8 +66,12 @@ public class LineItem implements Serializable {
 		this.isSelected = selected;
 	}
 	
-	
-	
+	public void setMyPayment(Double myPayment){
+		this.mMyPayment = myPayment;
+	}
+	public double getMyPayment(){
+		return mMyPayment;
+	}
 
 	public String getDescription() {
 		return mDescription;

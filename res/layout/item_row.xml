@@ -13,6 +13,17 @@
           android:background="@color/blue"
           android:focusableInTouchMode="false"
           android:src="@drawable/blue_button" />
+      
+       <ImageView
+           android:id="@+id/back_image_view_two"
+           android:layout_width="fill_parent"
+           android:layout_height="15dp"
+           android:layout_below="@+id/back_image_view"
+           android:layout_marginLeft="7dp"
+           android:layout_marginRight="7dp"
+           android:background="@color/blue"
+           android:focusableInTouchMode="false"
+           android:src="@drawable/blue_button" />
         
     <TextView
         android:id="@+id/item_price"
@@ -56,6 +67,14 @@
         
         android:textSize="15sp" />
 
-
+    <TextView
+        android:id="@+id/item_you_pay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/item_name"
+        android:layout_centerHorizontal="true"
+        android:text="Medium Text"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="13sp" />
 
 </RelativeLayout>

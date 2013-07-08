@@ -9,8 +9,10 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.text.InputFilter;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +23,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
@@ -66,6 +69,8 @@ public class ViewCheck extends BaseActivity {
 	private Button splitDollarButton;
 	private Button splitPercentButton;
 	private Double taxPercent;
+	
+	private int currentSelectedIndex;
 
 
 	private ArrayAdapter<LineItem> adapter;
@@ -81,6 +86,7 @@ public class ViewCheck extends BaseActivity {
 	private Check theBill;
 	DecimalFormat money = new DecimalFormat("$#.00");
 	NumberFormat quantity = new DecimalFormat("#");
+	ListView myListView;
 	
 	private Button payBillButton;
 
@@ -117,6 +123,7 @@ public class ViewCheck extends BaseActivity {
 		textAlreadyPaidName = (TextView) findViewById(R.id.text_already_paid_name);
 		textAlreadyPaidValue = (TextView) findViewById(R.id.text_already_paid_value);
 
+		myListView = (ListView) findViewById(R.id.invoiceItemList);
 		layoutBottom = (RelativeLayout) findViewById(R.id.invoice_bottom_layout);
 		//layoutBottom = (RelativeLayout) findViewById(R.id.l
 
@@ -134,6 +141,9 @@ public class ViewCheck extends BaseActivity {
 		splitDollarButton = (Button) findViewById(R.id.splitDollarButton);
 		splitDollarButton.setOnClickListener(new Button.OnClickListener() {
 		    public void onClick(View v) {
+		    
+				
+				
 		    	showPayAmountDialog();
 		    }
 		});
@@ -277,6 +287,32 @@ public class ViewCheck extends BaseActivity {
 
 		ArrayList<Payments> payments = theBill.getPayments();
 	
+		
+		//set the size of the view
+		int count = theBill.getItems().size();
+	
+		
+		if (count > 5){
+			
+			RelativeLayout.LayoutParams newparams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+			newparams.setMargins(0, 5, 0, 0);
+			newparams.addRule(RelativeLayout.ABOVE, layoutBottom.getId());
+			newparams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+			myListView.setLayoutParams(newparams);
+			
+			
+			RelativeLayout.LayoutParams newparams1 = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+			newparams1.setMargins(0, 10, 0, 20);
+			newparams1.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+			newparams1.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+
+			newparams1.addRule(RelativeLayout.ABOVE, myTotalTextView.getId());
+			layoutBottom.setLayoutParams(newparams1);
+			
+			
+		}
+
+		
 
 	}
 	
@@ -288,6 +324,8 @@ public class ViewCheck extends BaseActivity {
 	}
 	
 	private void registerClickCallback() {
+		
+		
 		list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View viewClicked,
@@ -299,9 +337,17 @@ public class ViewCheck extends BaseActivity {
 					
 					clickedItem.setIsSelected(false);
 
+					
 					if (areAnyRowsSelected()){
 						
-						myPayment -=  clickedItem.getAmount() * (clickedItem.getValue() + clickedItem.getValue()*taxPercent);
+						if (clickedItem.getMyPayment() > 0){
+							myPayment -= (clickedItem.getMyPayment() + clickedItem.getMyPayment()*taxPercent);
+
+						}else{
+							myPayment -=  clickedItem.getAmount() * (clickedItem.getValue() + clickedItem.getValue()*taxPercent);
+
+						}
+						
 						showMyPayment();
 
 						
@@ -310,26 +356,65 @@ public class ViewCheck extends BaseActivity {
 
 					}
 					
+					clickedItem.setMyPayment(0.0);
+					adapter.notifyDataSetChanged();
+
 				}else{
 					
-					if (areAnyRowsSelected()){
-
-						myPayment += clickedItem.getAmount() * (clickedItem.getValue() + clickedItem.getValue()*taxPercent);
-						
-
-						
-						
+					if (clickedItem.getAmount() > 1){
+						currentSelectedIndex = position;
+						showHowManyDialog();
 					}else{
-						myPayment = clickedItem.getAmount() * (clickedItem.getValue() + clickedItem.getValue()*taxPercent);
+						
+						if (areAnyRowsSelected()){
+
+							myPayment += clickedItem.getValue() + clickedItem.getValue()*taxPercent;							
+							
+						}else{
+							myPayment = clickedItem.getValue() + clickedItem.getValue()*taxPercent;
+						}
+						
+						showMyPayment();
+						clickedItem.setIsSelected(true);
+						adapter.notifyDataSetChanged();
+
 					}
 					
-					showMyPayment();
-					clickedItem.setIsSelected(true);
 
 				}
 				
-				adapter.notifyDataSetChanged();
 			
+			}
+		});
+		
+		//Long click on the cell
+		list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View viewClicked,
+					int position, long id) {
+				
+				LineItem clickedItem = theBill.getItems().get(position);
+				
+				if (clickedItem.getIsSelected()){
+					
+				
+
+				}else{
+					
+					currentSelectedIndex = position;
+
+					if (clickedItem.getAmount() > 1){
+						showHowManyDialog();
+					}else{
+				
+						showHowMuchDialog();
+					}
+					
+
+				}
+				
+			
+				return true;
 			}
 		});
 	}
@@ -361,6 +446,7 @@ public class ViewCheck extends BaseActivity {
 	}
 	
 	private void showMyPayment(){
+		
 		
 		myTotalTextView.setText(String.format("My Total: $%.2f", myPayment));
 
@@ -394,14 +480,48 @@ public class ViewCheck extends BaseActivity {
 			TextView priceText = (TextView) itemView.findViewById(R.id.item_price);
 			priceText.setText(String.format("%.2f", currentItem.getValue()));
 			
-			ImageView backImageView = (ImageView) itemView.findViewById(R.id.back_image_view);
+			// You Pay:
+			TextView youPay = (TextView) itemView.findViewById(R.id.item_you_pay);
+			//priceText.setText(String.format("%.2f", currentItem.getValue()));
 			
+			Boolean isLarge = false;
+			if (currentItem.getIsSelected()){
+				
+				if (currentItem.getMyPayment() > 0.0){
+					youPay.setVisibility(View.VISIBLE);
+					youPay.setText("You Pay: $" + String.format("%.2f", currentItem.getMyPayment()));
+					isLarge = true;
+
+				}else{
+					youPay.setVisibility(View.GONE);
+				}
+				
+			}else{
+				youPay.setVisibility(View.GONE);
+
+			}
+						
+						
+			ImageView backImageView = (ImageView) itemView.findViewById(R.id.back_image_view);
+			ImageView backImageView2 = (ImageView) itemView.findViewById(R.id.back_image_view_two);
+
+			if (isLarge){
+				backImageView2.setVisibility(View.VISIBLE);
+			}else{
+				backImageView2.setVisibility(View.GONE);
+
+			}
+			
+			backImageView.getLayoutParams().height = 52;
+
 			if (currentItem.getIsSelected()){
 				backImageView.setVisibility(View.VISIBLE);
 
 				amountText.setTextColor(Color.WHITE);
 				nameText.setTextColor(Color.WHITE);
 				priceText.setTextColor(Color.WHITE);
+				youPay.setTextColor(Color.WHITE);
+
 
 			}else{
 				
@@ -684,6 +804,247 @@ public class ViewCheck extends BaseActivity {
 							
 						}
 						payDialog.dismiss();
+					}
+				});
+			}
+		});
+		payDialog.show();
+	}
+	
+	
+	private void showHowManyDialog() {
+		payDialog = null;
+		
+		LayoutInflater factory = LayoutInflater.from(this);
+		final View makePaymentView = factory.inflate(R.layout.payment_dialog, null);
+		final EditText input = (EditText) makePaymentView.findViewById(R.id.paymentInput);
+		input.setFocusable(true);
+		input.setFocusableInTouchMode(true);
+		
+		TextView paymentTitle = (TextView) makePaymentView.findViewById(R.id.paymentTitle);
+		paymentTitle.setText("How many would you like to pay for?");
+		input.setGravity(Gravity.CENTER | Gravity.BOTTOM);
+
+		input.setFilters(new InputFilter[] { new CurrencyFilter() });
+		final TextView remainingBalance = (TextView) makePaymentView.findViewById(R.id.paymentRemaining);
+	
+
+		LineItem clickedItem = theBill.getItems().get(currentSelectedIndex);
+
+		String thisValue = String.format("%.2f", clickedItem.getValue()/clickedItem.getAmount());
+		
+		remainingBalance.setText(clickedItem.getAmount() + " " + clickedItem.getDescription() + ", $" + thisValue + " each");
+		
+        int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+	
+		
+		//Set colors
+		if (currentapiVersion <= android.os.Build.VERSION_CODES.GINGERBREAD_MR1){
+
+			paymentTitle.setTextColor(getResources().getColor(R.color.white));
+			remainingBalance.setTextColor(getResources().getColor(R.color.white));
+		}
+		
+		
+		AlertDialog.Builder builder = new AlertDialog.Builder(ViewCheck.this);
+		builder.setTitle(getString(R.string.app_dialog_title));
+		builder.setView(makePaymentView);
+		
+		
+		
+		
+		//builder.setIcon(R.drawable.logo);
+		builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+
+			}
+		});
+		builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+
+			}
+		});
+		builder.setOnCancelListener(new OnCancelListener() {
+
+			@Override
+			public void onCancel(DialogInterface dialog) {
+			}
+		});
+		payDialog = builder.create();
+		
+		
+		payDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+		
+		
+		payDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+
+			@Override
+			public void onShow(DialogInterface dialog) {
+
+				Button b = payDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+				b.setOnClickListener(new View.OnClickListener() {
+
+					@Override
+					public void onClick(View view) {
+						String paymentAmount = input.getText().toString();
+						Double amountPayingFor = Double.parseDouble(paymentAmount);
+						
+						LineItem clickedItem = theBill.getItems().get(currentSelectedIndex);
+						
+						if (amountPayingFor > clickedItem.getAmount()){
+							toastShort("You cannot pay for more items than are on the bill, please enter a smaller number");
+						}else{
+							Double pricePerItem = clickedItem.getValue()/clickedItem.getAmount();
+							
+							Double amountToPay = amountPayingFor * pricePerItem;
+							
+							//**TODO change the TOTAL AMOUNT based on this click
+							
+							if (areAnyRowsSelected()){
+
+								myPayment += amountToPay + amountToPay*taxPercent;								
+								
+							}else{
+								myPayment = amountToPay + amountToPay*taxPercent;								
+							}
+							showMyPayment();
+
+							
+							
+							clickedItem.setIsSelected(true);
+							clickedItem.setMyPayment(amountToPay);
+							adapter.notifyDataSetChanged();
+
+							payDialog.dismiss();
+
+						}
+
+						
+					}
+				});
+			}
+		});
+		payDialog.show();
+	}
+	
+	
+	
+	private void showHowMuchDialog() {
+		payDialog = null;
+		
+		LayoutInflater factory = LayoutInflater.from(this);
+		final View makePaymentView = factory.inflate(R.layout.payment_dialog, null);
+		final EditText input = (EditText) makePaymentView.findViewById(R.id.paymentInput);
+		input.setFocusable(true);
+		input.setFocusableInTouchMode(true);
+		
+		TextView paymentTitle = (TextView) makePaymentView.findViewById(R.id.paymentTitle);
+		paymentTitle.setText("How many people are splitting this item?");
+		input.setGravity(Gravity.CENTER | Gravity.BOTTOM);
+
+		input.setFilters(new InputFilter[] { new CurrencyFilter() });
+		final TextView remainingBalance = (TextView) makePaymentView.findViewById(R.id.paymentRemaining);
+	
+
+		LineItem clickedItem = theBill.getItems().get(currentSelectedIndex);
+
+		String thisValue = String.format("%.2f", clickedItem.getValue()/clickedItem.getAmount());
+		
+		remainingBalance.setText(clickedItem.getDescription() + ": $" + thisValue);
+		
+        int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+	
+		
+		//Set colors
+		if (currentapiVersion <= android.os.Build.VERSION_CODES.GINGERBREAD_MR1){
+
+			paymentTitle.setTextColor(getResources().getColor(R.color.white));
+			remainingBalance.setTextColor(getResources().getColor(R.color.white));
+		}
+		
+		
+		AlertDialog.Builder builder = new AlertDialog.Builder(ViewCheck.this);
+		builder.setTitle(getString(R.string.app_dialog_title));
+		builder.setView(makePaymentView);
+		
+		
+		
+		
+		//builder.setIcon(R.drawable.logo);
+		builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+
+			}
+		});
+		builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+
+			}
+		});
+		builder.setOnCancelListener(new OnCancelListener() {
+
+			@Override
+			public void onCancel(DialogInterface dialog) {
+			}
+		});
+		payDialog = builder.create();
+		
+		
+		payDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+		
+		
+		payDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+
+			@Override
+			public void onShow(DialogInterface dialog) {
+
+				Button b = payDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+				b.setOnClickListener(new View.OnClickListener() {
+
+					@Override
+					public void onClick(View view) {
+						String paymentAmount = input.getText().toString();
+						Double numberPeopleSplitting = Double.parseDouble(paymentAmount);
+						
+						LineItem clickedItem = theBill.getItems().get(currentSelectedIndex);
+						
+						if (numberPeopleSplitting <= 1){
+							toastShort("You must enter a number greater than 1.");
+						}else{
+
+							
+							Double amountToPay = clickedItem.getValue() / numberPeopleSplitting;
+							
+							//**TODO change the TOTAL AMOUNT based on this click
+							
+							if (areAnyRowsSelected()){
+
+								myPayment += amountToPay + amountToPay*taxPercent;								
+								
+							}else{
+								myPayment = amountToPay + amountToPay*taxPercent;								
+							}
+							showMyPayment();
+
+							
+							
+							clickedItem.setIsSelected(true);
+							clickedItem.setMyPayment(amountToPay);
+							adapter.notifyDataSetChanged();
+
+							payDialog.dismiss();
+
+						}
+
+						
 					}
 				});
 			}

@@ -68,23 +68,23 @@ public class Funds extends BaseActivity {
 		theView = (LinearLayout) findViewById(R.id.funds_layout);
 		theView.setAnimation(AnimationUtils.loadAnimation(this, R.anim.login_fade_in));
 		storedCardsView = (LinearLayout) findViewById(R.id.stored_cards_layout);
-		addCardSuccess = (TextView) findViewById(R.id.add_card_success);
-		addCardSuccess.setText(Utils.convertModernPicType(ModernPicTypes.MoneyBag));
-		addCardSuccess.setTextSize(220);
-		addCardSuccess.setTypeface(ArcMobileApp.getModernPicsTypeface());
-		addCardSuccessMsg = (TextView) findViewById(R.id.add_card_success_msg);
-		addCardSuccessLock = (TextView) findViewById(R.id.add_card_success_lock);
-		addCardSuccessLock.setText(Utils.convertModernPicType(ModernPicTypes.Unlock) + " " + Utils.convertModernPicType(ModernPicTypes.Lock));
-		addCardSuccessLock.setTextSize(100);
-		addCardSuccessLock.setTypeface(ArcMobileApp.getModernPicsTypeface());
-		addCardSuccessLock.setOnClickListener(new OnClickListener() {
+		// = (TextView) findViewById(R.id.add_card_success);
+		//addCardSuccess.setText(Utils.convertModernPicType(ModernPicTypes.MoneyBag));
+		//addCardSuccess.setTextSize(220);
+		//addCardSuccess.setTypeface(ArcMobileApp.getModernPicsTypeface());
+		//addCardSuccessMsg = (TextView) findViewById(R.id.add_card_success_msg);
+		//addCardSuccessLock = (TextView) findViewById(R.id.add_card_success_lock);
+		//addCardSuccessLock.setText(Utils.convertModernPicType(ModernPicTypes.Unlock) + " " + Utils.convertModernPicType(ModernPicTypes.Lock));
+		//addCardSuccessLock.setTextSize(100);
+		//addCardSuccessLock.setTypeface(ArcMobileApp.getModernPicsTypeface());
+		//addCardSuccessLock.setOnClickListener(new OnClickListener() {
 			
-			@Override
-			public void onClick(View v) {
-				lockCard();
-			}
-		});
-		hideSuccessMessage();
+			//@Override
+			//public void onClick(View v) {
+				//lockCard();
+			//}
+		//});
+		//hideSuccessMessage();
 		initStoredCards();
 	}
 	
@@ -169,16 +169,20 @@ public class Funds extends BaseActivity {
 	}
 	
 	private void hideSuccessMessage() {
+		/*
 		addCardSuccess.setVisibility(View.GONE);
 		addCardSuccessMsg.setVisibility(View.GONE);
 		addCardSuccessLock.setVisibility(View.GONE);
+		*/
 	}
 	
 	private void showSuccessMessage(String message) {
+		/*
 		addCardSuccess.setVisibility(View.VISIBLE);
 		addCardSuccessMsg.setText(message);
 		addCardSuccessMsg.setVisibility(View.VISIBLE);
 		addCardSuccessLock.setVisibility(View.VISIBLE);
+		*/
 	}
 	
 	@Override
