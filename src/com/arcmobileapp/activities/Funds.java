@@ -16,9 +16,11 @@ import android.text.InputFilter;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -321,12 +323,21 @@ public class Funds extends BaseActivity {
 	
 	public String encryptCardNumber(String cardNumber){	
 	
-		Security s = new Security();
-        String encrypted = s.encrypt(myPIN, cardNumber);
-       
-        Logger.d("ENCRYPTED: " + encrypted);
-        
-        return encrypted;
+		try{
+			Security s = new Security();
+			
+	        //String encrypted = s.encrypt(myPIN, cardNumber);
+	        String encrypted = s.encryptBlowfish(cardNumber, myPIN);
+
+	        Logger.d("Encrypted: " + encrypted);
+	        
+	        return encrypted;
+		}catch (Exception e){
+			
+	        Logger.d("EXCEPTION: " + e);
+
+			return "";
+		}
                 
 	}
 	
@@ -337,6 +348,9 @@ public class Funds extends BaseActivity {
 		LayoutInflater factory = LayoutInflater.from(this);
 		final View makePaymentView = factory.inflate(R.layout.payment_dialog, null);
 		final EditText input = (EditText) makePaymentView.findViewById(R.id.paymentInput);
+		
+		
+		
 		TextView paymentTitle = (TextView) makePaymentView.findViewById(R.id.paymentTitle);
 		paymentTitle.setText("Please create a PIN");
 		input.setGravity(Gravity.CENTER | Gravity.BOTTOM);
@@ -376,6 +390,9 @@ public class Funds extends BaseActivity {
 			}
 		});
 		pinDialog = builder.create();
+		
+		pinDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+
 		pinDialog.setOnShowListener(new DialogInterface.OnShowListener() {
 
 			@Override
@@ -386,14 +403,22 @@ public class Funds extends BaseActivity {
 
 					@Override
 					public void onClick(View view) {
-						myPIN = input.getText().toString();
-						pinDialog.dismiss();
-						Funds.this.refreshList();
+						
+						if (input.getText().toString().length() < 4){
+							toastShort("PIN must be at least 4 digits");
+						}else{
+							myPIN = input.getText().toString();
+							pinDialog.dismiss();
+							Funds.this.refreshList();
+						}
+					
+						
 					}
 				});
 			}
 		});
 		pinDialog.show();
+		
 	}
 	
 	public void refreshList(){

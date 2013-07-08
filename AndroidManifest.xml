@@ -16,6 +16,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <!-- Camera Card.io features - recommended -->
     <uses-feature
@@ -133,6 +134,10 @@
         <activity
             android:name="com.arcmobileapp.activities.InitActivity"
             android:label="@string/title_activity_init" >
+        </activity>
+        <activity
+            android:name="com.arcmobileapp.activities.Support"
+            android:label="@string/title_activity_support" >
         </activity>
     </application>
 

@@ -11,11 +11,11 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.InputFilter;
-import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -25,7 +25,6 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
-
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -497,6 +496,10 @@ public class ViewCheck extends BaseActivity {
 		LayoutInflater factory = LayoutInflater.from(this);
 		final View makePaymentView = factory.inflate(R.layout.payment_dialog, null);
 		final EditText input = (EditText) makePaymentView.findViewById(R.id.paymentInput);
+		
+		input.setFocusable(true);
+		input.setFocusableInTouchMode(true);
+		
 		TextView paymentTitle = (TextView) makePaymentView.findViewById(R.id.paymentTitle);
 		paymentTitle.setText("How much would you like to pay?");
 		input.setGravity(Gravity.CENTER | Gravity.BOTTOM);
@@ -541,6 +544,9 @@ public class ViewCheck extends BaseActivity {
 			}
 		});
 		payDialog = builder.create();
+		
+		payDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+
 		payDialog.setOnShowListener(new DialogInterface.OnShowListener() {
 
 			@Override
@@ -575,6 +581,7 @@ public class ViewCheck extends BaseActivity {
 			}
 		});
 		payDialog.show();
+	
 	}
 	
 	
@@ -586,6 +593,9 @@ public class ViewCheck extends BaseActivity {
 		LayoutInflater factory = LayoutInflater.from(this);
 		final View makePaymentView = factory.inflate(R.layout.payment_dialog, null);
 		final EditText input = (EditText) makePaymentView.findViewById(R.id.paymentInput);
+		input.setFocusable(true);
+		input.setFocusableInTouchMode(true);
+		
 		TextView paymentTitle = (TextView) makePaymentView.findViewById(R.id.paymentTitle);
 		paymentTitle.setText("How many people are splitting the bill?");
 		input.setGravity(Gravity.CENTER | Gravity.BOTTOM);
@@ -596,9 +606,25 @@ public class ViewCheck extends BaseActivity {
 
 		final Double remainingBill = totalBill;
 		remainingBalance.setText("Remaining balance: " + money.format(remainingBill));
+		
+        int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+	
+		
+		//Set colors
+		if (currentapiVersion <= android.os.Build.VERSION_CODES.GINGERBREAD_MR1){
+
+			paymentTitle.setTextColor(getResources().getColor(R.color.white));
+			remainingBalance.setTextColor(getResources().getColor(R.color.white));
+		}
+		
+		
 		AlertDialog.Builder builder = new AlertDialog.Builder(ViewCheck.this);
 		builder.setTitle(getString(R.string.app_dialog_title));
 		builder.setView(makePaymentView);
+		
+		
+		
+		
 		//builder.setIcon(R.drawable.logo);
 		builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
 
@@ -621,6 +647,11 @@ public class ViewCheck extends BaseActivity {
 			}
 		});
 		payDialog = builder.create();
+		
+		
+		payDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+		
+		
 		payDialog.setOnShowListener(new DialogInterface.OnShowListener() {
 
 			@Override

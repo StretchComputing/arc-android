@@ -37,6 +37,7 @@ public class ConfirmPayment extends BaseActivity {
 	private boolean justAddedCard;
     private EditText myPinText;
     private TextView textEnterPin;
+    private String decryptedCC;
    
     
 	@Override
@@ -83,10 +84,10 @@ public class ConfirmPayment extends BaseActivity {
 		
 		if (justAddedCard){
 			
-			cardNumber = selectedCard.getNumber();
+			decryptedCC = selectedCard.getNumber();
 		}else{
 			try{
-				cardNumber = decryptCreditCardNumber(selectedCard.getNumber());
+				decryptedCC = decryptCreditCardNumber(selectedCard.getNumber());
 
 			}catch(Exception e){
 				
@@ -94,7 +95,7 @@ public class ConfirmPayment extends BaseActivity {
 		}
 		
 		
-		if (cardNumber.length() > 0){
+		if (decryptedCC.length() > 0){
 			
 			makePayment();
 		}else{
@@ -115,12 +116,20 @@ public class ConfirmPayment extends BaseActivity {
 	private String decryptCreditCardNumber(String encryptedNumber){
 		
 		
-		Security s = new Security();
-        String decrypted = s.decrypt(myPinText.getText().toString(), encryptedNumber);
-        
-		
-
-        return decrypted;
+		try{
+			Security s = new Security();
+	        //String decrypted = s.decrypt(myPinText.getText().toString(), encryptedNumber);
+	        String decrypted = s.decryptBlowfish(encryptedNumber, myPinText.getText().toString());
+			
+	        Logger.d("DECRYPTED: " + decrypted);
+	        if (decrypted == null){
+	        	return "";
+	        }
+	        return decrypted;
+	        
+		}catch (Exception e){
+			return "";
+		}
 	}
 	
 	
@@ -131,7 +140,7 @@ public class ConfirmPayment extends BaseActivity {
 		String token = getString(Keys.DEV_TOKEN);
 		String customerId = getString(Keys.DEV_CUSTOMER_ID);
 
-		String account = selectedCard.getNumber().replace(" ", "");
+		String account = decryptedCC.replace(" ", "");
 		String month = selectedCard.getExpirationMonth();
 		if (month.length() == 1) {
 			month = "0" + month;

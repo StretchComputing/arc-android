@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.ContentProviderClient;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.arcmobileapp.activities.Support;
 import com.arcmobileapp.db.ArcProvider;
 import com.arcmobileapp.fragments.MenuListFragment;
 import com.arcmobileapp.utils.ArcPreferences;
@@ -359,7 +361,18 @@ public class BaseActivity extends SlidingFragmentActivity {
 		case R.id.whatIsArc:
 			showOkDialog("What is Arc?", "simply puy, Arc speeds up the checkout process.\n\n" + "1.tell us which restaurant you're at\n" + "2.input your check number\n" + "3.split and pay your portion\n\n\n" + "we'll send the payment straight from your phone to the point of sale\n\n\n" + "wasn't that easy?\n", null);
 			break;
+			
+		case R.id.feedback:
+			
+		
+			if (!this.getClass().getSimpleName().equals("Support")){
+				Intent about = (new Intent(getApplicationContext(), Support.class));
+				startActivity(about);
+				break;
 
+			}
+
+			
 		//case R.id.changeServer:
 		//	showChangeServerDialog();
 		//	break;

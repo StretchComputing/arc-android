@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">dutch</string>
-    <string name="app_dialog_title">Arc Mobile</string>
+    <string name="app_dialog_title">Dutch</string>
     <string name="version">2</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
@@ -63,5 +63,13 @@
     <string name="step_one_text">1. Enter your check number.</string>
     <string name="step_two_text">2. View the bill.</string>
     <string name="step_three_text">3. Split the check!</string>
+    <string name="init_sub_title">Pay your restaurant bill in 3 easy steps:</string>
+    <string name="title_activity_support">Support</string>
+    <string name="support_title">Dutch Support</string>
+    <string name="support_subtitle">Questions or Feedback?  Send us an email or give us a call:</string>
+    <string name="send_email_button">Send Email</string>
+    <string name="dutch_email">support@arcmobileapp.com</string>
+    <string name="call_string">Call Now</string>
+    <string name="dutch_phone">(708) 320-9272</string>
 
 </resources>

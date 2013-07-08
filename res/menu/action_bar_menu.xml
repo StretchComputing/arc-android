@@ -8,8 +8,14 @@
         <menu>
             <item
                 android:id="@+id/whatIsArc"
-                android:title="What is Arc?"/>
+                android:title="What is Dutch"/>
+            
+            <item
+                android:id="@+id/feedback"
+                android:title="Feedback"/>
+            
         </menu>
+       
     </item>
 
 </menu>

@@ -54,7 +54,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/button_email"
         style="@style/BlueButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

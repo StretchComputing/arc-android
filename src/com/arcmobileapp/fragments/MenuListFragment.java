@@ -19,6 +19,7 @@ import com.arcmobileapp.R;
 import com.arcmobileapp.activities.Funds;
 import com.arcmobileapp.activities.Home;
 import com.arcmobileapp.activities.Social;
+import com.arcmobileapp.activities.Support;
 import com.arcmobileapp.utils.Enums.ModernPicTypes;
 import com.arcmobileapp.utils.Utils;
 
@@ -34,7 +35,7 @@ public class MenuListFragment extends ListFragment {
 		adapter.add(new MenuItem(Utils.convertModernPicType(ModernPicTypes.World), "Home"));
 		adapter.add(new MenuItem(Utils.convertModernPicType(ModernPicTypes.Dollar), "Funds"));
 		adapter.add(new MenuItem(Utils.convertModernPicType(ModernPicTypes.Info), "About"));
-		adapter.add(new MenuItem(Utils.convertModernPicType(ModernPicTypes.Girl), "Social"));
+		//adapter.add(new MenuItem(Utils.convertModernPicType(ModernPicTypes.Girl), "Social"));
 		setListAdapter(adapter);
 	}
 
@@ -96,7 +97,8 @@ public class MenuListFragment extends ListFragment {
 				goToFunds();				
 				break;
 			case 2:
-				showInfoDialog();
+				//showInfoDialog();
+				goAboutScreen();
 				break;
 			case 3:
 				goToSocial();
@@ -121,6 +123,11 @@ public class MenuListFragment extends ListFragment {
 			startActivity(social);
 		}
 		
+		private void goAboutScreen(){
+			Intent about = (new Intent(getContext(), Support.class));
+			startActivity(about);
+			
+		}
 		private void showInfoDialog() {
 			AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 			builder.setTitle(getString(R.string.app_dialog_title));

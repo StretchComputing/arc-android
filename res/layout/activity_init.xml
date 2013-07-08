@@ -8,7 +8,7 @@
         android:id="@+id/text_enter_pin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/button1"
+        android:layout_above="@+id/button_email"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="5dp"
         android:text="@string/init_continue_string"
@@ -16,7 +16,7 @@
         android:textColor="@color/black" />
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/button_email"
         style="@style/BlueButton"
         android:layout_width="120dp"
         android:layout_height="30dp"
@@ -36,33 +36,13 @@
         android:layout_marginRight="20dp"
         android:text="@string/privacy_string" />
 
-    <ImageView
-        android:id="@+id/imageView1"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:src="@drawable/ic_launcher" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/imageView1"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="22dp"
-        android:text="@string/welcome_string"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@color/black" />
-
     <TextView
         android:id="@+id/TextView01"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/textView3"
         android:layout_below="@+id/textView3"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="20dp"
         android:text="@string/step_two_text"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/black" />
@@ -73,7 +53,7 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/TextView01"
         android:layout_below="@+id/TextView01"
-        android:layout_marginTop="43dp"
+        android:layout_marginTop="20dp"
         android:text="@string/step_three_text"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/black" />
@@ -82,15 +62,15 @@
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/button1"
+        android:layout_alignLeft="@+id/button_email"
         android:layout_below="@+id/textView2"
-        android:layout_marginTop="55dp"
+        android:layout_marginTop="110dp"
         android:text="@string/step_one_text"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/black" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/button_call"
         style="@style/CustomButton"
         android:layout_width="175dp"
         android:layout_height="40dp"
@@ -100,5 +80,38 @@
         android:onClick="onStartClicked"
         
         android:text="@string/start_using_string" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView2"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:text="@string/init_sub_title"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="35dp"
+        android:src="@drawable/ic_launcher" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="50dp"
+        android:layout_toRightOf="@+id/imageView1"
+        android:text="@string/welcome_string"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/black"
+        android:textStyle="bold" />
 
 </RelativeLayout>
