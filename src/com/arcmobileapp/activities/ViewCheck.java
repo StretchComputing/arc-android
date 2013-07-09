@@ -352,7 +352,7 @@ public class ViewCheck extends BaseActivity {
 
 						
 					}else{
-						myTotalTextView.setText("My Total: $" + totalBill);
+						myTotalTextView.setText(String.format("My Total: $%.2f", totalBill));
 
 					}
 					
