@@ -43,7 +43,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/current_merchant"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignRight="@+id/text_enter_pin"
@@ -107,7 +107,7 @@
         android:id="@+id/my_tip_text"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
-        android:layout_alignBottom="@+id/textView2"
+        android:layout_alignBottom="@+id/current_merchant"
         android:layout_alignRight="@+id/text_total_payment"
         android:ems="10"
         android:gravity="right|center_vertical"

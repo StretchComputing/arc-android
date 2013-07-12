@@ -9,34 +9,41 @@
     tools:context=".activities.Home" >
 
     <TextView
-        android:id="@+id/title"
-        style="@style/ViewTitle"
-        android:layout_width="fill_parent"
+        android:id="@+id/home_title"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="15dp"
         android:layout_marginTop="15dp"
-        android:gravity="center"
+        android:gravity="center_horizontal"
         android:text="@string/home_dining"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:textSize="15dp"
         android:textStyle="bold" />
-    
-    <HorizontalScrollView android:id="@+id/scroll"
+			
+    <com.arcmobileapp.utils.CarouselScrollView android:id="@+id/scroll"
         	android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scrollbars="none">
 
+        
         <LinearLayout android:id="@+id/carousel"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:orientation="horizontal"/>
+                      
 
-    </HorizontalScrollView>
-    
+    </com.arcmobileapp.utils.CarouselScrollView>
+
     <TextView
-        android:id="@+id/selected_venue"
-        style="@style/ViewTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:id="@+id/current_merchant"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="80dp"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="Small Text"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textSize="30sp" />
 
     <Button
         android:id="@+id/pay_bill_button"

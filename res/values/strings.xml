@@ -73,6 +73,7 @@
     <string name="dutch_phone">(708) 320-9272</string>
     <string name="receipt_description">Receipt Image</string>
     <string name="funds_secure_text">Dutch is 100% secure.  Your card information is encrypted with your personal PIN, and can only be accessed for purchases with your approval.</string>
+    <string name="home_dining_new">Where are you dining today?</string>
     
 
 </resources>

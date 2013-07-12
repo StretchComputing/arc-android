@@ -63,7 +63,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/button_email"
-        android:layout_below="@+id/textView2"
+        android:layout_below="@+id/current_merchant"
         android:layout_marginTop="110dp"
         android:text="@string/step_one_text"
         android:textAppearance="?android:attr/textAppearanceMedium"
@@ -85,7 +85,7 @@
         android:id="@+id/item_you_pay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView2"
+        android:layout_below="@+id/current_merchant"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
         android:text="@string/init_sub_title"
@@ -102,7 +102,7 @@
         android:src="@drawable/ic_launcher" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/current_merchant"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"

@@ -19,7 +19,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/current_merchant"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/item_you_pay"
@@ -34,7 +34,7 @@
         android:id="@+id/button_email"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView2"
+        android:layout_below="@+id/current_merchant"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="32dp"
         android:onClick="emailNow"
