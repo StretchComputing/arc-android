@@ -17,8 +17,8 @@
         android:gravity="center_horizontal"
         android:text="@string/home_dining"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textSize="15dp"
-        android:textStyle="bold" />
+        android:textSize="13dp"
+         />
 			
     <com.arcmobileapp.utils.CarouselScrollView android:id="@+id/scroll"
         	android:layout_width="match_parent"
@@ -38,12 +38,30 @@
         android:id="@+id/current_merchant"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="80dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:gravity="center"
         android:text="Small Text"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textSize="30sp" />
+        android:textSize="27sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/current_address"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="35dp"
+        android:gravity="center"
+        android:text="Small Text"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textSize="18sp" />
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:src="@drawable/divider" />
 
     <Button
         android:id="@+id/pay_bill_button"
@@ -52,18 +70,11 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="20dp"
+        android:layout_marginTop="40dp"
+        
+        android:gravity="center_vertical|center_horizontal"
         android:onClick="onPayBillClick"
         android:padding="10dp"
         android:text="@string/pay_bill" />
-    
-    <Button
-        android:id="@+id/explore_button"
-        style="@style/CustomButton"
-        android:layout_width="178dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:onClick="onExploreClick"
-        android:padding="10dp"
-        android:text="@string/explore" />
 
 </LinearLayout>

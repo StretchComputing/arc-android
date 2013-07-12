@@ -17,8 +17,8 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -27,12 +27,11 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.RelativeLayout.LayoutParams;
+import android.widget.TextView;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -43,9 +42,9 @@ import com.arcmobileapp.utils.Constants;
 import com.arcmobileapp.utils.Keys;
 import com.arcmobileapp.utils.Logger;
 import com.arcmobileapp.utils.MerchantObject;
+import com.arcmobileapp.utils.ScrollViewListener;
 import com.arcmobileapp.web.GetMerchantsTask;
 import com.arcmobileapp.web.GetTokenTask;
-import com.arcmobileapp.utils.ScrollViewListener;
 
 public class Home extends BaseActivity implements ScrollViewListener {
 
@@ -60,6 +59,7 @@ public class Home extends BaseActivity implements ScrollViewListener {
 	private int currentScrollPos;
 	private TextView homeTitle;
 	private int currentImageWidth;
+	private TextView currentMerchantAddressText;
 
 	private LinearLayout mCarouselContainer;
 
@@ -88,15 +88,18 @@ public class Home extends BaseActivity implements ScrollViewListener {
 		
 		currentMerchantText = (TextView) findViewById(R.id.current_merchant);
 		currentMerchantText.setText("");
+		currentMerchantAddressText = (TextView) findViewById(R.id.current_address);
+		currentMerchantAddressText.setText("");
+
 		//txtTitle = (TextView) findViewById(R.id.title);
 		//txtTitle.setFocusable(true);
 		//txtTitle.setTextColor(Color.rgb(128,128,128));
 		//txtTitle.setTypeface(getModernPicsTypeface()); 
 		
 		btnPayBill = (Button) findViewById(R.id.pay_bill_button);
-		btnExplore = (Button) findViewById(R.id.explore_button);
+		//btnExplore = (Button) findViewById(R.id.explore_button);
 		btnPayBill.setVisibility(View.VISIBLE);
-		btnExplore.setVisibility(View.GONE);
+		//.setVisibility(View.GONE);
 	
 
 		 
@@ -155,6 +158,7 @@ public class Home extends BaseActivity implements ScrollViewListener {
 					MerchantObject merchant = merchants.get(0);
 					
 					currentMerchantText.setText(merchant.merchantName);
+					currentMerchantAddressText.setText(merchant.merchantAddress);
 					
 					initCarousel();
 								        
@@ -201,7 +205,7 @@ public class Home extends BaseActivity implements ScrollViewListener {
         final DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int imageWidth = (int) (displayMetrics.widthPixels / 2.0);
-        currentImageWidth = imageWidth;
+                
         Logger.d("IMAGE WIDTH**************************** " + imageWidth);
         // Populate the carousel with items
         ImageView imageItem;
@@ -209,7 +213,11 @@ public class Home extends BaseActivity implements ScrollViewListener {
         
         //Padding before
         LinearLayout l1 = new LinearLayout(this);
-        l1.setLayoutParams(new LayoutParams(imageWidth/3, LayoutParams.MATCH_PARENT));
+        
+        int space = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 82, getResources().getDisplayMetrics());
+        currentImageWidth = space;
+
+        l1.setLayoutParams(new LayoutParams(space, LayoutParams.MATCH_PARENT));
         mCarouselContainer.addView(l1);
 
         for (int i = 0 ; i < merchants.size(); i++) {
@@ -262,7 +270,7 @@ public class Home extends BaseActivity implements ScrollViewListener {
         
         //Padding After
         LinearLayout l2 = new LinearLayout(this);
-        l2.setLayoutParams(new LayoutParams(imageWidth/3, LayoutParams.MATCH_PARENT));
+        l2.setLayoutParams(new LayoutParams(currentImageWidth, LayoutParams.MATCH_PARENT));
         mCarouselContainer.addView(l2);
         
         
@@ -281,7 +289,6 @@ public class Home extends BaseActivity implements ScrollViewListener {
 	
 	protected void touchCarousel() {
 		btnPayBill.setVisibility(View.VISIBLE);
-		btnExplore.setVisibility(View.GONE);
 	}
 	
 	public RelativeLayout createCarouselItem(ImageView image, String title, int index) {
@@ -332,6 +339,7 @@ public class Home extends BaseActivity implements ScrollViewListener {
 	
 	public void onPayBillClick(View v) {
 		
+	
 		int index = getCurrentIndex(currentScrollPos);        
 
         this.clickCarousel(index);
@@ -345,12 +353,15 @@ public class Home extends BaseActivity implements ScrollViewListener {
 	public void onScrollChanged(CarouselScrollView scrollView, int x, int y,
 			int oldx, int oldy) {
 		
+
 		currentScrollPos = x;
 		int index = getCurrentIndex(x);
 		
 		MerchantObject merchant = merchants.get(index);
 		
 		currentMerchantText.setText(merchant.merchantName);
+		currentMerchantAddressText.setText(merchant.merchantAddress);
+
 
 	}
 	
@@ -358,12 +369,12 @@ public class Home extends BaseActivity implements ScrollViewListener {
 	private int getCurrentIndex(int scrollPos){
 		int index = 0;
 		
-		int num = 120 + currentImageWidth/3;
+		int num = 170;
 		if (scrollPos < num){
 			return 0;
 		}else{
 			
-			index = (scrollPos - num)/450 + 1;
+			index = (scrollPos - num)/340 + 1;
 		}
 		
 		return index;
