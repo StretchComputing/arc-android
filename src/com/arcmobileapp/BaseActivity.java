@@ -165,12 +165,32 @@ public class BaseActivity extends SlidingFragmentActivity {
 	}
 
 	public String getToken() {
-		String token = getString(Keys.PROD_TOKEN);
-		if (getServer().equalsIgnoreCase(URLs.DEV_SERVER)) {
-			token = getString(Keys.DEV_TOKEN);
+		
+		try{
+			if (getString(Keys.CUSTOMER_TOKEN) != null && getString(Keys.CUSTOMER_TOKEN).length() > 0){
+				return getString(Keys.CUSTOMER_TOKEN);
+			}else{
+				return getString(Keys.GUEST_TOKEN);
+			}
+		}catch(Exception e){
+			return "";
 		}
-		return token;
+		
 	}
+	
+	public String getId() {
+		
+		try{
+			if (getString(Keys.CUSTOMER_ID) != null && getString(Keys.CUSTOMER_ID).length() > 0){
+				return getString(Keys.CUSTOMER_ID);
+			}else{
+				return getString(Keys.GUEST_ID);
+			}
+		}catch(Exception e){
+			return "";
+		}
+		
+	}	
 
 	public boolean hasKey(String key) {
 		return myPrefs.hasKey(key);

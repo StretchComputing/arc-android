@@ -77,8 +77,8 @@ public class Review extends BaseActivity {
 			textAdditionalComments.setText("");
 		}
 		
-		String customerId = getString(Keys.DEV_CUSTOMER_ID);
-		String token = getString(Keys.DEV_TOKEN);
+		String customerId = getId();
+		String token = getToken();
 		double numStars = (double) starRating.getNumStars();
 		
 		

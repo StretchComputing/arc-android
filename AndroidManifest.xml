@@ -139,6 +139,13 @@
             android:name="com.arcmobileapp.activities.Support"
             android:label="@string/title_activity_support" >
         </activity>
+        <activity
+            android:name="com.arcmobileapp.Profile"
+            android:label="@string/title_activity_profile"
+            android:windowSoftInputMode="adjustResize|stateVisible" >
+        </activity>
     </application>
 
 </manifest>
+
+

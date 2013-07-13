@@ -111,35 +111,7 @@ public class Home extends BaseActivity implements ScrollViewListener {
 		
 	}
 	
-	protected void getTokensFromWeb() {
-		if(getString(Keys.DEV_TOKEN) == null) {
-			// Get a token for this user, create guest account, generate and persist UUID
-			String uuid = UUID.randomUUID().toString();
-			putString(Keys.MY_UUID, uuid);  // THIS WILL BE THE USER'S UUID FOR LOGIN AS A GUEST
-			GetTokenTask getTokenTask = new GetTokenTask(uuid, uuid, true, getApplicationContext()) {
-				@Override
-				protected void onPostExecute(Void result) {
-					super.onPostExecute(result);
-					if(getSuccess()) {
-						if(getDevToken()!=null) {
-							putString(Keys.DEV_TOKEN, getDevToken());
-							putString(Keys.DEV_CUSTOMER_ID, getDevCustomerId());
-							Logger.d("SAVING DEV TOKEN '" + getDevToken() + "' id=" + getDevCustomerId());
-						}						
-						if(getProdToken()!=null) {
-							putString(Keys.PROD_TOKEN, getProdToken());
-							putString(Keys.PROD_CUSTOMER_ID, getProdCustomerId());
-							Logger.d("SAVING PROD TOKEN '" + getProdToken() + "' id=" + getProdCustomerId());
-						}
-					}
-				}
-			};
-			getTokenTask.execute();
-		} else {
-			Logger.d("STORED DEV TOKEN '" + getString(Keys.DEV_TOKEN) + "'");
-			Logger.d("STORED PROD TOKEN '" + getString(Keys.PROD_TOKEN) + "'");
-		}
-	}
+
 	
 	protected void getMerchantsFromWeb() {
 		GetMerchantsTask getMerchantsTask = new GetMerchantsTask(getApplicationContext()) {

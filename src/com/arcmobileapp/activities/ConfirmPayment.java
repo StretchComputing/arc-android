@@ -137,8 +137,8 @@ public class ConfirmPayment extends BaseActivity {
 		
 		
 		loadingDialog.show();
-		String token = getString(Keys.DEV_TOKEN);
-		String customerId = getString(Keys.DEV_CUSTOMER_ID);
+		String token = getToken();
+		String customerId = getId();
 
 		String account = decryptedCC.replace(" ", "");
 		String month = selectedCard.getExpirationMonth();

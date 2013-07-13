@@ -478,7 +478,7 @@ public class ViewCheck extends BaseActivity {
 
 			// Price:
 			TextView priceText = (TextView) itemView.findViewById(R.id.item_price);
-			priceText.setText(String.format("%.2f", currentItem.getValue()));
+			priceText.setText(String.format("%.2f", currentItem.getValue() * currentItem.getAmount()));
 			
 			// You Pay:
 			TextView youPay = (TextView) itemView.findViewById(R.id.item_you_pay);
@@ -583,8 +583,8 @@ public class ViewCheck extends BaseActivity {
 
 		Cards useFirstCard = cards.get(0);
 
-		String token = getString(Keys.DEV_TOKEN);
-		String customerId = getString(Keys.DEV_CUSTOMER_ID);
+		String token = getToken();
+		String customerId = getId();
 
 		String account = ""; //useFirstCard.getNumber().replace(" ", "");
 		String month = useFirstCard.getExpirationMonth();
@@ -831,7 +831,7 @@ public class ViewCheck extends BaseActivity {
 
 		LineItem clickedItem = theBill.getItems().get(currentSelectedIndex);
 
-		String thisValue = String.format("%.2f", clickedItem.getValue()/clickedItem.getAmount());
+		String thisValue = String.format("%.2f", clickedItem.getValue());
 		
 		remainingBalance.setText(clickedItem.getAmount() + " " + clickedItem.getDescription() + ", $" + thisValue + " each");
 		
@@ -898,7 +898,7 @@ public class ViewCheck extends BaseActivity {
 						if (amountPayingFor > clickedItem.getAmount()){
 							toastShort("You cannot pay for more items than are on the bill, please enter a smaller number");
 						}else{
-							Double pricePerItem = clickedItem.getValue()/clickedItem.getAmount();
+							Double pricePerItem = clickedItem.getValue();
 							
 							Double amountToPay = amountPayingFor * pricePerItem;
 							

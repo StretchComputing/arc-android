@@ -46,17 +46,12 @@ public class InitActivity extends Activity {
 				if(getSuccess()) {
 					ArcPreferences myPrefs = new ArcPreferences(getApplicationContext());
 
-					
 					if(getDevToken()!=null) {
 
-						myPrefs.putAndCommitString(Keys.DEV_TOKEN, getDevToken());
-						myPrefs.putAndCommitString(Keys.DEV_CUSTOMER_ID, getDevCustomerId());
+						myPrefs.putAndCommitString(Keys.GUEST_TOKEN, getDevToken());
+						myPrefs.putAndCommitString(Keys.GUEST_ID, getDevCustomerId());
 					}						
-					if(getProdToken()!=null) {
-						myPrefs.putAndCommitString(Keys.PROD_TOKEN, getProdToken());
-						myPrefs.putAndCommitString(Keys.PROD_CUSTOMER_ID, getProdCustomerId());
-					}
-					
+				
 					doesHaveToken = true;
 				}
 			}
