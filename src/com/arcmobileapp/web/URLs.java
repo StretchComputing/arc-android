@@ -14,6 +14,9 @@ public final class URLs {
 	public static final String GET_TOKEN = "/rest/v1/customers/token";
 	public static final String GET_CHECK = "/rest/v1/invoices/criteria";
 	
+	public static final String REGISTER = "rest/v1/customers/create";
+	public static final String CONFIRM_REGISTER = "/rest/v1/customers/register/confirm";
+
 	public static final String CREATE_PAYMENT = "/rest/v1/payments/create";
 	public static final String CONFIRM_PAYMENT = "/rest/v1/payments/confirm";
 	

@@ -20,8 +20,8 @@ import com.arcmobileapp.activities.Funds;
 import com.arcmobileapp.activities.Home;
 import com.arcmobileapp.activities.Social;
 import com.arcmobileapp.activities.Support;
+import com.arcmobileapp.activities.UserProfile;
 import com.arcmobileapp.utils.Enums.ModernPicTypes;
-import com.arcmobileapp.utils.Logger;
 import com.arcmobileapp.utils.Utils;
 
 public class MenuListFragment extends ListFragment {
@@ -112,7 +112,8 @@ public class MenuListFragment extends ListFragment {
 		}
 		
 		private void goToProfile(){
-			
+			Intent funds = (new Intent(getContext(), UserProfile.class));
+			startActivity(funds);
 		}
 		private void goHome() {
 			Intent home = (new Intent(getContext(), Home.class));

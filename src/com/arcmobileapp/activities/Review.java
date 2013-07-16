@@ -98,13 +98,13 @@ public class Review extends BaseActivity {
 				loadingDialog.hide();
 				if (getFinalSuccess()) {
 
-	
+					toastShort("Thank you for your review!");
+
 					Intent goBackHome = new Intent(getApplicationContext(), Home.class);
 					goBackHome.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 					startActivity(goBackHome);
 					
 					
-					toastShort("Thank you for your review!");
 				} else {
 					toastShort("Review Failed, please try again.");
 

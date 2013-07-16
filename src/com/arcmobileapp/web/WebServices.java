@@ -110,6 +110,58 @@ public class WebServices {
 		}
 	}
 	
+	
+	public String register(String login, String password, String firstName, String lastName) {
+		String resp = "";
+		try {
+
+			String url = this.serverAddress + URLs.REGISTER;
+			Logger.d("|arc-web-services|", "REGISTER URL  = " + url);
+			
+			JSONObject json = new JSONObject();
+			json.put(WebKeys.EMAIL,login);
+			json.put(WebKeys.PASSWORD,password);
+			
+			json.put(WebKeys.FIRST_NAME,firstName);
+			json.put(WebKeys.LAST_NAME,lastName);
+
+			json.put(WebKeys.IS_GUEST, false);
+			json.put(WebKeys.ACCEPT_TERMS, true);
+
+
+			
+			resp = this.getResponse(url, json.toString(), null);
+			Logger.d("|arc-web-services|", "REGISTER RESP = " + resp);
+			return resp;
+		} catch (Exception e) {
+			setError(e.getMessage());
+			return resp;
+		}
+	}
+	
+	public String confirmRegister(String ticketId) {
+		String resp = "";
+		try {
+
+			String url = this.serverAddress + URLs.CONFIRM_REGISTER;
+			Logger.d("|arc-web-services|", "CONFIRM REGISTER URL  = " + url);
+			
+			JSONObject json = new JSONObject();
+			json.put(WebKeys.TICKET_ID, ticketId);
+			
+			Logger.d("CONFIRM PAYMENT JSON =\n\n" + json.toString());
+			
+			resp = this.getResponse(url, json.toString(), null);
+			Logger.d("|arc-web-services|", "CONFIRM REGISTER RESP = " + resp);
+			return resp;
+		} catch (Exception e) {
+			setError(e.getMessage());
+			return resp;
+		}
+	}
+	
+	
+	
 	public String getToken(String login, String password, boolean isGuest) {
 		String resp = "";
 		try {

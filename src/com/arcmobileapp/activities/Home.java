@@ -109,6 +109,13 @@ public class Home extends BaseActivity implements ScrollViewListener {
 		loadingDialog.setCancelable(false);
 		loadingDialog.show();
 		
+		boolean didLogOut = getIntent().getBooleanExtra(Constants.LOGGED_OUT, false);
+		
+		if (didLogOut){
+			toastShort("Logout Successful!  You may continue to use Dutch as a guest.");
+		}
+
+		
 	}
 	
 

@@ -72,6 +72,7 @@ public class GetTokenTask extends AsyncTask<Void, Void, Void> {
 		}
 		
 		try {
+			Logger.d("Token Response: " + mDevResponse);
 			JSONObject json =  new JSONObject(mDevResponse);
 			mSuccess = json.getBoolean(WebKeys.SUCCESS);
 			if(mSuccess) {

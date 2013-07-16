@@ -4,9 +4,15 @@ public final class WebKeys {
 	
 		
 	public static final String LOGIN = "Login";
+	public static final String EMAIL = "eMail";
+
 	public static final String PASSWORD = "Password";
 	public static final String IS_GUEST = "IsGuest";
-	
+	public static final String ACCEPT_TERMS = "AcceptTerms";
+
+	public static final String FIRST_NAME = "FirstName";
+	public static final String LAST_NAME = "LastName";
+
 	public static final String MERCHANT_ID = "MerchantId";
 	public static final String INVOICE_NUMBER = "Number";
 	public static final String REQUEST_ID = "RequestId";
