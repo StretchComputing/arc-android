@@ -28,7 +28,7 @@ public class CreatePayment implements Serializable {
     private String mTipEntry;
     private String mPercentEntry;
     
-    private ArrayList<Items> mItems;
+    private ArrayList<LineItem> mItems;
     
     public class Items {
     	int mItemId;
@@ -66,7 +66,7 @@ public class CreatePayment implements Serializable {
 		}
     }
         
-    public CreatePayment(String merchantId, String customerId, String invoiceId, Double total, Double paying, Double gratuity, String account, String type, String cardType, String expiration, String pin, Double percentPaid, String splitType, String tipEntry, String percentEntry, ArrayList<Items> items) {
+    public CreatePayment(String merchantId, String customerId, String invoiceId, Double total, Double paying, Double gratuity, String account, String type, String cardType, String expiration, String pin, Double percentPaid, String splitType, String tipEntry, String percentEntry, ArrayList<LineItem> items) {
     	setMerchantId(merchantId);
     	setCustomerId(customerId);
     	setInvoiceId(invoiceId);
@@ -212,11 +212,11 @@ public class CreatePayment implements Serializable {
     	return this.mExpiration;
     }
 
-	public ArrayList<Items> getItems() {
+	public ArrayList<LineItem> getItems() {
 		return mItems;
 	}
 
-	public void setPaidItems(ArrayList<Items> items) {
+	public void setPaidItems(ArrayList<LineItem> items) {
 		this.mItems = items;
 	}
 }

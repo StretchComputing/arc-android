@@ -94,6 +94,7 @@ public class MenuListFragment extends ListFragment {
 			switch(position) {
 			case 0:
 				goHome();
+				break;
 			case 1:
 				goToProfile();				
 				break;

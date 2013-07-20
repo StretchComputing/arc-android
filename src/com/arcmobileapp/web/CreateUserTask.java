@@ -67,8 +67,14 @@ public class CreateUserTask extends AsyncTask<Void, Void, Void> {
 	
 	protected boolean performTask() {
 		// get a token for the dev server
-		WebServices webService = new WebServices(URLs.DEV_SERVER);
-		mDevResponse = webService.register(mLogin, mPassword, mFirstName, mLastName);
+		
+		try{
+			WebServices webService = new WebServices(URLs.DEV_SERVER);
+			mDevResponse = webService.register(mLogin, mPassword, mFirstName, mLastName);
+		}catch (Exception e){
+			return false;
+		}
+	
 		
 		try {
 			Logger.d("Token Response: " + mDevResponse);
@@ -136,8 +142,11 @@ public class CreateUserTask extends AsyncTask<Void, Void, Void> {
 
 					return false;
 				}else{
-					Logger.d("FINAL SUCCESS!!!!!");
 					Logger.d("RESULTS " + result);
+					
+					mDevCustomerId = result.getString(WebKeys.ID);
+					mDevToken = result.getString(WebKeys.TOKEN);
+					
 					finalSuccess = true;
 					//mPaymentId = result.getInt(WebKeys.PAYMENT_ID);
 					//Store customer ID, customer email, customer token

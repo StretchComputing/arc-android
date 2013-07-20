@@ -213,7 +213,7 @@ public class Home extends BaseActivity implements ScrollViewListener {
             String imageName = "";
             
             
-            if (merchants.get(i).merchantName.equalsIgnoreCase("Isis Lab")){
+            if (merchants.get(i).merchantName.equalsIgnoreCase("Isis Lab") || merchants.get(i).merchantName.equalsIgnoreCase("Untitled")){
             	imageName = "untitled";
             }else{
             	imageName = "union";

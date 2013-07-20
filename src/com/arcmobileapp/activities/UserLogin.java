@@ -75,7 +75,7 @@ public class UserLogin extends BaseActivity {
 
 						toastShort("Login Successful!");
 						
-						Intent goBackProfile = new Intent(getApplicationContext(), UserProfile.class);
+						Intent goBackProfile = new Intent(getApplicationContext(), Home.class);
 						goBackProfile.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 						startActivity(goBackProfile);
 

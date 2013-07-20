@@ -28,7 +28,9 @@ public class Review extends BaseActivity {
 	private Check theBill;
 	private ProgressDialog loadingDialog;
 
-	
+	@Override
+	public void onBackPressed() {
+	}
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -54,7 +56,7 @@ public class Review extends BaseActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getSupportMenuInflater();
-		inflater.inflate(R.menu.action_bar_menu, menu);
+		//inflater.inflate(R.menu.action_bar_menu, menu);
 		return true;
 	}
 	

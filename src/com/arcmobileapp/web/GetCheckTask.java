@@ -216,16 +216,42 @@ public class GetCheckTask extends AsyncTask<Void, Void, Void> {
 			
 			ArrayList<PaidItems> paidItems = new ArrayList<Payments.PaidItems>();
 			JSONArray paidItemsArray = paymentItem.getJSONArray(WebKeys.PAID_ITEMS);
+
 			for(int j = 0; j < paidItemsArray.length(); j++) {
 				JSONObject paidItemObject = paidItemsArray.getJSONObject(j);
-				PaidItems paidItem = payment.new PaidItems(paidItemObject.getInt(WebKeys.ITEM_ID), paidItemObject.getDouble(WebKeys.AMOUNT), paidItemObject.getDouble(WebKeys.PERCENT));
+				PaidItems paidItem = payment.new PaidItems(paidItemObject.getInt(WebKeys.ITEM_ID), paidItemObject.getDouble(WebKeys.AMOUNT), paidItemObject.getDouble(WebKeys.PERCENT), "", "");
 				paidItems.add(paidItem);
 			}
+		
+			
+
 			payment.setPaidItems(paidItems);
 			payments.add(payment);
 		}
 		
 		theBill.setPayments(payments);
+        ArrayList<PaidItems> tempPaidItems = new ArrayList<PaidItems>();
+
+		for (int i = 0; i < theBill.getPayments().size(); i++) {
+			
+			Payments payment = theBill.getPayments().get(i);
+            
+			ArrayList<PaidItems> paidItems = theBill.getPayments().get(i).getPaidItems();
+   
+            String paidBy = payment.getCustomerName();
+            String paidByAct = payment.getAccount();
+            
+            for (int j = 0; j < paidItems.size(); j++) {
+            	
+                PaidItems paidItem = paidItems.get(j);
+                paidItem.setPaidByAct(paidByAct);
+                paidItem.setPaidBy(paidBy);
+             
+                
+                tempPaidItems.add(paidItem);
+            }
+            theBill.setPaidItems(tempPaidItems);
+        }
 		
 	}
 	

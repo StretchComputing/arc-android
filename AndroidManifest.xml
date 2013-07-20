@@ -156,6 +156,10 @@
             android:name="com.arcmobileapp.activities.UserCreateNew"
             android:label="@string/title_activity_user_create_new" >
         </activity>
+        <activity
+            android:name="com.arcmobileapp.activities.GuestCreateCustomer"
+            android:label="@string/title_activity_guest_create_customer" >
+        </activity>
     </application>
 
 </manifest>
