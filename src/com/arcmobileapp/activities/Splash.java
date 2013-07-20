@@ -39,8 +39,12 @@ public class Splash extends Activity {
 				logo.setVisibility(View.GONE);
 
 				ArcPreferences myPrefs = new ArcPreferences(getApplicationContext());
-				String token = myPrefs.getString(Keys.DEV_TOKEN);
-				if(token == null){
+				
+				//If there is a guest token or customer token, go to HOME
+				String guestToken = myPrefs.getString(Keys.GUEST_TOKEN);
+				String customerToken = myPrefs.getString(Keys.CUSTOMER_TOKEN);
+
+				if(guestToken == null && customerToken == null){
 					//Go to initPage
 					startActivity(new Intent(getApplicationContext(), InitActivity.class));
 

@@ -152,7 +152,7 @@ public class AdditionalTip extends BaseActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getSupportMenuInflater();
-		inflater.inflate(R.menu.action_bar_menu, menu);
+		//inflater.inflate(R.menu.action_bar_menu, menu);
 		return true;
 	}
 	

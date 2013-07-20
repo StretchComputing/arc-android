@@ -15,7 +15,21 @@ public class LineItem implements Serializable {
     private Double mValue;
     private Boolean isSelected;
     private Double mMyPayment;
+    private Double mPercent;
+    private String mIsPaidFor;
     
+    
+    public LineItem(){
+    	setId(0);
+    	setPosKey("");
+    	setAmount(0.0);
+    	setDisplay(false);
+    	setDescription("");
+    	setValue(0.0);
+    	setMyPayment(0.0);
+    	setPercent(0.0);
+    	setIsPaidFor("");
+    }
     public LineItem(int id, String posKey, Double amount, Boolean display, String description, Double value) {
     	setId(id);
     	setPosKey(posKey);
@@ -24,6 +38,8 @@ public class LineItem implements Serializable {
     	setDescription(description);
     	setValue(value);
     	setMyPayment(0.0);
+    	setPercent(0.0);
+    	setIsPaidFor("");
     }
     
     public int getId() {
@@ -34,6 +50,15 @@ public class LineItem implements Serializable {
 		this.id = id;
 	}
 
+	public String getIsPaidFor() {
+		return mIsPaidFor;
+	}
+
+	public void setIsPaidFor(String paidFor) {
+		this.mIsPaidFor = paidFor;
+	}
+	
+	
 	public String getPosKey() {
 		return mPosKey;
 	}
@@ -42,6 +67,15 @@ public class LineItem implements Serializable {
 		this.mPosKey = posKey;
 	}
 
+	public Double getPercent() {
+		return mPercent;
+	}
+
+	public void setPercent(Double amount) {
+		this.mPercent = amount;
+	}
+	
+	
 	public Double getAmount() {
 		return mAmount;
 	}

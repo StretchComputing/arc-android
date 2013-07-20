@@ -85,6 +85,14 @@ public class GetMerchantsTask extends AsyncTask<Void, Void, Void> {
 			myMerchant.merchantName = name;
 			myMerchant.merchantId = merchantId;
 			
+			myMerchant.merchantAddress = "";
+			
+			try{
+				myMerchant.merchantAddress = street;
+			}catch(Exception e){
+				
+			}
+			
 			mMerchantList.add(myMerchant);
 			
 			Logger.d(name + " | " + merchantId + " | "  + street + " | " + city + " | " + state + " | " + zip + " | " + lat + " | " + lon + " | " + paymentsAccepted + " | " + twitterHandle + " | " + geoDistance);

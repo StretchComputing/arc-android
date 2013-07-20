@@ -1,14 +1,24 @@
 package com.arcmobileapp.activities;
 
-import java.util.UUID;
 import java.util.ArrayList;
+import java.util.UUID;
 
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PorterDuff.Mode;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.RectF;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -17,34 +27,39 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.arcmobileapp.BaseActivity;
 import com.arcmobileapp.R;
+import com.arcmobileapp.utils.CarouselScrollView;
 import com.arcmobileapp.utils.Constants;
 import com.arcmobileapp.utils.Keys;
 import com.arcmobileapp.utils.Logger;
 import com.arcmobileapp.utils.MerchantObject;
-
+import com.arcmobileapp.utils.ScrollViewListener;
 import com.arcmobileapp.web.GetMerchantsTask;
 import com.arcmobileapp.web.GetTokenTask;
 
-public class Home extends BaseActivity {
+public class Home extends BaseActivity implements ScrollViewListener {
 
 	private TextView txtTitle;
 	private LinearLayout theView;
 	private Button btnPayBill;
 	private Button btnExplore;
-	private HorizontalScrollView scrollView;
+	private CarouselScrollView scrollView;
 	private ArrayList<MerchantObject> merchants;
 	private ProgressDialog loadingDialog;
-
+	private TextView currentMerchantText;
+	private int currentScrollPos;
+	private TextView homeTitle;
+	private int currentImageWidth;
+	private TextView currentMerchantAddressText;
 
 	private LinearLayout mCarouselContainer;
 
@@ -62,58 +77,48 @@ public class Home extends BaseActivity {
 		setContentView(R.layout.home);
 		
 		theView = (LinearLayout) findViewById(R.id.home_layout);
-		scrollView = (HorizontalScrollView) findViewById(R.id.scroll);
+		scrollView = (CarouselScrollView) findViewById(R.id.scroll);
 		mCarouselContainer = (LinearLayout) findViewById(R.id.carousel);
 		theView.setAnimation(AnimationUtils.loadAnimation(this,
 				R.anim.login_fade_in));
 		
-		txtTitle = (TextView) findViewById(R.id.title);
-		txtTitle.setFocusable(true);
-		txtTitle.setTextColor(Color.rgb(128,128,128));
-//		txtTitle.setTypeface(getModernPicsTypeface()); 
+		homeTitle = (TextView) findViewById(R.id.home_title);
+		
+		homeTitle.setTextColor(Color.rgb(190,190,190));
+		
+		currentMerchantText = (TextView) findViewById(R.id.current_merchant);
+		currentMerchantText.setText("");
+		currentMerchantAddressText = (TextView) findViewById(R.id.current_address);
+		currentMerchantAddressText.setText("");
+
+		//txtTitle = (TextView) findViewById(R.id.title);
+		//txtTitle.setFocusable(true);
+		//txtTitle.setTextColor(Color.rgb(128,128,128));
+		//txtTitle.setTypeface(getModernPicsTypeface()); 
 		
 		btnPayBill = (Button) findViewById(R.id.pay_bill_button);
-		btnExplore = (Button) findViewById(R.id.explore_button);
+		//btnExplore = (Button) findViewById(R.id.explore_button);
 		btnPayBill.setVisibility(View.VISIBLE);
-		btnExplore.setVisibility(View.GONE);
-		
+		//.setVisibility(View.GONE);
+	
+
+		 
 		loadingDialog = new ProgressDialog(Home.this);
 		loadingDialog.setTitle("Finding Nearby Merchants");
 		loadingDialog.setMessage("Please Wait...");
 		loadingDialog.setCancelable(false);
 		loadingDialog.show();
 		
+		boolean didLogOut = getIntent().getBooleanExtra(Constants.LOGGED_OUT, false);
+		
+		if (didLogOut){
+			toastShort("Logout Successful!  You may continue to use Dutch as a guest.");
+		}
+
+		
 	}
 	
-	protected void getTokensFromWeb() {
-		if(getString(Keys.DEV_TOKEN) == null) {
-			// Get a token for this user, create guest account, generate and persist UUID
-			String uuid = UUID.randomUUID().toString();
-			putString(Keys.MY_UUID, uuid);  // THIS WILL BE THE USER'S UUID FOR LOGIN AS A GUEST
-			GetTokenTask getTokenTask = new GetTokenTask(uuid, uuid, true, getApplicationContext()) {
-				@Override
-				protected void onPostExecute(Void result) {
-					super.onPostExecute(result);
-					if(getSuccess()) {
-						if(getDevToken()!=null) {
-							putString(Keys.DEV_TOKEN, getDevToken());
-							putString(Keys.DEV_CUSTOMER_ID, getDevCustomerId());
-							Logger.d("SAVING DEV TOKEN '" + getDevToken() + "' id=" + getDevCustomerId());
-						}						
-						if(getProdToken()!=null) {
-							putString(Keys.PROD_TOKEN, getProdToken());
-							putString(Keys.PROD_CUSTOMER_ID, getProdCustomerId());
-							Logger.d("SAVING PROD TOKEN '" + getProdToken() + "' id=" + getProdCustomerId());
-						}
-					}
-				}
-			};
-			getTokenTask.execute();
-		} else {
-			Logger.d("STORED DEV TOKEN '" + getString(Keys.DEV_TOKEN) + "'");
-			Logger.d("STORED PROD TOKEN '" + getString(Keys.PROD_TOKEN) + "'");
-		}
-	}
+
 	
 	protected void getMerchantsFromWeb() {
 		GetMerchantsTask getMerchantsTask = new GetMerchantsTask(getApplicationContext()) {
@@ -124,10 +129,18 @@ public class Home extends BaseActivity {
 				merchants = new ArrayList<MerchantObject>();
 				
 				merchants = getMerchants();
+				
 
 				loadingDialog.hide();
 				if (merchants.size() > 0){
+				
+					MerchantObject merchant = merchants.get(0);
+					
+					currentMerchantText.setText(merchant.merchantName);
+					currentMerchantAddressText.setText(merchant.merchantAddress);
+					
 					initCarousel();
+								        
 				}
 
 			}
@@ -170,12 +183,22 @@ public class Home extends BaseActivity {
         // Compute the width of a carousel item based on the screen width and number of initial items.
         final DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        final int imageWidth = (int) (displayMetrics.widthPixels / 2.0);
-
+        int imageWidth = (int) (displayMetrics.widthPixels / 2.0);
+                
+        Logger.d("IMAGE WIDTH**************************** " + imageWidth);
         // Populate the carousel with items
         ImageView imageItem;
         mCarouselContainer.removeAllViews();
         
+        //Padding before
+        LinearLayout l1 = new LinearLayout(this);
+        
+        int space = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 82, getResources().getDisplayMetrics());
+        currentImageWidth = space;
+
+        l1.setLayoutParams(new LayoutParams(space, LayoutParams.MATCH_PARENT));
+        mCarouselContainer.addView(l1);
+
         for (int i = 0 ; i < merchants.size(); i++) {
             // Create new ImageView
         	final int pos = i;
@@ -190,7 +213,7 @@ public class Home extends BaseActivity {
             String imageName = "";
             
             
-            if (merchants.get(i).merchantName.equalsIgnoreCase("Isis Lab")){
+            if (merchants.get(i).merchantName.equalsIgnoreCase("Isis Lab") || merchants.get(i).merchantName.equalsIgnoreCase("Untitled")){
             	imageName = "untitled";
             }else{
             	imageName = "union";
@@ -201,6 +224,7 @@ public class Home extends BaseActivity {
             
             // Set the size of the image view to the previously computed value
             imageItem.setLayoutParams(new LinearLayout.LayoutParams(imageWidth, imageWidth));
+          
 
            
             /// Add image view to the carousel container
@@ -209,8 +233,9 @@ public class Home extends BaseActivity {
             String title = "hello";
             title = merchants.get(i).merchantName;
             
-            View carouselItem = createCarouselItem(imageItem, title);
+            View carouselItem = createCarouselItem(imageItem, title, i);
             
+           
             carouselItem.setOnClickListener(new OnClickListener() {
 				
      				@Override
@@ -221,6 +246,13 @@ public class Home extends BaseActivity {
             
             mCarouselContainer.addView(carouselItem);
         }
+        
+        //Padding After
+        LinearLayout l2 = new LinearLayout(this);
+        l2.setLayoutParams(new LayoutParams(currentImageWidth, LayoutParams.MATCH_PARENT));
+        mCarouselContainer.addView(l2);
+        
+        
         scrollView.setOnTouchListener(new OnTouchListener() {
 			
 			@Override
@@ -229,40 +261,65 @@ public class Home extends BaseActivity {
 				return false;
 			}
 		});
+       // scrollView.setScrollViewListener(this);
+        scrollView.setScrollViewListener(this);
+        
     }
 	
 	protected void touchCarousel() {
 		btnPayBill.setVisibility(View.VISIBLE);
-		btnExplore.setVisibility(View.GONE);
 	}
 	
-	public RelativeLayout createCarouselItem(ImageView image, String title) {
+	public RelativeLayout createCarouselItem(ImageView image, String title, int index) {
+		
+		//round corners
+		Bitmap bitmap = ((BitmapDrawable)image.getDrawable()).getBitmap();
+		Bitmap newMap = getRoundedCornerBitmap(bitmap);
+		image.setImageBitmap(newMap);
+		
 		LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE); 
 		RelativeLayout rLayout = (RelativeLayout) inflater.inflate(R.layout.carousel_item, null);
-		
+		 
+		 
 		ImageView itemImage = (ImageView) rLayout.findViewById(R.id.itemImage);
 		itemImage.setImageDrawable(image.getDrawable());
 		
 		TextView itemText = (TextView) rLayout.findViewById(R.id.itemText);
 		itemText.setText(title);
 		itemText.setGravity(Gravity.CENTER | Gravity.BOTTOM);
+		itemText.setVisibility(View.INVISIBLE);
 		return rLayout;
 	}
 
+	
+	public static Bitmap getRoundedCornerBitmap(Bitmap bitmap) {
+	    Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
+	        bitmap.getHeight(), Config.ARGB_8888);
+	    Canvas canvas = new Canvas(output);
+	 
+	    //final int color = 0xff424242;
+	    final int color = Color.BLACK;
+	    final Paint paint = new Paint();
+	    final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+	    final RectF rectF = new RectF(rect);
+	    final float roundPx = 5;
+	 
+	    paint.setAntiAlias(true);
+	    canvas.drawARGB(0, 0, 0, 0);
+	    paint.setColor(color);
+	    canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
+	 
+	    paint.setXfermode(new PorterDuffXfermode(Mode.SRC_IN));
+	    canvas.drawBitmap(bitmap, rect, rect, paint);
+	 
+	    return output;
+	  }
+	
+	
 	public void onPayBillClick(View v) {
 		
-		int scrollPosX = scrollView.getScrollX();
-		Logger.d("Scroll Pos: " + scrollPosX);
-		
-		final DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        final int imageWidth = (int) (displayMetrics.widthPixels / 2.0);
-        
-		
-
-        int index = scrollPosX/ (imageWidth/merchants.size());
-        
-		Logger.d("Index: " + index);
+	
+		int index = getCurrentIndex(currentScrollPos);        
 
         this.clickCarousel(index);
 	}
@@ -270,4 +327,36 @@ public class Home extends BaseActivity {
 	public void onExploreClick(View v) {
 		toastShort("Explore");
 	}
+
+	@Override
+	public void onScrollChanged(CarouselScrollView scrollView, int x, int y,
+			int oldx, int oldy) {
+		
+
+		currentScrollPos = x;
+		int index = getCurrentIndex(x);
+		
+		MerchantObject merchant = merchants.get(index);
+		
+		currentMerchantText.setText(merchant.merchantName);
+		currentMerchantAddressText.setText(merchant.merchantAddress);
+
+
+	}
+	
+	
+	private int getCurrentIndex(int scrollPos){
+		int index = 0;
+		
+		int num = 170;
+		if (scrollPos < num){
+			return 0;
+		}else{
+			
+			index = (scrollPos - num)/340 + 1;
+		}
+		
+		return index;
+	}
+   
 }

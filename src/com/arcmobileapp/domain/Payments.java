@@ -27,13 +27,39 @@ public class Payments implements Serializable {
     	int mItemId;
     	double mPaymentAmount;
     	double mPercentPaid;
+    	private String paidBy;
+    	private String paidByAct;
     	
-    	public PaidItems(int itemId, double paymentAmount, double percentPaid) {
+    	public PaidItems(int itemId, double paymentAmount, double percentPaid, String paidBy, String paidByAct) {
     		setItemId(itemId);
-    		setPaymentAmount(paymentAmount);
+    		setAmount(paymentAmount);
     		setPercentPaid(percentPaid);
+    		setPaidBy(paidBy);
+    		setPaidByAct(paidByAct);
     	}
 
+    	
+    	public String getPaidBy() {
+			return paidBy;
+		}
+
+		public void setPaidBy(String paidBy) {
+			this.paidBy = paidBy;
+		}
+		
+		
+		
+		public String getPaidByAct() {
+			return paidByAct;
+		}
+
+		public void setPaidByAct(String paidByAct) {
+			this.paidByAct = paidByAct;
+		}
+		
+		
+		
+		
 		public int getItemId() {
 			return mItemId;
 		}
@@ -42,11 +68,11 @@ public class Payments implements Serializable {
 			this.mItemId = itemId;
 		}
 
-		public double getPaymentAmount() {
+		public double getAmount() {
 			return mPaymentAmount;
 		}
 
-		public void setPaymentAmount(double paymentAmount) {
+		public void setAmount(double paymentAmount) {
 			this.mPaymentAmount = paymentAmount;
 		}
 
@@ -57,6 +83,10 @@ public class Payments implements Serializable {
 		public void setPercentPaid(double percentPaid) {
 			this.mPercentPaid = percentPaid;
 		}
+    }
+    
+    public Payments(){
+    	
     }
         
     public Payments(int id, int customerId, String customerName, String status, String confirmation, Double amount, Double gratuity, String type, String notes, String account, ArrayList<PaidItems> paidItems) {

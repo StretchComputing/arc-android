@@ -9,34 +9,59 @@
     tools:context=".activities.Home" >
 
     <TextView
-        android:id="@+id/title"
-        style="@style/ViewTitle"
-        android:layout_width="fill_parent"
+        android:id="@+id/home_title"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="15dp"
         android:layout_marginTop="15dp"
-        android:gravity="center"
+        android:gravity="center_horizontal"
         android:text="@string/home_dining"
-        android:textSize="15dp"
-        android:textStyle="bold" />
-    
-    <HorizontalScrollView android:id="@+id/scroll"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="13dp"
+         />
+			
+    <com.arcmobileapp.utils.CarouselScrollView android:id="@+id/scroll"
         	android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scrollbars="none">
 
+        
         <LinearLayout android:id="@+id/carousel"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:orientation="horizontal"/>
+                      
 
-    </HorizontalScrollView>
-    
+    </com.arcmobileapp.utils.CarouselScrollView>
+
     <TextView
-        android:id="@+id/selected_venue"
-        style="@style/ViewTitle"
+        android:id="@+id/current_merchant"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="Small Text"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textSize="27sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/current_address"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="35dp"
+        android:gravity="center"
+        android:text="Small Text"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textSize="18sp" />
+
+    <ImageView
+        android:id="@+id/imageView1"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:src="@drawable/divider" />
 
     <Button
         android:id="@+id/pay_bill_button"
@@ -45,18 +70,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="20dp"
+        android:layout_marginTop="30dp"
+        android:gravity="center_vertical|center_horizontal"
         android:onClick="onPayBillClick"
         android:padding="10dp"
         android:text="@string/pay_bill" />
-    
-    <Button
-        android:id="@+id/explore_button"
-        style="@style/CustomButton"
-        android:layout_width="178dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:onClick="onExploreClick"
-        android:padding="10dp"
-        android:text="@string/explore" />
 
 </LinearLayout>

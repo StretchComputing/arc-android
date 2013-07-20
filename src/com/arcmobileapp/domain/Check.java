@@ -3,6 +3,8 @@ package com.arcmobileapp.domain;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import com.arcmobileapp.domain.Payments.PaidItems;
+
 public class Check implements Serializable {
 
 	private static final long serialVersionUID = 6406815055461255727L;
@@ -25,6 +27,8 @@ public class Check implements Serializable {
     private Double myTip;
     
     private ArrayList<LineItem> mItems;
+    private ArrayList<LineItem> mMyItems;
+    private ArrayList<PaidItems> mPaidItems;
     private ArrayList<Payments> mPayments;
         
     public Check(int id, String merchantId, String checkNumber, String tableNumber, String status, String waiterRef, Double baseAmount, Double taxAmount, String dateCreated, String lastUpdated, String expiration, Double amtPaid, ArrayList<LineItem> items, ArrayList<Payments> payments) {
@@ -45,6 +49,7 @@ public class Check implements Serializable {
     	setServiceCharge(0.0);
     	setDiscount(0.0);
     	setPaymentId(0);
+    
     }
 
 	public int getId() {
@@ -179,6 +184,16 @@ public class Check implements Serializable {
 		this.mItems = items;
 	}
 	
+	public ArrayList<LineItem> getMyItems() {
+		return mMyItems;
+	}
+
+	public void setMyItems(ArrayList<LineItem> items) {
+		this.mMyItems = items;
+	}
+	
+	
+	
 	public ArrayList<Payments> getPayments() {
 		return mPayments;
 	}
@@ -186,6 +201,16 @@ public class Check implements Serializable {
 	public void setPayments(ArrayList<Payments> payments) {
 		this.mPayments = payments;
 	}
+	
+	public ArrayList<PaidItems> getPaidItems() {
+		return mPaidItems;
+	}
+
+	public void setPaidItems(ArrayList<PaidItems> paidItems) {
+		this.mPaidItems = paidItems;
+	}
+	
+	
 
 	
 	public Double getMyBasePayment() {

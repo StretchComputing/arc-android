@@ -4,16 +4,19 @@ package com.arcmobileapp.web;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.arcmobileapp.domain.CreatePayment;
 import com.arcmobileapp.domain.CreateReview;
+import com.arcmobileapp.domain.LineItem;
 import com.arcmobileapp.utils.Logger;
 
 public class WebServices {
@@ -110,6 +113,86 @@ public class WebServices {
 		}
 	}
 	
+	
+	public String register(String login, String password, String firstName, String lastName) {
+		String resp = "";
+		try {
+
+			String url = this.serverAddress + URLs.REGISTER;
+			Logger.d("|arc-web-services|", "REGISTER URL  = " + url);
+			
+			JSONObject json = new JSONObject();
+			json.put(WebKeys.EMAIL,login);
+			json.put(WebKeys.PASSWORD,password);
+			
+			json.put(WebKeys.FIRST_NAME,firstName);
+			json.put(WebKeys.LAST_NAME,lastName);
+
+			json.put(WebKeys.IS_GUEST, false);
+			json.put(WebKeys.ACCEPT_TERMS, true);
+
+
+			
+			resp = this.getResponse(url, json.toString(), null);
+			Logger.d("|arc-web-services|", "REGISTER RESP = " + resp);
+			return resp;
+		} catch (Exception e) {
+			Logger.d("EXCEPTION IN REGISTER");
+
+			setError(e.getMessage());
+			return resp;
+		}
+	}
+	
+	public String updateCustomer(String login, String password, String token) {
+		String resp = "";
+		try {
+
+			String url = this.serverAddress + URLs.UPDATE_CUSTOMER;
+			Logger.d("|arc-web-services|", "REGISTER URL  = " + url);
+			
+			JSONObject json = new JSONObject();
+			json.put(WebKeys.EMAIL,login);
+			json.put(WebKeys.PASSWORD,password);
+			json.put(WebKeys.IS_GUEST, false);
+
+
+			
+			resp = this.getResponse(url, json.toString(), token);
+			Logger.d("|arc-web-services|", "REGISTER RESP = " + resp);
+			return resp;
+		} catch (Exception e) {
+			Logger.d("EXCEPTION IN REGISTER");
+
+			setError(e.getMessage());
+			return resp;
+		}
+	}
+	
+	
+	public String confirmRegister(String ticketId) {
+		String resp = "";
+		try {
+
+			String url = this.serverAddress + URLs.CONFIRM_REGISTER;
+			Logger.d("|arc-web-services|", "CONFIRM REGISTER URL  = " + url);
+			
+			JSONObject json = new JSONObject();
+			json.put(WebKeys.TICKET_ID, ticketId);
+			
+			Logger.d("CONFIRM PAYMENT JSON =\n\n" + json.toString());
+			
+			resp = this.getResponse(url, json.toString(), null);
+			Logger.d("|arc-web-services|", "CONFIRM REGISTER RESP = " + resp);
+			return resp;
+		} catch (Exception e) {
+			setError(e.getMessage());
+			return resp;
+		}
+	}
+	
+	
+	
 	public String getToken(String login, String password, boolean isGuest) {
 		String resp = "";
 		try {
@@ -187,9 +270,33 @@ public class WebServices {
 			json.put(WebKeys.TAG, "");
 			json.put(WebKeys.NOTES, "");
 			
-			Logger.d("CREATE PAYMENT JSON =\n\n" + json.toString());
+			ArrayList<JSONObject> myArrayList = new ArrayList<JSONObject>();
 			
-			resp = this.getResponse(url, json.toString(), token);
+			for (int i = 0; i < newPayment.getItems().size(); i++){
+				
+				LineItem lineItem = newPayment.getItems().get(i);
+				
+				JSONObject itemJson = new JSONObject();
+				
+				itemJson.put("Percent", lineItem.getPercent());
+				itemJson.put("Amount", lineItem.getAmount());
+				itemJson.put("ItemId", lineItem.getId());
+				
+				myArrayList.add(itemJson);
+				
+				
+			}
+			
+			JSONArray jsonArray = new JSONArray(myArrayList);
+			
+			json.put(WebKeys.ITEMS, jsonArray);
+			
+			String jsonString = json.toString();
+			jsonString = jsonString.replace("\\", "");
+
+			Logger.d("CREATE PAYMENT JSON =\n\n" + jsonString);
+			
+			resp = this.getResponse(url, jsonString, token);
 			Logger.d("|arc-web-services|", "CREATE PAYMENT RESP = " + resp);
 			return resp;
 		} catch (Exception e) {

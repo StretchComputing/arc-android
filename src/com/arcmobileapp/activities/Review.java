@@ -28,7 +28,9 @@ public class Review extends BaseActivity {
 	private Check theBill;
 	private ProgressDialog loadingDialog;
 
-	
+	@Override
+	public void onBackPressed() {
+	}
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -54,7 +56,7 @@ public class Review extends BaseActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getSupportMenuInflater();
-		inflater.inflate(R.menu.action_bar_menu, menu);
+		//inflater.inflate(R.menu.action_bar_menu, menu);
 		return true;
 	}
 	
@@ -77,8 +79,8 @@ public class Review extends BaseActivity {
 			textAdditionalComments.setText("");
 		}
 		
-		String customerId = getString(Keys.DEV_CUSTOMER_ID);
-		String token = getString(Keys.DEV_TOKEN);
+		String customerId = getId();
+		String token = getToken();
 		double numStars = (double) starRating.getNumStars();
 		
 		
@@ -98,13 +100,13 @@ public class Review extends BaseActivity {
 				loadingDialog.hide();
 				if (getFinalSuccess()) {
 
-	
+					toastShort("Thank you for your review!");
+
 					Intent goBackHome = new Intent(getApplicationContext(), Home.class);
 					goBackHome.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 					startActivity(goBackHome);
 					
 					
-					toastShort("Thank you for your review!");
 				} else {
 					toastShort("Review Failed, please try again.");
 

@@ -73,6 +73,26 @@
     <string name="dutch_phone">(708) 320-9272</string>
     <string name="receipt_description">Receipt Image</string>
     <string name="funds_secure_text">Dutch is 100% secure.  Your card information is encrypted with your personal PIN, and can only be accessed for purchases with your approval.</string>
-    
+    <string name="home_dining_new">Where are you dining today?</string>
+    <string name="title_activity_profile">Profile</string>
+    <string name="title_activity_user_profile">UserProfile</string>
+    <string name="log_out_text">Sign Out</string>
+    <string name="sign_out_text">Sign Out</string>
+    <string name="create_text">Create</string>
+    <string name="log_in_text">Log In</string>
+    <string name="logged_out_info">You are not currently logged in.  Please log in our create an account to continue.</string>
+    <string name="title_activity_user_create">UserCreate</string>
+    <string name="title_activity_user_login">UserLogin</string>
+    <string name="email_hint">Email</string>
+    <string name="password_hint">Password</string>
+    <string name="title_activity_user_create_new">UserCreateNew</string>
+    <string name="register_string">Register Now!</string>
+    <string name="register_title_string">Enter your email and create a password</string>
+    <string name="title_activity_guest_create_customer">GuestCreateCustomer</string>
+    <string name="guest_create_string">Would you like to create an account?</string>
+    <string name="guest_create_explain">If you create an account, we can send you email receipts of your transactions!</string>
+    <string name="create_string">Create</string>
+    <string name="nothanks_string">No Thanks</string>
+    <string name="no_payments_string">No payments have been made on this invoice.</string>
 
 </resources>

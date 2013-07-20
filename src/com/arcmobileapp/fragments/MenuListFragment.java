@@ -20,6 +20,7 @@ import com.arcmobileapp.activities.Funds;
 import com.arcmobileapp.activities.Home;
 import com.arcmobileapp.activities.Social;
 import com.arcmobileapp.activities.Support;
+import com.arcmobileapp.activities.UserProfile;
 import com.arcmobileapp.utils.Enums.ModernPicTypes;
 import com.arcmobileapp.utils.Utils;
 
@@ -33,6 +34,7 @@ public class MenuListFragment extends ListFragment {
 		super.onActivityCreated(savedInstanceState);
 		MenuAdapter adapter = new MenuAdapter(getActivity());
 		adapter.add(new MenuItem(Utils.convertModernPicType(ModernPicTypes.World), "Home"));
+		adapter.add(new MenuItem(Utils.convertModernPicType(ModernPicTypes.Guy), "Profile"));
 		adapter.add(new MenuItem(Utils.convertModernPicType(ModernPicTypes.Dollar), "Funds"));
 		adapter.add(new MenuItem(Utils.convertModernPicType(ModernPicTypes.Info), "About"));
 		//adapter.add(new MenuItem(Utils.convertModernPicType(ModernPicTypes.Girl), "Social"));
@@ -94,19 +96,26 @@ public class MenuListFragment extends ListFragment {
 				goHome();
 				break;
 			case 1:
-				goToFunds();				
+				goToProfile();				
 				break;
 			case 2:
+				goToFunds();				
+				break;
+			case 3:
 				//showInfoDialog();
 				goAboutScreen();
 				break;
-			case 3:
+			case 4:
 				goToSocial();
 				break;
 			}
 			
 		}
 		
+		private void goToProfile(){
+			Intent funds = (new Intent(getContext(), UserProfile.class));
+			startActivity(funds);
+		}
 		private void goHome() {
 			Intent home = (new Intent(getContext(), Home.class));
 			home.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

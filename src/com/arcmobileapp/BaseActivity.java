@@ -165,12 +165,32 @@ public class BaseActivity extends SlidingFragmentActivity {
 	}
 
 	public String getToken() {
-		String token = getString(Keys.PROD_TOKEN);
-		if (getServer().equalsIgnoreCase(URLs.DEV_SERVER)) {
-			token = getString(Keys.DEV_TOKEN);
+		
+		try{
+			if (getString(Keys.CUSTOMER_TOKEN) != null && getString(Keys.CUSTOMER_TOKEN).length() > 0){
+				return getString(Keys.CUSTOMER_TOKEN);
+			}else{
+				return getString(Keys.GUEST_TOKEN);
+			}
+		}catch(Exception e){
+			return "";
 		}
-		return token;
+		
 	}
+	
+	public String getId() {
+		
+		try{
+			if (getString(Keys.CUSTOMER_ID) != null && getString(Keys.CUSTOMER_ID).length() > 0){
+				return getString(Keys.CUSTOMER_ID);
+			}else{
+				return getString(Keys.GUEST_ID);
+			}
+		}catch(Exception e){
+			return "";
+		}
+		
+	}	
 
 	public boolean hasKey(String key) {
 		return myPrefs.hasKey(key);
@@ -359,7 +379,7 @@ public class BaseActivity extends SlidingFragmentActivity {
 			return true;
 
 		case R.id.whatIsArc:
-			showOkDialog("What is Arc?", "simply puy, Arc speeds up the checkout process.\n\n" + "1.tell us which restaurant you're at\n" + "2.input your check number\n" + "3.split and pay your portion\n\n\n" + "we'll send the payment straight from your phone to the point of sale\n\n\n" + "wasn't that easy?\n", null);
+			showOkDialog("What is Dutch?", "Simply put, Dutch speeds up the checkout process.\n\n" + "1. Tell us which restaurant you're at\n" + "2. Input your check number\n" + "3. Split and pay your portion\n\n\n" + "We'll send the payment straight from your phone to the point of sale\n\n\n" + "Wasn't that easy?\n", null);
 			break;
 			
 		case R.id.feedback:

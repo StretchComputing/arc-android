@@ -1,0 +1,32 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/menu_settings"
+        android:orderInCategory="0"
+        android:showAsAction="ifRoom"
+        android:title="split">
+        <menu>
+            <item
+                android:id="@+id/splitByDollar"
+                android:title="Split By $"/>
+            
+            <item
+                android:id="@+id/splitByPercent"
+                android:title="Split By %"/>
+            
+        </menu>
+       
+    </item>
+    
+     <item
+        android:id="@+id/showBalance"
+        android:orderInCategory="0"
+        android:showAsAction="ifRoom"
+        android:title="balance">
+        
+       
+    </item>
+   
+    
+
+</menu>
