@@ -45,10 +45,11 @@
     <Button
         android:id="@+id/button1"
         android:layout_width="150dp"
-        android:layout_height="wrap_content"
+        android:layout_height="46dp"
         android:layout_below="@+id/new_password_text"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="35dp"
+        android:background="@drawable/i_button_grey"
         android:onClick="onRegisterClicked"
         android:text="@string/register_string" />
 

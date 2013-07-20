@@ -33,10 +33,11 @@
     <Button
         android:id="@+id/button_email"
         android:layout_width="150dp"
-        android:layout_height="wrap_content"
+        android:layout_height="46dp"
         android:layout_below="@+id/current_merchant"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="32dp"
+        android:background="@drawable/i_button_grey"
         android:onClick="emailNow"
         android:text="@string/send_email_button" />
 
@@ -52,10 +53,11 @@
     <Button
         android:id="@+id/button_call"
         android:layout_width="150dp"
-        android:layout_height="wrap_content"
+        android:layout_height="46dp"
         android:layout_below="@+id/textView3"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="36dp"
+        android:background="@drawable/i_button_grey"
         android:onClick="callNow"
         android:text="@string/call_string" />
 

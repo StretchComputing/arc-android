@@ -59,20 +59,22 @@
     <Button
         android:id="@+id/button1"
         android:layout_width="130dp"
-        android:layout_height="wrap_content"
+        android:layout_height="46dp"
         android:layout_alignRight="@+id/textView2"
         android:layout_below="@+id/guest_password_textv"
         android:layout_marginTop="10dp"
+        android:background="@drawable/i_button_grey"
         android:onClick="onCreateClicked"
         android:text="@string/create_string" />
 
     <Button
         android:id="@+id/button2"
         android:layout_width="130dp"
-        android:layout_height="wrap_content"
+        android:layout_height="46dp"
         android:layout_alignBaseline="@+id/button1"
         android:layout_alignBottom="@+id/button1"
         android:layout_alignLeft="@+id/textView2"
+        android:background="@drawable/i_button_grey"
         android:onClick="onNoThanksClicked"
         android:text="@string/nothanks_string" />
 

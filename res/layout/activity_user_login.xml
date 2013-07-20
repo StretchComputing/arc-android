@@ -35,11 +35,12 @@
 
     <Button
         android:id="@+id/button1"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
+        android:layout_width="120dp"
+        android:layout_height="46dp"
         android:layout_alignRight="@+id/register_email_text"
         android:layout_below="@+id/register_password_text"
         android:layout_marginTop="22dp"
+        android:background="@drawable/i_button_grey"
         android:onClick="onLogInClicked"
         android:text="@string/login" />
 

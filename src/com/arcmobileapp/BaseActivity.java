@@ -350,7 +350,7 @@ public class BaseActivity extends SlidingFragmentActivity {
 		AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
 		alertDialog.setTitle("Change server");
 		int selectedIndex = -1;
-		if (getString(Keys.SERVER) == URLs.DEV_SERVER) {
+		if (getString(Keys.SERVER) == URLs.DUTCH_SERVER) {
 			selectedIndex = 0;
 		} else if (getString(Keys.SERVER) == URLs.PROD_SERVER) {
 			selectedIndex = 1;
@@ -358,7 +358,7 @@ public class BaseActivity extends SlidingFragmentActivity {
 		alertDialog.setSingleChoiceItems(servers, selectedIndex, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int itemSelected) {
 				if (itemSelected == 0) {
-					putString(Keys.SERVER, URLs.DEV_SERVER);
+					putString(Keys.SERVER, URLs.DUTCH_SERVER);
 				} else if (itemSelected == 1) {
 					putString(Keys.SERVER, URLs.PROD_SERVER);
 				}

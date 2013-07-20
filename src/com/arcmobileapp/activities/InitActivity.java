@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -12,7 +13,6 @@ import android.widget.Toast;
 import com.arcmobileapp.R;
 import com.arcmobileapp.utils.ArcPreferences;
 import com.arcmobileapp.utils.Keys;
-import com.arcmobileapp.utils.Logger;
 import com.arcmobileapp.web.GetTokenTask;
 
 public class InitActivity extends Activity {
@@ -30,6 +30,7 @@ public class InitActivity extends Activity {
 		//Get the token
 		
 		getGuestToken();
+		
 	}
 	
 	private void getGuestToken(){
@@ -66,6 +67,11 @@ public class InitActivity extends Activity {
 		//Go Home
 		
 		if (doesHaveToken){
+			
+			ArcPreferences myPrefs = new ArcPreferences(getApplicationContext());
+
+			myPrefs.putAndCommitBoolean(Keys.AGREED_TERMS, true);
+
 			startActivity(new Intent(getApplicationContext(), Home.class));
 			overridePendingTransition(0, 0);
 			finish();
@@ -79,5 +85,22 @@ public class InitActivity extends Activity {
 	private void toast(String message, int duration) {
 		Toast.makeText(getApplicationContext(), message, duration).show();
 	}
+	
+	public void onTermsClicked(View view){
+		
+		Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"));
+		startActivity(browserIntent);
+		
+		
+	}
 
+
+	public void onPrivacyClicked(View view){
+		
+		Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"));
+		startActivity(browserIntent);
+		
+		
+	}
+	
 }

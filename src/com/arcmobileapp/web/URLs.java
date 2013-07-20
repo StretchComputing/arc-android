@@ -4,8 +4,8 @@ package com.arcmobileapp.web;
 public final class URLs {
 	
 	public static final String PROD_SERVER = "https://arc.dagher.mobi";
-	public static final String DEV_SERVER = "http://dev.dagher.mobi";
-	//public static final String DEV_SERVER = "https://arc.dagher.mobi";
+	public static final String DUTCH_SERVER = "http://dev.dagher.mobi";
+	//public static final String DUTCH_SERVER = "https://arc.dagher.mobi";
 
 	//public static final String DEV_SERVER = "http://dtnetwork.asuscomm.com:8700/arc-dev";
 	

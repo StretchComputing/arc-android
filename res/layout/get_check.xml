@@ -51,10 +51,11 @@
       <Button
           android:id="@+id/get_invoice_button"
           style="@style/CustomButton"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
+          android:layout_width="204dp"
+          android:layout_height="46dp"
           android:layout_marginBottom="20dp"
           android:layout_marginTop="20dp"
+          android:background="@drawable/i_button_green"
           android:minHeight="48dp"
           android:onClick="onViewBillClick"
           android:text="@string/view_bill" />

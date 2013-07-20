@@ -94,5 +94,8 @@
     <string name="create_string">Create</string>
     <string name="nothanks_string">No Thanks</string>
     <string name="no_payments_string">No payments have been made on this invoice.</string>
+    <string name="title_activity_terms">TermsActivity</string>
 
+    
+    
 </resources>
