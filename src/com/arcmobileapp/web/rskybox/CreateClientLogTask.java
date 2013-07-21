@@ -46,14 +46,13 @@ public class CreateClientLogTask extends AsyncTask<Void, Void, Void> {
 	protected boolean performTask() {
 		WebServices webService = new WebServices();
 		this.rskyboxResponse = webService.createClientLog(this.logName, this.logMessage, this.logLevel, this.exception);
-		Logger.d("rSkybox Create Client Log with logLevel = " + this.logLevel);
-		Logger.d("rSkybox CREATE CLIENT LOG RESPONSE: " + this.rskyboxResponse);
+		//Logger.d("rSkybox CREATE CLIENT LOG RESPONSE: " + this.rskyboxResponse);
 		return true;
 	}
 	
 	// runs on UI thread
 	protected void performPostExec() {
-		Logger.d("UI thread: Create Client Log Response: " + this.rskyboxResponse);
+		//Logger.d("UI thread: Create Client Log Response: " + this.rskyboxResponse);
 		if(this.rskyboxResponse == null) {
 			return;
 		}
