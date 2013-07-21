@@ -54,7 +54,7 @@ public class GetCheck extends BaseActivity {
 		loadingDialog.setCancelable(false);
 		
 		// rSkybox Client Log test
-		(new CreateClientLogTask("dutch android first log", "this is a test by joepwro inside of GetCheck()", "error", null)).execute();
+		//(new CreateClientLogTask("dutch android first log", "this is a test by joepwro inside of GetCheck()", "error", null)).execute();
 	}
 	
 	public void onViewBillClick(View v) {
