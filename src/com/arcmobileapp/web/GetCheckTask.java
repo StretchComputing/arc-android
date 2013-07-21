@@ -64,10 +64,16 @@ public class GetCheckTask extends AsyncTask<Void, Void, Void> {
 	
 	protected boolean performTask() {
 		WebServices webService = new WebServices(new ArcPreferences(mContext).getServer());
+
 		mResponse = webService.getCheck(mToken, mMerchantId, mInvoiceNumber, "");
-		Logger.d("FINAL GET CHECK RESPONSE: " + mResponse);
+		
+
 		
 		
+		if (mResponse == null){
+
+			return false;
+		}
 		
 		
 		
@@ -117,13 +123,15 @@ public class GetCheckTask extends AsyncTask<Void, Void, Void> {
 				}
 			}
 		} catch (JSONException e) {
+			
+
 			(new CreateClientLogTask("GetCheckTask.parseJson", "Exception Caught", "error", e)).execute();
 
-			Logger.e("Error creating payment, JSON Exception: " + e.getMessage());
+			Logger.e("Error getting check , JSON Exception: " + e.getMessage());
 		}
 		
 		
-		
+
 		return false;
 	}
 	

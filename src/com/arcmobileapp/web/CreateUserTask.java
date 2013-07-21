@@ -76,6 +76,11 @@ public class CreateUserTask extends AsyncTask<Void, Void, Void> {
 		try{
 			WebServices webService = new WebServices(URLs.DUTCH_SERVER);
 			mDevResponse = webService.register(mLogin, mPassword, mFirstName, mLastName);
+			
+			if (mDevResponse == null){
+
+				return false;
+			}
 		}catch (Exception e){
 			return false;
 		}
@@ -152,6 +157,13 @@ public class CreateUserTask extends AsyncTask<Void, Void, Void> {
 			Thread.sleep(sleep);
 			WebServices webService = new WebServices(new ArcPreferences(mContext).getServer());
 			mDevResponse = webService.confirmRegister(mResponseTicket);
+			
+			if (mDevResponse == null){
+
+				return false;
+			}
+			
+			
 			try {
 				JSONObject json =  new JSONObject(mDevResponse);
 				

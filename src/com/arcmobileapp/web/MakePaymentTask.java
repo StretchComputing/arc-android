@@ -59,6 +59,11 @@ public class MakePaymentTask extends AsyncTask<Void, Void, Void> {
 	protected boolean performTask() {
 		WebServices webService = new WebServices(new ArcPreferences(mContext).getServer());
 		mResponse = webService.createPayment(mToken, mPayment);
+		
+		if (mResponse == null){
+
+			return false;
+		}
 		try {
 
 			JSONObject json =  new JSONObject(mResponse);
@@ -112,6 +117,13 @@ public class MakePaymentTask extends AsyncTask<Void, Void, Void> {
 			Thread.sleep(sleep);
 			WebServices webService = new WebServices(new ArcPreferences(mContext).getServer());
 			mResponse = webService.confirmPayment(mToken, getResponseTicket());
+			
+			if (mResponse == null){
+
+				return false;
+			}
+			
+			
 			try {
 				JSONObject json =  new JSONObject(mResponse);
 				

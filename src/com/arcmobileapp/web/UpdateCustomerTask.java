@@ -65,7 +65,10 @@ public class UpdateCustomerTask extends AsyncTask<Void, Void, Void> {
 		
 		mDevResponse = webService.updateCustomer(mLogin, mPassword, guestToken);
 		
-		
+		if (mDevResponse == null){
+
+			return false;
+		}
 		try {
 			Logger.d("UPDATE Response: " + mDevResponse);
 			JSONObject json =  new JSONObject(mDevResponse);

@@ -145,7 +145,7 @@ public class Home extends BaseActivity implements ScrollViewListener {
 						
 
 						loadingDialog.hide();
-						if (merchants.size() > 0){
+						if (merchants != null && merchants.size() > 0){
 						
 							MerchantObject merchant = merchants.get(0);
 							
@@ -155,6 +155,12 @@ public class Home extends BaseActivity implements ScrollViewListener {
 							initCarousel();
 										        
 						}else{
+							
+							//Remove carousel view?
+							scrollView.setVisibility(View.INVISIBLE);
+							currentMerchantText.setVisibility(View.INVISIBLE);
+							currentMerchantAddressText.setVisibility(View.INVISIBLE);
+
 							
 							if (errorCode != 0){
 								
@@ -178,6 +184,11 @@ public class Home extends BaseActivity implements ScrollViewListener {
 
 						}
 					} catch (Exception e) {
+						
+						scrollView.setVisibility(View.INVISIBLE);
+						currentMerchantText.setVisibility(View.INVISIBLE);
+						currentMerchantAddressText.setVisibility(View.INVISIBLE);
+						
 						toastShort("Error retrieving nearby merchants.");
 
 						(new CreateClientLogTask("Home.getMerchantsFromWeb.onPostExecute", "Exception Caught", "error", e)).execute();
@@ -312,6 +323,9 @@ public class Home extends BaseActivity implements ScrollViewListener {
 				}
 			});
       // scrollView.setScrollViewListener(this);
+			scrollView.setVisibility(View.VISIBLE);
+			currentMerchantText.setVisibility(View.VISIBLE);
+			currentMerchantAddressText.setVisibility(View.VISIBLE);
 			scrollView.setScrollViewListener(this);
 		} catch (Exception e) {
 			(new CreateClientLogTask("Home.initCarousel", "Exception Caught", "error", e)).execute();
@@ -387,7 +401,7 @@ public class Home extends BaseActivity implements ScrollViewListener {
 	
 		try {
 			
-			if (merchants.size() > 0){
+			if (merchants != null && merchants.size() > 0){
 				int index = getCurrentIndex(currentScrollPos);        
 
 				this.clickCarousel(index);

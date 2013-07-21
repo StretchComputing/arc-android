@@ -12,6 +12,7 @@ import com.arcmobileapp.BaseActivity;
 import com.arcmobileapp.R;
 import com.arcmobileapp.utils.ArcPreferences;
 import com.arcmobileapp.utils.Keys;
+import com.arcmobileapp.web.ErrorCodes;
 import com.arcmobileapp.web.GetTokenTask;
 import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 
@@ -99,7 +100,16 @@ public class UserLogin extends BaseActivity {
 											
 						
 						}else{
-							toastShort("Invalid username/password, please try again.");
+							
+							int errorCode = getErrorCode();
+							
+							if (errorCode == ErrorCodes.INCORRECT_LOGIN_INFO){
+								toastShort("Invalid username/password, please try again.");
+
+							}else{
+								toastShort("Error logging in.  Dutch may be experiencing network issues, please try again.");
+
+							}
 						}
 					} catch (Exception e) {
 						(new CreateClientLogTask("UserLogin.login.onPostExecute", "Exception Caught", "error", e)).execute();

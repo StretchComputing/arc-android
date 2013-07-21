@@ -30,6 +30,8 @@ public class WebServices {
 	private HttpEntity httpEntity;
 	private String errorMsg = "";
 	private String serverAddress;
+	private int httpStatusCode;
+	private String currentAPI;
 	
 	public WebServices() {
 		setServer(URLs.DUTCH_SERVER);
@@ -38,14 +40,23 @@ public class WebServices {
 
 	public WebServices(String server) {
 		setServer(server);
+		httpStatusCode = 0;
+		currentAPI = "unknown";
 		this.httpClient = new DefaultHttpClient();
 	}	
 	
+	private void handleHttpStatusError(){
+		
+		String errorMsg = "HTTP Status Code: " + httpStatusCode + " for API " + currentAPI + " on " + serverAddress;
+		(new CreateClientLogTask("WebServices.handleHttpStatusError", errorMsg, "error", null)).execute();
+
+        
+        
+	}
 	private String getResponse(String url, String json, String token) {
 		StringBuilder reply = null;
 		try {
 
-				
 			this.httpClient = new DefaultHttpClient();
 			httpPost = new HttpPost(url);
 
@@ -59,21 +70,30 @@ public class WebServices {
 			}
 
 			httpResponse = httpClient.execute(httpPost);
-			httpEntity = httpResponse.getEntity();
 
-			BufferedReader in = new BufferedReader(new InputStreamReader(
-					httpEntity.getContent()));
-			String inputLine;
+			httpStatusCode = httpResponse.getStatusLine().getStatusCode();
 
-			reply = new StringBuilder();
+			if (httpStatusCode != 200 && httpStatusCode != 201 && httpStatusCode != 422){
+				handleHttpStatusError();
+				return null;
+			}else{
+				httpEntity = httpResponse.getEntity();
 
-			while ((inputLine = in.readLine()) != null) {
-				reply.append(inputLine);
+				BufferedReader in = new BufferedReader(new InputStreamReader(
+						httpEntity.getContent()));
+				String inputLine;
+
+				reply = new StringBuilder();
+
+				while ((inputLine = in.readLine()) != null) {
+					reply.append(inputLine);
+				}
+				in.close();
+
+				httpEntity.consumeContent();
+				httpClient.getConnectionManager().shutdown();
 			}
-			in.close();
-
-			httpEntity.consumeContent();
-			httpClient.getConnectionManager().shutdown();
+			
 		} catch (IOException e) {
 			(new CreateClientLogTask("WebServices.getResponse", "Exception Caught", "error", e)).execute();
 
@@ -117,6 +137,7 @@ public class WebServices {
 		} catch (Exception e) {
 			(new CreateClientLogTask("WebServices.getMerchants", "Exception Caught", "error", e)).execute();
 
+			Logger.d("************EXCEPTION IN GET MERCHANTS()");
 			setError(e.getMessage());
 			return resp;
 		}
@@ -251,9 +272,14 @@ public class WebServices {
 			}
 			
 			resp = this.getResponse(url, json.toString(), token);
+			Logger.d("************RETURNING IN GET GETCHECK()");
+
 			Logger.d("|arc-web-services|", "GET CHECK RESP = " + resp);
 			return resp;
 		} catch (Exception e) {
+			
+			Logger.d("************EXCEPTION IN GETCHECK IN GET GETCHECK()");
+
 			(new CreateClientLogTask("WebServices.getCheck", "Exception Caught", "error", e)).execute();
 
 			setError(e.getMessage());

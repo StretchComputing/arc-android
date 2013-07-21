@@ -57,6 +57,13 @@ public class SubmitReviewTask extends AsyncTask<Void, Void, Void> {
 	protected boolean performTask() {
 		WebServices webService = new WebServices(new ArcPreferences(mContext).getServer());
 		mResponse = webService.createReview(mToken, mReview);
+		
+		if (mResponse == null){
+
+			return false;
+		}
+		
+		
 		try {
 
 			JSONObject json =  new JSONObject(mResponse);

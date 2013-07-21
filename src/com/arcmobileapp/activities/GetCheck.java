@@ -103,6 +103,7 @@ public class GetCheck extends BaseActivity {
 					@Override
 					protected void onPostExecute(Void result) {
 						try {
+							
 							super.onPostExecute(result);
 							
 
@@ -160,6 +161,7 @@ public class GetCheck extends BaseActivity {
 
 							}
 						} catch (Exception e) {
+
 							(new CreateClientLogTask("GetCheck.getInvoice.onPostExecute", "Exception Caught", "error", e)).execute();
 
 						}
@@ -167,7 +169,7 @@ public class GetCheck extends BaseActivity {
 				};
 				getInvoiceTask.execute();
 			} else {
-				Logger.d("NO TOKEN - GET TOKEN AND THEN GET THE INVOICE NUMBER");
+
 			}
 		} catch (Exception e) {
 			(new CreateClientLogTask("GetCheck.getInvoice", "Exception Caught", "error", e)).execute();
