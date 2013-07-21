@@ -8,6 +8,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
+import android.content.res.Resources.NotFoundException;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.view.Gravity;
@@ -32,6 +33,7 @@ import com.arcmobileapp.utils.Keys;
 import com.arcmobileapp.utils.Logger;
 import com.arcmobileapp.utils.Security;
 import com.arcmobileapp.web.CreateUserTask;
+import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 
 public class UserCreateNew extends BaseActivity {
 
@@ -48,17 +50,22 @@ public class UserCreateNew extends BaseActivity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_user_create_new);
-		
+		try {
+			super.onCreate(savedInstanceState);
+			setContentView(R.layout.activity_user_create_new);
+			
 
-		emailTextView = (TextView) findViewById(R.id.new_email_text);
-		passwordTextView = (TextView) findViewById(R.id.new_password_text);
-		
-		loadingDialog = new ProgressDialog(UserCreateNew.this);
-		loadingDialog.setTitle("Registering");
-		loadingDialog.setMessage("Please Wait...");
-		loadingDialog.setCancelable(false);
+			emailTextView = (TextView) findViewById(R.id.new_email_text);
+			passwordTextView = (TextView) findViewById(R.id.new_password_text);
+			
+			loadingDialog = new ProgressDialog(UserCreateNew.this);
+			loadingDialog.setTitle("Registering");
+			loadingDialog.setMessage("Please Wait...");
+			loadingDialog.setCancelable(false);
+		} catch (Exception e) {
+			(new CreateClientLogTask("UserCreateNew.onCreate", "Exception Caught", "error", e)).execute();
+
+		}
 	}
 
 	@Override
@@ -71,11 +78,16 @@ public class UserCreateNew extends BaseActivity {
 	
 	public void onRegisterClicked(View view) {
 
-		if (emailTextView != null && emailTextView.length() > 0 && passwordTextView != null && passwordTextView.length() > 0 ){
-			//Send the login
-			login();
-		}else{
-			toastShort("Please enter an email address and password.");
+		try {
+			if (emailTextView != null && emailTextView.length() > 0 && passwordTextView != null && passwordTextView.length() > 0 ){
+				//Send the login
+				login();
+			}else{
+				toastShort("Please enter an email address and password.");
+			}
+		} catch (Exception e) {
+			(new CreateClientLogTask("UserCreateNew.onRegisterClicked", "Exception Caught", "error", e)).execute();
+
 		}
 	}
 
@@ -83,43 +95,53 @@ public class UserCreateNew extends BaseActivity {
 	private void login(){
 		
 		
-		loadingDialog.show();
-		String sendEmail = (String) emailTextView.getText().toString();
-		String sendPassword = (String) passwordTextView.getText().toString();
+		try {
+			loadingDialog.show();
+			String sendEmail = (String) emailTextView.getText().toString();
+			String sendPassword = (String) passwordTextView.getText().toString();
 
-		String firstName = "test";
-		String lastName = "test";
-		
-		Logger.d("CREATING NEW USER WITH EMAIL: " + sendEmail + " AND PASSWORD: " + sendPassword);
-		
-		CreateUserTask createUserTask = new CreateUserTask(sendEmail, sendPassword, firstName, lastName, false, getApplicationContext()) {
-			@Override
-			protected void onPostExecute(Void result) {
-				super.onPostExecute(result);
-				UserCreateNew.this.loadingDialog.hide();
-				
-				if (getFinalSuccess()){
-					ArcPreferences myPrefs = new ArcPreferences(getApplicationContext());
-					
-					myPrefs.putAndCommitString(Keys.CUSTOMER_TOKEN, getDevToken());
-					myPrefs.putAndCommitString(Keys.CUSTOMER_ID, getDevCustomerId());
-					myPrefs.putAndCommitString(Keys.CUSTOMER_EMAIL, UserCreateNew.this.emailTextView.getText().toString());
-					
-					
-					showSuccessDialog();
-					
+			String firstName = "test";
+			String lastName = "test";
+			
+			Logger.d("CREATING NEW USER WITH EMAIL: " + sendEmail + " AND PASSWORD: " + sendPassword);
+			
+			CreateUserTask createUserTask = new CreateUserTask(sendEmail, sendPassword, firstName, lastName, false, getApplicationContext()) {
+				@Override
+				protected void onPostExecute(Void result) {
+					try {
+						super.onPostExecute(result);
+						UserCreateNew.this.loadingDialog.hide();
+						
+						if (getFinalSuccess()){
+							ArcPreferences myPrefs = new ArcPreferences(getApplicationContext());
+							
+							myPrefs.putAndCommitString(Keys.CUSTOMER_TOKEN, getDevToken());
+							myPrefs.putAndCommitString(Keys.CUSTOMER_ID, getDevCustomerId());
+							myPrefs.putAndCommitString(Keys.CUSTOMER_EMAIL, UserCreateNew.this.emailTextView.getText().toString());
+							
+							
+							showSuccessDialog();
+							
 
-					
-					
-				}else{
-					toastShort("Registration error, please try again.");
+							
+							
+						}else{
+							toastShort("Registration error, please try again.");
 
+						}
+					} catch (Exception e) {
+						(new CreateClientLogTask("UserCreateNew.login.onPostExecute", "Exception Caught", "error", e)).execute();
+
+					}
+					
+					
 				}
-				
-				
-			}
-		};
-		createUserTask.execute();
+			};
+			createUserTask.execute();
+		} catch (Exception e) {
+			(new CreateClientLogTask("UserCreateNew.login", "Exception Caught", "error", e)).execute();
+
+		}
 	     
 		
 	}
@@ -128,166 +150,186 @@ public class UserCreateNew extends BaseActivity {
 	
 	private void showSuccessDialog() {
 
-		successDialog = null;
+		try {
+			successDialog = null;
 
-		
-		LayoutInflater factory = LayoutInflater.from(this);
-		final View makePaymentView = factory.inflate(R.layout.payment_dialog, null);
-		EditText input = (EditText) makePaymentView.findViewById(R.id.paymentInput);
-		input.setVisibility(View.GONE);
-		
-		TextView paymentTitle = (TextView) makePaymentView.findViewById(R.id.paymentTitle);
-		paymentTitle.setText("You will now be prompted to enter a form of payment.");
+			
+			LayoutInflater factory = LayoutInflater.from(this);
+			final View makePaymentView = factory.inflate(R.layout.payment_dialog, null);
+			EditText input = (EditText) makePaymentView.findViewById(R.id.paymentInput);
+			input.setVisibility(View.GONE);
+			
+			TextView paymentTitle = (TextView) makePaymentView.findViewById(R.id.paymentTitle);
+			paymentTitle.setText("You will now be prompted to enter a form of payment.");
 
-		TextView remainingBalance = (TextView) makePaymentView.findViewById(R.id.paymentRemaining);
-	
-		int currentapiVersion = android.os.Build.VERSION.SDK_INT;
-	
-		
-		//Set colors
-		if (currentapiVersion <= android.os.Build.VERSION_CODES.GINGERBREAD_MR1){
+			TextView remainingBalance = (TextView) makePaymentView.findViewById(R.id.paymentRemaining);
 
-			paymentTitle.setTextColor(getResources().getColor(R.color.white));
-			remainingBalance.setTextColor(getResources().getColor(R.color.white));
+			int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+
+			
+			//Set colors
+			if (currentapiVersion <= android.os.Build.VERSION_CODES.GINGERBREAD_MR1){
+
+				paymentTitle.setTextColor(getResources().getColor(R.color.white));
+				remainingBalance.setTextColor(getResources().getColor(R.color.white));
+			}
+
+			remainingBalance.setText("Registration Successful!");
+			AlertDialog.Builder builder = new AlertDialog.Builder(UserCreateNew.this);
+			builder.setCancelable(false);
+			builder.setTitle(getString(R.string.app_dialog_title));
+			builder.setView(makePaymentView);
+			
+			//builder.setIcon(R.drawable.logo);
+			builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+
+				}
+			});
+
+			builder.setOnCancelListener(new OnCancelListener() {
+
+				@Override
+				public void onCancel(DialogInterface dialog) {
+				}
+			});
+			successDialog = builder.create();
+			successDialog.setCancelable(false);
+			successDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+
+				@Override
+				public void onShow(DialogInterface dialog) {
+
+					Button b = successDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+					b.setOnClickListener(new View.OnClickListener() {
+
+						@Override
+						public void onClick(View view) {
+							
+							
+							//clicked
+							
+							showCardIo();
+							successDialog.dismiss();
+						}
+					});
+				}
+			});
+			successDialog.show();
+		} catch (NotFoundException e) {
+			(new CreateClientLogTask("UserCreateNew.showSuccessDialog", "Exception Caught", "error", e)).execute();
+
 		}
-
-		remainingBalance.setText("Registration Successful!");
-		AlertDialog.Builder builder = new AlertDialog.Builder(UserCreateNew.this);
-		builder.setCancelable(false);
-		builder.setTitle(getString(R.string.app_dialog_title));
-		builder.setView(makePaymentView);
-		
-		//builder.setIcon(R.drawable.logo);
-		builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
-
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-
-			}
-		});
-	
-		builder.setOnCancelListener(new OnCancelListener() {
-
-			@Override
-			public void onCancel(DialogInterface dialog) {
-			}
-		});
-		successDialog = builder.create();
-		successDialog.setCancelable(false);
-		successDialog.setOnShowListener(new DialogInterface.OnShowListener() {
-
-			@Override
-			public void onShow(DialogInterface dialog) {
-
-				Button b = successDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-				b.setOnClickListener(new View.OnClickListener() {
-
-					@Override
-					public void onClick(View view) {
-						
-						
-						//clicked
-						
-						showCardIo();
-						successDialog.dismiss();
-					}
-				});
-			}
-		});
-		successDialog.show();
 	
 	}
 	
 	public void showCardIo(){
 		
-		Intent scanIntent = new Intent(this, CardIOActivity.class);
-		// required for authentication with card.io
-		scanIntent.putExtra(CardIOActivity.EXTRA_APP_TOKEN, Constants.MY_CARDIO_APP_TOKEN);
-		scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_EXPIRY, true);
-		scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_CVV, true); 
-		scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_ZIP, false); 
-		startActivityForResult(scanIntent, Constants.SCAN_REQUEST_CODE);
+		try {
+			Intent scanIntent = new Intent(this, CardIOActivity.class);
+			// required for authentication with card.io
+			scanIntent.putExtra(CardIOActivity.EXTRA_APP_TOKEN, Constants.MY_CARDIO_APP_TOKEN);
+			scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_EXPIRY, true);
+			scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_CVV, true); 
+			scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_ZIP, false); 
+			startActivityForResult(scanIntent, Constants.SCAN_REQUEST_CODE);
+		} catch (Exception e) {
+			(new CreateClientLogTask("UserCreateNew.showCardIO", "Exception Caught", "error", e)).execute();
+
+		}
 		
 		
 	}
 	
 	
 	private void showPinDialog() {
-		pinDialog = null;
-		
-		LayoutInflater factory = LayoutInflater.from(this);
-		final View makePaymentView = factory.inflate(R.layout.payment_dialog, null);
-		final EditText input = (EditText) makePaymentView.findViewById(R.id.paymentInput);
-		
-		
-		
-		TextView paymentTitle = (TextView) makePaymentView.findViewById(R.id.paymentTitle);
-		paymentTitle.setText("Please create a PIN");
-		input.setGravity(Gravity.CENTER | Gravity.BOTTOM);
+		try {
+			pinDialog = null;
+			
+			LayoutInflater factory = LayoutInflater.from(this);
+			final View makePaymentView = factory.inflate(R.layout.payment_dialog, null);
+			final EditText input = (EditText) makePaymentView.findViewById(R.id.paymentInput);
+			
+			
+			
+			TextView paymentTitle = (TextView) makePaymentView.findViewById(R.id.paymentTitle);
+			paymentTitle.setText("Please create a PIN");
+			input.setGravity(Gravity.CENTER | Gravity.BOTTOM);
 
-		input.setFilters(new InputFilter[] { new CurrencyFilter() });
-		TextView remainingBalance = (TextView) makePaymentView.findViewById(R.id.paymentRemaining);
-		remainingBalance.setVisibility(View.GONE);
-		
-		
-        int currentapiVersion = android.os.Build.VERSION.SDK_INT;
-		
-		//Set colors
-		if (currentapiVersion <= android.os.Build.VERSION_CODES.GINGERBREAD_MR1){
+			input.setFilters(new InputFilter[] { new CurrencyFilter() });
+			TextView remainingBalance = (TextView) makePaymentView.findViewById(R.id.paymentRemaining);
+			remainingBalance.setVisibility(View.GONE);
+			
+			
+			int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+			
+			//Set colors
+			if (currentapiVersion <= android.os.Build.VERSION_CODES.GINGERBREAD_MR1){
 
-			paymentTitle.setTextColor(getResources().getColor(R.color.white));
-		}
-		
-		
-		
-		AlertDialog.Builder builder = new AlertDialog.Builder(UserCreateNew.this);
-		builder.setTitle(getString(R.string.app_dialog_title));
-		builder.setView(makePaymentView);
-		//builder.setIcon(R.drawable.logo);
-		builder.setCancelable(false);
-		builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
-
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-
+				paymentTitle.setTextColor(getResources().getColor(R.color.white));
 			}
-		});
-		
-		builder.setOnCancelListener(new OnCancelListener() {
+			
+			
+			
+			AlertDialog.Builder builder = new AlertDialog.Builder(UserCreateNew.this);
+			builder.setTitle(getString(R.string.app_dialog_title));
+			builder.setView(makePaymentView);
+			//builder.setIcon(R.drawable.logo);
+			builder.setCancelable(false);
+			builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
 
-			@Override
-			public void onCancel(DialogInterface dialog) {
-			}
-		});
-		pinDialog = builder.create();
-		
-		pinDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
 
-		pinDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+				}
+			});
+			
+			builder.setOnCancelListener(new OnCancelListener() {
 
-			@Override
-			public void onShow(DialogInterface dialog) {
+				@Override
+				public void onCancel(DialogInterface dialog) {
+				}
+			});
+			pinDialog = builder.create();
+			
+			pinDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
-				Button b = pinDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-				b.setOnClickListener(new View.OnClickListener() {
+			pinDialog.setOnShowListener(new DialogInterface.OnShowListener() {
 
-					@Override
-					public void onClick(View view) {
+				@Override
+				public void onShow(DialogInterface dialog) {
+
+					Button b = pinDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+					b.setOnClickListener(new View.OnClickListener() {
+
+						@Override
+						public void onClick(View view) {
+							
+							try {
+								if (input.getText().toString().length() < 4){
+									toastShort("PIN must be at least 4 digits");
+								}else{
+									myPIN = input.getText().toString();
+									pinDialog.dismiss();
+									UserCreateNew.this.refreshList();
+								}
+							} catch (Exception e) {
+								(new CreateClientLogTask("UserCreateNew.showPinDialog.onClick", "Exception Caught", "error", e)).execute();
+
+							}
 						
-						if (input.getText().toString().length() < 4){
-							toastShort("PIN must be at least 4 digits");
-						}else{
-							myPIN = input.getText().toString();
-							pinDialog.dismiss();
-							UserCreateNew.this.refreshList();
+							
 						}
-					
-						
-					}
-				});
-			}
-		});
-		pinDialog.show();
+					});
+				}
+			});
+			pinDialog.show();
+		} catch (NotFoundException e) {
+			(new CreateClientLogTask("UserCreateNew.showPinDialog", "Exception Caught", "error", e)).execute();
+
+		}
 		
 	}
 	
@@ -295,148 +337,167 @@ public class UserCreateNew extends BaseActivity {
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
+		try {
+			super.onActivityResult(requestCode, resultCode, data);
 
-		String resultDisplayStr = "no response";
+			String resultDisplayStr = "no response";
 
-		if (requestCode == Constants.SCAN_REQUEST_CODE) {
-			if (data != null && data.hasExtra(CardIOActivity.EXTRA_SCAN_RESULT)) {
-				CreditCard scanResult = data.getParcelableExtra(CardIOActivity.EXTRA_SCAN_RESULT);
-				
-				if(!scanResult.isExpiryValid()) {
-					resultDisplayStr = "Your credit card is not valid (expired)";
+			if (requestCode == Constants.SCAN_REQUEST_CODE) {
+				if (data != null && data.hasExtra(CardIOActivity.EXTRA_SCAN_RESULT)) {
+					CreditCard scanResult = data.getParcelableExtra(CardIOActivity.EXTRA_SCAN_RESULT);
+					
+					if(!scanResult.isExpiryValid()) {
+						resultDisplayStr = "Your credit card is not valid (expired)";
+						showInfoDialog(resultDisplayStr);
+						return;
+					}
+					
+					if(scanResult.getCardType() == CardType.INSUFFICIENT_DIGITS || scanResult.getCardType() == CardType.UNKNOWN || scanResult.getCardType() == CardType.JCB) {
+						resultDisplayStr = "Your credit card is not valid (type unknown)";
+						showInfoDialog(resultDisplayStr);
+						return;
+					}
+					
+					resultDisplayStr = "Card Number (formatted):\n"
+							+ scanResult.getFormattedCardNumber() + "\n";
+
+					resultDisplayStr += "Card Type: "
+							+ scanResult.getCardType().name + "\n";
+
+					
+					
+					// Do something with the raw number, e.g.:
+					// myService.setCardNumber( scanResult.cardNumber );
+
+					if (scanResult.isExpiryValid()) {
+						resultDisplayStr += "Expiration Date: "
+								+ scanResult.expiryMonth + "/"
+								+ scanResult.expiryYear + "\n";
+					}
+
+					if (scanResult.cvv != null) {
+						// Never log or display a CVV
+						resultDisplayStr += "CVV has " + scanResult.cvv.length()
+								+ " digits.\n";
+					}
+
+					if (scanResult.zip != null) {
+						resultDisplayStr += "Zip: " + scanResult.zip + "\n";
+					}
+					
+					saveTemp(scanResult.getFormattedCardNumber(), String.valueOf(scanResult.expiryMonth), String.valueOf(scanResult.expiryYear), scanResult.zip, scanResult.cvv, String.valueOf(scanResult.getCardType().ordinal()), scanResult.getCardType().name());
+					showPinDialog();
+					
+				} else {
+					
+					didCancelScan = true;
+					resultDisplayStr = "\nScan canceled.  You may instead enter payment from the 'Funds' section on the Menu, or as you are about to make a payment.\n";
 					showInfoDialog(resultDisplayStr);
+					
+					
+					
+					
 					return;
 				}
-				
-				if(scanResult.getCardType() == CardType.INSUFFICIENT_DIGITS || scanResult.getCardType() == CardType.UNKNOWN || scanResult.getCardType() == CardType.JCB) {
-					resultDisplayStr = "Your credit card is not valid (type unknown)";
-					showInfoDialog(resultDisplayStr);
-					return;
-				}
-				
-				resultDisplayStr = "Card Number (formatted):\n"
-						+ scanResult.getFormattedCardNumber() + "\n";
-
-				resultDisplayStr += "Card Type: "
-						+ scanResult.getCardType().name + "\n";
-
-				
-				
-				// Do something with the raw number, e.g.:
-				// myService.setCardNumber( scanResult.cardNumber );
-
-				if (scanResult.isExpiryValid()) {
-					resultDisplayStr += "Expiration Date: "
-							+ scanResult.expiryMonth + "/"
-							+ scanResult.expiryYear + "\n";
-				}
-
-				if (scanResult.cvv != null) {
-					// Never log or display a CVV
-					resultDisplayStr += "CVV has " + scanResult.cvv.length()
-							+ " digits.\n";
-				}
-
-				if (scanResult.zip != null) {
-					resultDisplayStr += "Zip: " + scanResult.zip + "\n";
-				}
-				
-				saveTemp(scanResult.getFormattedCardNumber(), String.valueOf(scanResult.expiryMonth), String.valueOf(scanResult.expiryYear), scanResult.zip, scanResult.cvv, String.valueOf(scanResult.getCardType().ordinal()), scanResult.getCardType().name());
-				showPinDialog();
-				
-			} else {
-				
-				didCancelScan = true;
-				resultDisplayStr = "\nScan canceled.  You may instead enter payment from the 'Funds' section on the Menu, or as you are about to make a payment.\n";
-				showInfoDialog(resultDisplayStr);
-				
-				
-				
-				
-				return;
 			}
-		}
 
-		//showSuccessMessage(resultDisplayStr);
-		//toastLong(resultDisplayStr);
+			//showSuccessMessage(resultDisplayStr);
+			//toastLong(resultDisplayStr);
 //		showInfoDialog(resultDisplayStr);
-		// else handle other activity results
+			// else handle other activity results
+		} catch (Exception e) {
+			(new CreateClientLogTask("UserCreateNew.onActivityResult", "Exception Caught", "error", e)).execute();
+
+		}
 	}
 	
 	protected void saveTemp(String number, String month, String year, String zip, String cvv, String typeId, String typeLabel) {
 		
-		enteredCard = new Cards(number, month, year, zip, cvv, "****" + number.substring(number.length() - 4), typeLabel, null);
+		try {
+			enteredCard = new Cards(number, month, year, zip, cvv, "****" + number.substring(number.length() - 4), typeLabel, null);
+		} catch (Exception e) {
+			(new CreateClientLogTask("UserCreateNew.saveTemp", "Exception Caught", "error", e)).execute();
+
+		}
 
 	}
 	
 	
 	protected void saveCard() {
-		
-		
-		//ArrayList<Cards> cards = DBController.getCards(getContentProvider());
-		
-		/*
-		for(Cards card: cards) {
-			if(card.getNumber().equalsIgnoreCase(newCard.getNumber())) {
-				toastLong("You've already saved this credit card. You can edit or delete the card if you'd like to make a change");
-				return;
-			}
-		}*/
-		
-		DBController.saveCreditCard(getContentProvider(), enteredCard);
+	
+		try {
+			DBController.saveCreditCard(getContentProvider(), enteredCard);
+		} catch (Exception e) {
+			(new CreateClientLogTask("UserCreateNew.saveCard", "Exception Caught", "error", e)).execute();
+
+		}
 		//showInfoDialog(DBController.getCardCount(getContentProvider()) + "Card added");
 	}
 	
 	private void showInfoDialog(String display) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(UserCreateNew.this);
-		builder.setTitle(getString(R.string.app_dialog_title));
-		builder.setMessage(display);
-		//builder.setIcon(R.drawable.logo);
-		builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+		try {
+			AlertDialog.Builder builder = new AlertDialog.Builder(UserCreateNew.this);
+			builder.setTitle(getString(R.string.app_dialog_title));
+			builder.setMessage(display);
+			//builder.setIcon(R.drawable.logo);
+			builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
 
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				// hideSuccessMessage();
-				
-				if (didCancelScan){
-					didCancelScan = false;
-					Intent goBackProfile = new Intent(getApplicationContext(), Home.class);
-					goBackProfile.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-					startActivity(goBackProfile);
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// hideSuccessMessage();
+					
+					try {
+						if (didCancelScan){
+							didCancelScan = false;
+							Intent goBackProfile = new Intent(getApplicationContext(), Home.class);
+							goBackProfile.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+							startActivity(goBackProfile);
+						}
+					} catch (Exception e) {
+						(new CreateClientLogTask("UserCreateNew.showInfoDialog.onClick", "Exception Caught", "error", e)).execute();
+
+					}
+					
+					
+					
 				}
-				
-				
-				
-			}
-		});
-		builder.setOnCancelListener(new OnCancelListener() {
+			});
+			builder.setOnCancelListener(new OnCancelListener() {
 
-			@Override
-			public void onCancel(DialogInterface dialog) {
-				// hideSuccessMessage();
-			}
-		});
-		builder.create().show();
+				@Override
+				public void onCancel(DialogInterface dialog) {
+					// hideSuccessMessage();
+				}
+			});
+			builder.create().show();
+		} catch (Exception e) {
+			(new CreateClientLogTask("UserCreateNew.showInfoDialog", "Exception Caught", "error", e)).execute();
+
+		}
 	}
 	
 	
 	public void refreshList(){
 		
-		//encrypt it
-		enteredCard.setNumber(encryptCardNumber(enteredCard.getNumber()));
-		//save it
-		saveCard();
-		
-		
-		
-		toastShort("Thank you for registering!");
-		Intent goBackProfile = new Intent(getApplicationContext(), Home.class);
-		goBackProfile.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		startActivity(goBackProfile);
-		
-		
-		//refresh list
+		try {
+			//encrypt it
+			enteredCard.setNumber(encryptCardNumber(enteredCard.getNumber()));
+			//save it
+			saveCard();
+			
+			
+			
+			toastShort("Thank you for registering!");
+			Intent goBackProfile = new Intent(getApplicationContext(), Home.class);
+			goBackProfile.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(goBackProfile);
+			
+			
+			//refresh list
+		} catch (Exception e) {
+			(new CreateClientLogTask("UserCreateNew.refreshList", "Exception Caught", "error", e)).execute();
+
+		}
 	}
 	
 	public String encryptCardNumber(String cardNumber){	
@@ -452,7 +513,7 @@ public class UserCreateNew extends BaseActivity {
 	        return encrypted;
 		}catch (Exception e){
 			
-	        Logger.d("EXCEPTION: " + e);
+			(new CreateClientLogTask("UserCreateNew.encryptCardNumber", "Exception Caught", "error", e)).execute();
 
 			return "";
 		}

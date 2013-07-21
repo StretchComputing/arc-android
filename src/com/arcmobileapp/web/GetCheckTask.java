@@ -16,6 +16,7 @@ import com.arcmobileapp.domain.Payments;
 import com.arcmobileapp.domain.Payments.PaidItems;
 import com.arcmobileapp.utils.ArcPreferences;
 import com.arcmobileapp.utils.Logger;
+import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 
 public class GetCheckTask extends AsyncTask<Void, Void, Void> {
 	
@@ -93,8 +94,10 @@ public class GetCheckTask extends AsyncTask<Void, Void, Void> {
 				// if we successfulyl got a response ticket, we need to query with the confirm 
 				// call to know if it was successful or not
 			}
-		} catch (JSONException exc) {
-			Logger.e("Error creating payment, JSON Exception: " + exc.getMessage());
+		} catch (JSONException e) {
+			(new CreateClientLogTask("GetCheckTask.parseJson", "Exception Caught", "error", e)).execute();
+
+			Logger.e("Error creating payment, JSON Exception: " + e.getMessage());
 		}
 		
 		
@@ -128,11 +131,16 @@ public class GetCheckTask extends AsyncTask<Void, Void, Void> {
 					return false;
 				}
 				
-			} catch (JSONException exc) {
+			} catch (JSONException e) {
+				(new CreateClientLogTask("GetCheckTask.checkInvoiceConfirmationJSON", "Exception Caught", "error", e)).execute();
+
 				return false;
 			}
 			
-		}catch (Exception exc){}
+		}catch (Exception e){
+			(new CreateClientLogTask("GetCheckTask.checkInvoiceConfirmation", "Exception Caught", "error", e)).execute();
+
+		}
 		return false;
 	}
 	

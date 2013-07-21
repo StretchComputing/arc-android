@@ -3,6 +3,8 @@ package com.arcmobileapp.utils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.arcmobileapp.web.rskybox.CreateClientLogTask;
+
 import android.text.InputFilter;
 import android.text.Spanned;
 
@@ -14,14 +16,20 @@ public class CurrencyFilter implements InputFilter {
 	public CharSequence filter(CharSequence source, int start, int end,
 			Spanned dest, int dstart, int dend) {
 
-		String result = dest.subSequence(0, dstart) + source.toString()
-				+ dest.subSequence(dend, dest.length());
+		try {
+			String result = dest.subSequence(0, dstart) + source.toString()
+					+ dest.subSequence(dend, dest.length());
 
-		Matcher matcher = mPattern.matcher(result);
+			Matcher matcher = mPattern.matcher(result);
 
-		if (!matcher.matches())
-			return dest.subSequence(dstart, dend);
+			if (!matcher.matches())
+				return dest.subSequence(dstart, dend);
 
-		return null;
+			return null;
+		} catch (Exception e) {
+			(new CreateClientLogTask("CurrencyFilter.filter", "Exception Caught", "error", e)).execute();
+			return null;
+
+		}
 	}
 }

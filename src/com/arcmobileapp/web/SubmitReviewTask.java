@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import com.arcmobileapp.domain.CreateReview;
 import com.arcmobileapp.utils.ArcPreferences;
 import com.arcmobileapp.utils.Logger;
+import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 
 public class SubmitReviewTask extends AsyncTask<Void, Void, Void> {
 	
@@ -65,8 +66,10 @@ public class SubmitReviewTask extends AsyncTask<Void, Void, Void> {
 				return true;
 				
 			}
-		} catch (JSONException exc) {
-			Logger.e("Error creating payment, JSON Exception: " + exc.getMessage());
+		} catch (JSONException e) {
+			(new CreateClientLogTask("SubmitReview.performTask", "Exception Caught", "error", e)).execute();
+
+			Logger.e("Error creating payment, JSON Exception: " + e.getMessage());
 		}
 		
 		

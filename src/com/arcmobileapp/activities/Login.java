@@ -2,6 +2,7 @@ package com.arcmobileapp.activities;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.res.Resources.NotFoundException;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.AnimationUtils;
@@ -14,6 +15,7 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.arcmobileapp.BaseActivity;
 import com.arcmobileapp.R;
+import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 
 public class Login extends BaseActivity {
 
@@ -35,27 +37,37 @@ public class Login extends BaseActivity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.login);
-		theView = (LinearLayout) findViewById(R.id.login_layout);
-		theView.setAnimation(AnimationUtils.loadAnimation(this,
-				R.anim.login_fade_in));
+		try {
+			super.onCreate(savedInstanceState);
+			setContentView(R.layout.login);
+			theView = (LinearLayout) findViewById(R.id.login_layout);
+			theView.setAnimation(AnimationUtils.loadAnimation(this,
+					R.anim.login_fade_in));
 
-		usernameEt = (EditText) findViewById(R.id.username_et);
-		passwordEt = (EditText) findViewById(R.id.password_et);
-		rememberMeCb = (CheckBox) findViewById(R.id.remember_me_cb);
-		usernameEt.setText("");
-		passwordEt.setText("");
-		rememberMeCb.setChecked(false);
-		
-		initCredentials();
-		initActionBar();
+			usernameEt = (EditText) findViewById(R.id.username_et);
+			passwordEt = (EditText) findViewById(R.id.password_et);
+			rememberMeCb = (CheckBox) findViewById(R.id.remember_me_cb);
+			usernameEt.setText("");
+			passwordEt.setText("");
+			rememberMeCb.setChecked(false);
+			
+			initCredentials();
+			initActionBar();
+		} catch (NotFoundException e) {
+			(new CreateClientLogTask("Login.onCreate", "Exception Caught", "error", e)).execute();
+
+		}
 	}
 
 	protected void initActionBar() {
-		actionBar = getSupportActionBar();
-		actionBar.setTitle(R.string.app_name);
-		actionBar.setDisplayHomeAsUpEnabled(false);
+		try {
+			actionBar = getSupportActionBar();
+			actionBar.setTitle(R.string.app_name);
+			actionBar.setDisplayHomeAsUpEnabled(false);
+		} catch (Exception e) {
+			(new CreateClientLogTask("Login.initActionBar", "Exception Caught", "error", e)).execute();
+
+		}
 	}
 
 	private void initCredentials() {

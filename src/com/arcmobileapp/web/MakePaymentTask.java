@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import com.arcmobileapp.domain.CreatePayment;
 import com.arcmobileapp.utils.ArcPreferences;
 import com.arcmobileapp.utils.Logger;
+import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 
 public class MakePaymentTask extends AsyncTask<Void, Void, Void> {
 	
@@ -83,8 +84,10 @@ public class MakePaymentTask extends AsyncTask<Void, Void, Void> {
 				// if we successfulyl got a response ticket, we need to query with the confirm 
 				// call to know if it was successful or not
 			}
-		} catch (JSONException exc) {
-			Logger.e("Error creating payment, JSON Exception: " + exc.getMessage());
+		} catch (JSONException e) {
+			(new CreateClientLogTask("MakePaymentTask.performTask", "Exception Caught", "error", e)).execute();
+
+			Logger.e("Error creating payment, JSON Exception: " + e.getMessage());
 		}
 		
 		
@@ -111,8 +114,10 @@ public class MakePaymentTask extends AsyncTask<Void, Void, Void> {
 					return true;
 				}
 				
-			} catch (JSONException exc) {
-				Logger.e("Error getting confirmation, JSON Exception: " + exc.getMessage());
+			} catch (JSONException e) {
+				(new CreateClientLogTask("MakePaymentTask.checkPaymentConfirmation", "Exception Caught", "error", e)).execute();
+
+				Logger.e("Error getting confirmation, JSON Exception: " + e.getMessage());
 			}
 			
 		}catch (Exception exc){}

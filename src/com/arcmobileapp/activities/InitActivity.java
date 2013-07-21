@@ -14,6 +14,7 @@ import com.arcmobileapp.R;
 import com.arcmobileapp.utils.ArcPreferences;
 import com.arcmobileapp.utils.Keys;
 import com.arcmobileapp.web.GetTokenTask;
+import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 
 public class InitActivity extends Activity {
 	
@@ -21,62 +22,82 @@ public class InitActivity extends Activity {
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		
-		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		try {
+			super.onCreate(savedInstanceState);
+			
+			this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-		setContentView(R.layout.activity_init);
+			setContentView(R.layout.activity_init);
 
-		//Get the token
-		
-		getGuestToken();
+			//Get the token
+			
+			getGuestToken();
+		} catch (Exception e) {
+			(new CreateClientLogTask("InitActivity.onCreate", "Exception Caught", "error", e)).execute();
+
+		}
 		
 	}
 	
 	private void getGuestToken(){
 		
-		String uuid = UUID.randomUUID().toString();
-		
-		ArcPreferences myPrefs = new ArcPreferences(getApplicationContext());
-		myPrefs.putAndCommitString(Keys.MY_UUID, uuid);
-		
-		GetTokenTask getTokenTask = new GetTokenTask(uuid, uuid, true, getApplicationContext()) {
-			@Override
-			protected void onPostExecute(Void result) {
-				super.onPostExecute(result);
-				if(getSuccess()) {
-					ArcPreferences myPrefs = new ArcPreferences(getApplicationContext());
+		try {
+			String uuid = UUID.randomUUID().toString();
+			
+			ArcPreferences myPrefs = new ArcPreferences(getApplicationContext());
+			myPrefs.putAndCommitString(Keys.MY_UUID, uuid);
+			
+			GetTokenTask getTokenTask = new GetTokenTask(uuid, uuid, true, getApplicationContext()) {
+				@Override
+				protected void onPostExecute(Void result) {
+					try {
+						super.onPostExecute(result);
+						if(getSuccess()) {
+							ArcPreferences myPrefs = new ArcPreferences(getApplicationContext());
 
-					if(getDevToken()!=null) {
+							if(getDevToken()!=null) {
 
-						myPrefs.putAndCommitString(Keys.GUEST_TOKEN, getDevToken());
-						myPrefs.putAndCommitString(Keys.GUEST_ID, getDevCustomerId());
-					}						
-				
-					doesHaveToken = true;
+								myPrefs.putAndCommitString(Keys.GUEST_TOKEN, getDevToken());
+								myPrefs.putAndCommitString(Keys.GUEST_ID, getDevCustomerId());
+							}						
+						
+							doesHaveToken = true;
+						}
+					} catch (Exception e) {
+						(new CreateClientLogTask("InitActivity.getGuestToken.onPostExecute", "Exception Caught", "error", e)).execute();
+
+					}
 				}
-			}
-		};
-		getTokenTask.execute();
+			};
+			getTokenTask.execute();
+		} catch (Exception e) {
+			(new CreateClientLogTask("InitActivity.getGuestToken", "Exception Caught", "error", e)).execute();
+
+		}
 		
 		
 	}
 	
 	public void onStartClicked(View view) {
 
-		//Go Home
-		
-		if (doesHaveToken){
+		try {
+			//Go Home
 			
-			ArcPreferences myPrefs = new ArcPreferences(getApplicationContext());
+			if (doesHaveToken){
+				
+				ArcPreferences myPrefs = new ArcPreferences(getApplicationContext());
 
-			myPrefs.putAndCommitBoolean(Keys.AGREED_TERMS, true);
+				myPrefs.putAndCommitBoolean(Keys.AGREED_TERMS, true);
 
-			startActivity(new Intent(getApplicationContext(), Home.class));
-			overridePendingTransition(0, 0);
-			finish();
-		}else{
-			toast("Registering you as a guest, please wait a second then try again.", Toast.LENGTH_SHORT);
+				startActivity(new Intent(getApplicationContext(), Home.class));
+				overridePendingTransition(0, 0);
+				finish();
+			}else{
+				toast("Registering you as a guest, please wait a second then try again.", Toast.LENGTH_SHORT);
+			}
+		} catch (Exception e) {
+			(new CreateClientLogTask("InitActivity.onStartClicked", "Exception Caught", "error", e)).execute();
+
 		}
 		
 
@@ -88,8 +109,13 @@ public class InitActivity extends Activity {
 	
 	public void onTermsClicked(View view){
 		
-		Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"));
-		startActivity(browserIntent);
+		try {
+			Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://arc.dagher.mobi/html/docs/terms.html"));
+			startActivity(browserIntent);
+		} catch (Exception e) {
+			(new CreateClientLogTask("InitActivity.onTermsClicked", "Exception Caught", "error", e)).execute();
+
+		}
 		
 		
 	}
@@ -97,8 +123,13 @@ public class InitActivity extends Activity {
 
 	public void onPrivacyClicked(View view){
 		
-		Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"));
-		startActivity(browserIntent);
+		try {
+			Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://arc.dagher.mobi/html/docs/privacy.html"));
+			startActivity(browserIntent);
+		} catch (Exception e) {
+			(new CreateClientLogTask("InitActivity.onPrivacyClicked", "Exception Caught", "error", e)).execute();
+
+		}
 		
 		
 	}

@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import com.arcmobileapp.utils.ArcPreferences;
 import com.arcmobileapp.utils.Keys;
 import com.arcmobileapp.utils.Logger;
+import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 
 public class UpdateCustomerTask extends AsyncTask<Void, Void, Void> {
 	
@@ -89,7 +90,9 @@ public class UpdateCustomerTask extends AsyncTask<Void, Void, Void> {
 			}
 			
 			
-		} catch (JSONException exc) {
+		} catch (JSONException e) {
+			(new CreateClientLogTask("UpdateCustomerTask.performTask", "Exception Caught", "error", e)).execute();
+
 			Logger.e("Error retrieving token, JSON Exception");
 		}
 		// get a token for the prod server

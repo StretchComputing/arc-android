@@ -17,6 +17,7 @@ import com.arcmobileapp.utils.Constants;
 import com.arcmobileapp.utils.Keys;
 import com.arcmobileapp.web.SubmitReviewTask;
 //import android.view.Menu;
+import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 
 
 
@@ -34,22 +35,27 @@ public class Review extends BaseActivity {
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_review);
-	
-		theBill =  (Check) getIntent().getSerializableExtra(Constants.INVOICE);
+		try {
+			super.onCreate(savedInstanceState);
+			setContentView(R.layout.activity_review);
 
-		
-		textAdditionalComments = (EditText) findViewById(R.id.text_additional_comments);
-		textAdditionalComments.setHint(R.string.review_hint);
-		
-		starRating = (RatingBar) findViewById(R.id.star_rating);
+			theBill =  (Check) getIntent().getSerializableExtra(Constants.INVOICE);
 
-		
-		loadingDialog = new ProgressDialog(Review.this);
-		loadingDialog.setTitle("Sending Review");
-		loadingDialog.setMessage("Please Wait...");
-		loadingDialog.setCancelable(false);
+			
+			textAdditionalComments = (EditText) findViewById(R.id.text_additional_comments);
+			textAdditionalComments.setHint(R.string.review_hint);
+			
+			starRating = (RatingBar) findViewById(R.id.star_rating);
+
+			
+			loadingDialog = new ProgressDialog(Review.this);
+			loadingDialog.setTitle("Sending Review");
+			loadingDialog.setMessage("Please Wait...");
+			loadingDialog.setCancelable(false);
+		} catch (Exception e) {
+			(new CreateClientLogTask("Review.onCreate", "Exception Caught", "error", e)).execute();
+
+		}
 
 	}
 
@@ -64,9 +70,14 @@ public class Review extends BaseActivity {
     public void onSkipClicked(View view) {
 		
 	
-    	Intent goBackHome = new Intent(getApplicationContext(), Home.class);
-		goBackHome.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		startActivity(goBackHome);
+    	try {
+			Intent goBackHome = new Intent(getApplicationContext(), Home.class);
+			goBackHome.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(goBackHome);
+		} catch (Exception e) {
+			(new CreateClientLogTask("Review.onSkipClicked", "Exception Caught", "error", e)).execute();
+
+		}
 		
 		
 	}
@@ -75,46 +86,56 @@ public class Review extends BaseActivity {
     public void onSubmitClicked(View view) {
 		
 	
-		if (textAdditionalComments.getText().toString().length() == 0){
-			textAdditionalComments.setText("");
-		}
-		
-		String customerId = getId();
-		String token = getToken();
-		double numStars = (double) starRating.getNumStars();
-		
-		
-		loadingDialog.show();
-		CreateReview newReview = new CreateReview(String.valueOf(theBill.getId()), String.valueOf(theBill.getPaymentId()),
-				numStars, customerId, textAdditionalComments.getText().toString());
-		
-		
-			
-		
-		SubmitReviewTask task = new SubmitReviewTask(token, newReview, getApplicationContext()) {
-			@Override
-			protected void onPostExecute(Void result) {
-				super.onPostExecute(result);
-				
-
-				loadingDialog.hide();
-				if (getFinalSuccess()) {
-
-					toastShort("Thank you for your review!");
-
-					Intent goBackHome = new Intent(getApplicationContext(), Home.class);
-					goBackHome.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-					startActivity(goBackHome);
-					
-					
-				} else {
-					toastShort("Review Failed, please try again.");
-
-				}
+		try {
+			if (textAdditionalComments.getText().toString().length() == 0){
+				textAdditionalComments.setText("");
 			}
-		};
-		
-		task.execute();
+			
+			String customerId = getId();
+			String token = getToken();
+			double numStars = (double) starRating.getNumStars();
+			
+			
+			loadingDialog.show();
+			CreateReview newReview = new CreateReview(String.valueOf(theBill.getId()), String.valueOf(theBill.getPaymentId()),
+					numStars, customerId, textAdditionalComments.getText().toString());
+			
+			
+				
+			
+			SubmitReviewTask task = new SubmitReviewTask(token, newReview, getApplicationContext()) {
+				@Override
+				protected void onPostExecute(Void result) {
+					try {
+						super.onPostExecute(result);
+						
+
+						loadingDialog.hide();
+						if (getFinalSuccess()) {
+
+							toastShort("Thank you for your review!");
+
+							Intent goBackHome = new Intent(getApplicationContext(), Home.class);
+							goBackHome.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+							startActivity(goBackHome);
+							
+							
+						} else {
+							toastShort("Review Failed, please try again.");
+
+						}
+					} catch (Exception e) {
+						(new CreateClientLogTask("Review.onSubmitClicked.onPostExecute", "Exception Caught", "error", e)).execute();
+
+					}
+				}
+			};
+			
+			task.execute();
+		} catch (Exception e) {
+			(new CreateClientLogTask("Review.onSubmitClicked", "Exception Caught", "error", e)).execute();
+
+		}
 			
 			
 		

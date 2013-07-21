@@ -5,6 +5,7 @@ import android.view.animation.Interpolator;
 
 import com.arcmobileapp.R;
 import com.arcmobileapp.utils.Logger;
+import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 import com.slidingmenu.lib.SlidingMenu.CanvasTransformer;
 
 public class CustomSlideAnimation extends CustomAnimation {
@@ -12,8 +13,14 @@ public class CustomSlideAnimation extends CustomAnimation {
 	private static Interpolator interp = new Interpolator() {
 		@Override
 		public float getInterpolation(float t) {
-			t -= 1.0f;
-			return t * t * t + 1.0f;
+			try {
+				t -= 1.0f;
+				return t * t * t + 1.0f;
+			} catch (Exception e) {
+				(new CreateClientLogTask("CustomSlideAnimation.getInterpolation", "Exception Caught", "error", e)).execute();
+				return 0.0f;
+
+			}
 		}		
 	};
 
@@ -24,7 +31,12 @@ public class CustomSlideAnimation extends CustomAnimation {
 			@Override
 			public void transformCanvas(Canvas canvas, float percentOpen) {
 
-				canvas.translate(0, canvas.getHeight()*(1-interp.getInterpolation(percentOpen)));
+				try {
+					canvas.translate(0, canvas.getHeight()*(1-interp.getInterpolation(percentOpen)));
+				} catch (Exception e) {
+					(new CreateClientLogTask("CustomSlideAnimation.transformCanvas", "Exception Caught", "error", e)).execute();
+
+				}
 			}			
 		});
 	}

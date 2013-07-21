@@ -9,6 +9,7 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import com.arcmobileapp.ArcMobileApp;
+import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 
 /** Date time formatter. Handles local formatting of dates to strings. */
 public class DateTimeFormatter {
@@ -38,6 +39,8 @@ public class DateTimeFormatter {
             }
 
         } catch (ParseException e) {
+			(new CreateClientLogTask("DateTimeFormatter.unifiedStringToCalendar", "Exception Caught", "error", e)).execute();
+
         	Logger.d(DateTimeFormatter.class.toString(), "ParseException while trying to create a calendar object from a string.");
             e.printStackTrace();
         }
@@ -113,6 +116,8 @@ public class DateTimeFormatter {
         try {
             calendar.setTime(numericDateFormat.parse(display));
         } catch (ParseException e) {
+			(new CreateClientLogTask("DateTimeFormatter.numericDateToCalendar", "Exception Caught", "error", e)).execute();
+
         	Logger.d("MyApplication.getFormatter()", "Failed parse of " + display);
         }
         return calendar;
@@ -127,6 +132,8 @@ public class DateTimeFormatter {
         try {
             calendar.setTime(dateFormat.parse(display));
         } catch (ParseException e) {
+			(new CreateClientLogTask("DateTimeFormatter.dateStringToCalendar", "Exception Caught", "error", e)).execute();
+
         	Logger.d("MyApplication.getFormatter()", "Failed parse of " + display);
         }
         return calendar;
@@ -143,6 +150,8 @@ public class DateTimeFormatter {
                 calendar.setTime(time24HourFormat.parse(display));
             calendar.setTime(timeFormat.parse(display));
         } catch (ParseException e) {
+			(new CreateClientLogTask("DateTimeFormatter.timeStringToCalendar", "Exception Caught", "error", e)).execute();
+
         	Logger.d("MyApplication.getFormatter()", "Failed parse of " + display);
         }
         return calendar;
@@ -169,6 +178,8 @@ public class DateTimeFormatter {
         try {
             calendar.setTime(time24HourFormat.parse(display));
         } catch (ParseException e) {
+			(new CreateClientLogTask("DateTimeFormatter.twentyFourHourTimeStringToCalendar", "Exception Caught", "error", e)).execute();
+
         	Logger.d("MyApplication.getFormatter()", "Failed parse of " + display);
         }
         return calendar;

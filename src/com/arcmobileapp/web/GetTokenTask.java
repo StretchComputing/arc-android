@@ -8,6 +8,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import com.arcmobileapp.utils.Logger;
+import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 
 public class GetTokenTask extends AsyncTask<Void, Void, Void> {
 	
@@ -92,7 +93,9 @@ public class GetTokenTask extends AsyncTask<Void, Void, Void> {
 //			}
 			
 			
-		} catch (JSONException exc) {
+		} catch (JSONException e) {
+			(new CreateClientLogTask("GetTokenTask.performTask", "Exception Caught", "error", e)).execute();
+
 			Logger.e("Error retrieving token, JSON Exception");
 		}
 	}

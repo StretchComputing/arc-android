@@ -6,6 +6,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
@@ -13,6 +14,7 @@ import android.net.Uri;
 
 import com.arcmobileapp.db.provider.Table_Funds;
 import com.arcmobileapp.db.provider.Table_Funds.FundsColumns;
+import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 
 /**
  * Contains methods for assembling and maintaining the database used by the application
@@ -46,20 +48,25 @@ public class ArcProvider extends ContentProvider {
     	@Override
     	public void onCreate(SQLiteDatabase database) {
     		
-            // Structured Test table
-    	    String createTableString = "CREATE TABLE IF NOT EXISTS " + FUNDS_TABLE + " ("                    
-                    + FundsColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
-                    + FundsColumns.NUMBER + " TEXT,"
-                    + FundsColumns.EXPIRATION_MONTH + " TEXT,"
-                    + FundsColumns.EXPIRATION_YEAR + " TEXT,"
-                    + FundsColumns.ZIP + " TEXT,"
-                    + FundsColumns.CVV + " TEXT,"
-                    + FundsColumns.CARD_TYPE_ID + " TEXT,"
-                    + FundsColumns.CARD_TYPE_LABEL + " TEXT,"
-                    + FundsColumns.PIN + " TEXT"
-                    + ");";
-            
-            database.execSQL(createTableString);
+            try {
+				// Structured Test table
+				String createTableString = "CREATE TABLE IF NOT EXISTS " + FUNDS_TABLE + " ("                    
+				        + FundsColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
+				        + FundsColumns.NUMBER + " TEXT,"
+				        + FundsColumns.EXPIRATION_MONTH + " TEXT,"
+				        + FundsColumns.EXPIRATION_YEAR + " TEXT,"
+				        + FundsColumns.ZIP + " TEXT,"
+				        + FundsColumns.CVV + " TEXT,"
+				        + FundsColumns.CARD_TYPE_ID + " TEXT,"
+				        + FundsColumns.CARD_TYPE_LABEL + " TEXT,"
+				        + FundsColumns.PIN + " TEXT"
+				        + ");";
+				
+				database.execSQL(createTableString);
+			} catch (SQLException e) {
+				(new CreateClientLogTask("ArcProvider.onCreate", "Exception Caught", "error", e)).execute();
+
+			}
 		}
     	
 //		private String generateForeignKey(String column, String foreignTable) {
@@ -95,21 +102,27 @@ public class ArcProvider extends ContentProvider {
 	
 	@Override
 	public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-		SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
-		qb.setTables(getTableNameFromUri(uri));
+		try {
+			SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
+			qb.setTables(getTableNameFromUri(uri));
 
-		// TODO: build the query, and set the order
+			// TODO: build the query, and set the order
 
-		// Get the database and run the query
-		SQLiteDatabase db = mOpenHelper.getReadableDatabase();		
-		Cursor c = qb.query(db, projection, selection, selectionArgs, null, null, sortOrder);
+			// Get the database and run the query
+			SQLiteDatabase db = mOpenHelper.getReadableDatabase();		
+			Cursor c = qb.query(db, projection, selection, selectionArgs, null, null, sortOrder);
 
-		// Tell the cursor what uri to watch, so it knows when its source data
-		// changes
-		Context context = getContext();
-		ContentResolver contentResolver = context.getContentResolver();
-		c.setNotificationUri(contentResolver, uri);
-		return c;
+			// Tell the cursor what uri to watch, so it knows when its source data
+			// changes
+			Context context = getContext();
+			ContentResolver contentResolver = context.getContentResolver();
+			c.setNotificationUri(contentResolver, uri);
+			return c;
+		} catch (Exception e) {
+			(new CreateClientLogTask("ArcProvider.query", "Exception Caught", "error", e)).execute();
+			return null;
+
+		}
 	}
 
 	@Override
@@ -122,14 +135,20 @@ public class ArcProvider extends ContentProvider {
 	@Override
 	public Uri insert(Uri uri, ContentValues initialValues) {
 
-		String tableName = getTableNameFromUri(uri);
-		if (tableName == null)
+		try {
+			String tableName = getTableNameFromUri(uri);
+			if (tableName == null)
+				return null;
+
+			SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+			long newId = db.insert(tableName, null, initialValues);
+			// TODO : set to entity uri.
+			return uri.buildUpon().appendPath(String.valueOf(newId)).build();
+		} catch (Exception e) {
+			(new CreateClientLogTask("ArcProvider.insert", "Exception Caught", "error", e)).execute();
 			return null;
 
-		SQLiteDatabase db = mOpenHelper.getWritableDatabase();
-		long newId = db.insert(tableName, null, initialValues);
-		// TODO : set to entity uri.
-		return uri.buildUpon().appendPath(String.valueOf(newId)).build();
+		}
 	}
 
 	public static String getTableNameFromUri(Uri uri) {
@@ -144,27 +163,39 @@ public class ArcProvider extends ContentProvider {
 	}
 	
 	public void clearData(){
-	    SQLiteDatabase db = mOpenHelper.getWritableDatabase();
-	    db.delete(FUNDS_TABLE, null, null);
-	    db.close();
+	    try {
+			SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+			db.delete(FUNDS_TABLE, null, null);
+			db.close();
+		} catch (Exception e) {
+			(new CreateClientLogTask("ArcProvider.clearData", "Exception Caught", "error", e)).execute();
+
+		}
 	}
 	
 	@Override
 	public int delete(Uri uri, String where, String[] selectionArgs) {
-	    SQLiteDatabase db = mOpenHelper.getWritableDatabase();
-	    String tableName = getTableNameFromUri(uri);
-	    int count = db.delete(tableName, where, selectionArgs);
-	    getContext().getContentResolver().notifyChange(uri, null);
-	    return count;
+	    try {
+			SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+			String tableName = getTableNameFromUri(uri);
+			int count = db.delete(tableName, where, selectionArgs);
+			getContext().getContentResolver().notifyChange(uri, null);
+			return count;
+		} catch (Exception e) {
+			(new CreateClientLogTask("ArcProvider.delete", "Exception Caught", "error", e)).execute();
+			return 0;
+
+		}
 	}
 
 	@Override
 	public int update(Uri uri, ContentValues values, String where, String[] whereArgs) {
-		SQLiteDatabase db = mOpenHelper.getWritableDatabase();
-		int count;
+		try {
+			SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+			int count;
 
-		String tableName = getTableNameFromUri(uri);
-		// TODO doesn't handle updates of ID and other where clause
+			String tableName = getTableNameFromUri(uri);
+			// TODO doesn't handle updates of ID and other where clause
 //		if (where == null) {
 //			// single update
 //			String id = uri.getPathSegments().get(1);
@@ -173,10 +204,15 @@ public class ArcProvider extends ContentProvider {
 //			// multi-update
 //			count = db.update(tableName, values, where, whereArgs);
 //		}
-		count = db.update(tableName, values, where, whereArgs);
+			count = db.update(tableName, values, where, whereArgs);
 
-		getContext().getContentResolver().notifyChange(uri, null);
-		return count;
+			getContext().getContentResolver().notifyChange(uri, null);
+			return count;
+		} catch (Exception e) {
+			(new CreateClientLogTask("ArcProvider.update", "Exception Caught", "error", e)).execute();
+			return 0;
+
+		}
 	}
 
 	static {

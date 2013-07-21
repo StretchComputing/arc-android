@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 
 import com.arcmobileapp.utils.ArcPreferences;
 import com.arcmobileapp.utils.Logger;
+import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 
 public class CreateUserTask extends AsyncTask<Void, Void, Void> {
 	
@@ -110,7 +111,9 @@ public class CreateUserTask extends AsyncTask<Void, Void, Void> {
 
 			
 			
-		} catch (JSONException exc) {
+		} catch (JSONException e) {
+			(new CreateClientLogTask("CreateUserTask.performTask", "Exception Caught", "error", e)).execute();
+
 			Logger.e("Error retrieving token, JSON Exception");
 		}
 		// get a token for the prod server
@@ -154,11 +157,16 @@ public class CreateUserTask extends AsyncTask<Void, Void, Void> {
 					return true;
 				}
 				
-			} catch (JSONException exc) {
-				Logger.e("Error getting confirmation, JSON Exception: " + exc.getMessage());
+			} catch (JSONException e) {
+				(new CreateClientLogTask("CreateUserTask.checkRegisterConfirmationJSON", "Exception Caught", "error", e)).execute();
+
+				Logger.e("Error getting confirmation, JSON Exception: " + e.getMessage());
 			}
 			
-		}catch (Exception exc){}
+		}catch (Exception e){
+			(new CreateClientLogTask("CreateUserTask.checkRegisterConfirmation", "Exception Caught", "error", e)).execute();
+
+		}
 		return false;
 	}
 	
