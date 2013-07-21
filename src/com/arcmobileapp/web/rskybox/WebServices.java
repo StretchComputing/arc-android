@@ -48,14 +48,16 @@ public class WebServices {
 		this.httpClient = new DefaultHttpClient();
 	}
 	
-	public String getAuthenticationHeader(String theUnencodedToken) {
-		byte[] tokenBytes = theUnencodedToken.getBytes();
-		String encodedToken = Base64.encodeToString(tokenBytes, Base64.DEFAULT);
+	public String getAuthenticationHeader() {
+		String authPair = "token:" + BASIC_AUTH_TOKEN;
+		byte[] tokenBytes = authPair.getBytes();
+		String encodedToken = Base64.encodeToString(tokenBytes, Base64.NO_WRAP);
 		String authHeader = "Basic " + encodedToken;
+		Logger.d("|rskybox-web-services|", "CREATE CLIENTLOG auth header  = " + authHeader);
 		return authHeader;
 	}
 	
-	private String getResponse(String url, String json, String token) {
+	private String getResponse(String url, String json) {
 		StringBuilder reply = null;
 		try {
 			this.httpClient = new DefaultHttpClient();
@@ -64,15 +66,7 @@ public class WebServices {
 			if (json != null && json != "") {
 				httpPost.setEntity(new ByteArrayEntity(json.getBytes("UTF8")));
 				httpPost.setHeader("Content-type", "application/json");
-				//ByteArrayEntity bae = new ByteArrayEntity(json.getBytes("UTF8"));
-				//Long contentLength = bae.getContentLength();
-				//httpPost.setEntity(bae);
-				//httpPost.setHeader("Content-type", "application/json");
-				//httpPost.setHeader("Content-length", contentLength.toString());
-				
-				if(token!=null) {
-					httpPost.setHeader("Authorization", "Basic " + token);
-				}
+				httpPost.setHeader("Authorization", getAuthenticationHeader());
 			}
 
 			httpResponse = httpClient.execute(httpPost);
@@ -156,7 +150,7 @@ public class WebServices {
 				json.put(WebKeys.STACK_BACK_TRACE, steJsonArray);
 			}
 			
-			resp = this.getResponse(url, json.toString(), getAuthenticationHeader(BASIC_AUTH_TOKEN));
+			resp = this.getResponse(url, json.toString());
 			Logger.d("|rskybox-web-services|", "CREATE CLIENT JSON INPUT = " + json.toString());
 			Logger.d("|rskybox-web-services|", "CREATE CLIENT LOG RESP = " + resp);
 			return resp;
