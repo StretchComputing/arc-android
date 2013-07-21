@@ -1,6 +1,7 @@
 package com.arcmobileapp.web;
 
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -22,7 +23,7 @@ public class UpdateCustomerTask extends AsyncTask<Void, Void, Void> {
 	private boolean mSuccess;
 	private boolean finalSuccess;
 	private Context mContext;
-
+	private int mErrorCode;
 	
 	public UpdateCustomerTask(String login, String password, Context context) {
 		super();
@@ -31,7 +32,7 @@ public class UpdateCustomerTask extends AsyncTask<Void, Void, Void> {
 		mIsGuest = false;
 		mNewCustomerToken = "";
 		mContext = context;
-		
+		mErrorCode = 0;
 	}
 	
 	@Override
@@ -87,6 +88,14 @@ public class UpdateCustomerTask extends AsyncTask<Void, Void, Void> {
 					return true;
 				}
 				
+			}else{
+				JSONArray errorArray = json.getJSONArray(WebKeys.ERROR_CODES);  // get an array of returned results
+				if (errorArray != null && errorArray.length() > 0){
+					//Error
+					JSONObject error = errorArray.getJSONObject(0);
+					mErrorCode = error.getInt(WebKeys.CODE);
+
+				}
 			}
 			
 			
@@ -132,5 +141,8 @@ public class UpdateCustomerTask extends AsyncTask<Void, Void, Void> {
 	}
 	public Context getContext() {
 		return mContext;
+	}
+	public int getErrorCode(){
+		return mErrorCode;
 	}
 }

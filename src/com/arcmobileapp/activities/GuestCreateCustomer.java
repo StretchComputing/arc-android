@@ -14,6 +14,7 @@ import com.arcmobileapp.domain.Check;
 import com.arcmobileapp.utils.ArcPreferences;
 import com.arcmobileapp.utils.Constants;
 import com.arcmobileapp.utils.Keys;
+import com.arcmobileapp.web.ErrorCodes;
 import com.arcmobileapp.web.UpdateCustomerTask;
 import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 
@@ -103,6 +104,9 @@ public class GuestCreateCustomer extends BaseActivity {
 						super.onPostExecute(result);
 						GuestCreateCustomer.this.loadingDialog.hide();
 						
+						int errorCode = getErrorCode();
+
+						
 						if (getFinalSuccess()){
 							ArcPreferences myPrefs = new ArcPreferences(getApplicationContext());
 							
@@ -127,7 +131,30 @@ public class GuestCreateCustomer extends BaseActivity {
 							
 							
 						}else{
-							toastShort("Registration error, please try again.");
+							
+							if (errorCode != 0){
+								
+								String errorMsg = "";
+								
+					            if(errorCode == 103) {
+					                errorMsg = "The email address you entered is already being used.  If you already have an account, please sign in by going to Profile in the left menu";
+					            }else if (errorCode == ErrorCodes.NETWORK_ERROR){
+					                
+					                errorMsg = "Arc is having problems connecting to the internet.  Please check your connection and try again.  Thank you!";
+					                
+					            }else {
+					                errorMsg = "We encountered an error during the registration process, please try again.";
+					            }
+								
+								
+								
+								toastShort(errorMsg);
+								
+							}else{
+								toastShort("We encountered an error during the registration process, please try again.");
+
+							}
+
 
 						}
 					} catch (Exception e) {

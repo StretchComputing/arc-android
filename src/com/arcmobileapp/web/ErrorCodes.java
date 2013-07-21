@@ -34,5 +34,8 @@ public final class ErrorCodes {
 	public static final int NETWORK_ERROR_CONFIRM_PAYMENT = 998;
 	public static final int NETWORK_ERROR = 999;
 	public static final int MAX_RETRIES_EXCEEDED = 1000;
+	
+	public static final String ARC_ERROR_MSG = "Dutch is experiencing network issues, please try again.";
+
 
 }

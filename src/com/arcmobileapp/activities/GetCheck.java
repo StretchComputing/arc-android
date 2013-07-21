@@ -15,6 +15,7 @@ import com.arcmobileapp.R;
 import com.arcmobileapp.domain.Check;
 import com.arcmobileapp.utils.Constants;
 import com.arcmobileapp.utils.Logger;
+import com.arcmobileapp.web.ErrorCodes;
 import com.arcmobileapp.web.GetCheckTask;
 import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 
@@ -106,7 +107,10 @@ public class GetCheck extends BaseActivity {
 							
 
 							loadingDialog.hide();
-							if (getSuccess()) {
+							int errorCode = getErrorCode();
+
+							
+							if (getFinalSuccess() && errorCode == 0) {
 
 								Check theBill = getTheBill();
 
@@ -125,7 +129,33 @@ public class GetCheck extends BaseActivity {
 								}
 
 							} else {
-								toastShort("Could not find your check");
+								//Not Succes
+								
+								if (errorCode != 0){
+									
+									String errorMsg = "";
+									
+									if(errorCode == ErrorCodes.INVOICE_NOT_FOUND) {
+						                errorMsg = "Can not find invoice.";
+						            } else if(errorCode == ErrorCodes.INVOICE_CLOSED) {
+						                errorMsg = "Invoice closed.";
+						            }else if (errorCode == ErrorCodes.CHECK_IS_LOCKED){
+						                errorMsg = "Invoice being access by your server.  Try again in a few minutes.";
+						            } else if (errorCode == ErrorCodes.NETWORK_ERROR){
+						                errorMsg = "Arc is having problems connecting to the internet.  Please check your connection and try again.  Thank you!";
+						                
+						            } else {
+						                errorMsg = ErrorCodes.ARC_ERROR_MSG;
+						            }
+									
+									
+									
+									toastShort(errorMsg);
+									
+								}else{
+									toastShort("Error retreiving invoice");
+
+								}
 								//.setVisibility(View.INVISIBLE);
 
 							}

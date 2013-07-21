@@ -44,6 +44,7 @@ import com.arcmobileapp.utils.Keys;
 import com.arcmobileapp.utils.Logger;
 import com.arcmobileapp.utils.MerchantObject;
 import com.arcmobileapp.utils.ScrollViewListener;
+import com.arcmobileapp.web.ErrorCodes;
 import com.arcmobileapp.web.GetMerchantsTask;
 import com.arcmobileapp.web.GetTokenTask;
 import com.arcmobileapp.web.rskybox.CreateClientLogTask;
@@ -135,6 +136,9 @@ public class Home extends BaseActivity implements ScrollViewListener {
 				protected void onPostExecute(Void result) {
 					try {
 						super.onPostExecute(result);
+						
+						int errorCode = getErrorCode();
+
 						merchants = new ArrayList<MerchantObject>();
 						
 						merchants = getMerchants();
@@ -150,8 +154,32 @@ public class Home extends BaseActivity implements ScrollViewListener {
 							
 							initCarousel();
 										        
+						}else{
+							
+							if (errorCode != 0){
+								
+								String errorMsg = "";
+								
+								if(errorCode == 999) {
+					                errorMsg = "Can not find nearby merchants.";
+					            } else {
+					                errorMsg = ErrorCodes.ARC_ERROR_MSG;
+					            }
+								
+								
+								
+								toastShort(errorMsg);
+								
+							}else{
+								toastShort("Error retrieving nearby merchants.");
+
+							}
+
+
 						}
 					} catch (Exception e) {
+						toastShort("Error retrieving nearby merchants.");
+
 						(new CreateClientLogTask("Home.getMerchantsFromWeb.onPostExecute", "Exception Caught", "error", e)).execute();
 
 					}
@@ -208,7 +236,6 @@ public class Home extends BaseActivity implements ScrollViewListener {
 			getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
 			int imageWidth = (int) (displayMetrics.widthPixels / 2.0);
 			        
-			Logger.d("IMAGE WIDTH**************************** " + imageWidth);
 			// Populate the carousel with items
 			ImageView imageItem;
 			mCarouselContainer.removeAllViews();
@@ -359,9 +386,15 @@ public class Home extends BaseActivity implements ScrollViewListener {
 		
 	
 		try {
-			int index = getCurrentIndex(currentScrollPos);        
+			
+			if (merchants.size() > 0){
+				int index = getCurrentIndex(currentScrollPos);        
 
-			this.clickCarousel(index);
+				this.clickCarousel(index);
+			}else{
+				toastShort("No nearby merchants found, please try again.");
+			}
+			
 		} catch (Exception e) {
 			(new CreateClientLogTask("Home.onPayBillClick", "Exception Caught", "error", e)).execute();
 

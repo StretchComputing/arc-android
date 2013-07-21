@@ -33,6 +33,7 @@ import com.arcmobileapp.utils.Keys;
 import com.arcmobileapp.utils.Logger;
 import com.arcmobileapp.utils.Security;
 import com.arcmobileapp.web.CreateUserTask;
+import com.arcmobileapp.web.ErrorCodes;
 import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 
 public class UserCreateNew extends BaseActivity {
@@ -112,7 +113,9 @@ public class UserCreateNew extends BaseActivity {
 						super.onPostExecute(result);
 						UserCreateNew.this.loadingDialog.hide();
 						
-						if (getFinalSuccess()){
+						int errorCode = getErrorCode();
+
+						if (getFinalSuccess() && errorCode == 0){
 							ArcPreferences myPrefs = new ArcPreferences(getApplicationContext());
 							
 							myPrefs.putAndCommitString(Keys.CUSTOMER_TOKEN, getDevToken());
@@ -126,7 +129,30 @@ public class UserCreateNew extends BaseActivity {
 							
 							
 						}else{
-							toastShort("Registration error, please try again.");
+							
+							
+							if (errorCode != 0){
+								
+								String errorMsg = "";
+								
+					            if(errorCode == ErrorCodes.USER_ALREADY_EXISTS) {
+					                errorMsg = "Email Address already used.";
+					            }else if (errorCode == ErrorCodes.NETWORK_ERROR){
+					                
+					                errorMsg = "Arc is having problems connecting to the internet.  Please check your connection and try again.  Thank you!";
+					                
+					            }else {
+					                errorMsg = ErrorCodes.ARC_ERROR_MSG;
+					            }
+								
+								
+								
+								toastShort(errorMsg);
+								
+							}else{
+								toastShort("We encountered an error during the registration process, please try again.");
+
+							}
 
 						}
 					} catch (Exception e) {

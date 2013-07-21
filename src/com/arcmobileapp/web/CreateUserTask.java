@@ -1,6 +1,7 @@
 package com.arcmobileapp.web;
 
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -28,6 +29,8 @@ public class CreateUserTask extends AsyncTask<Void, Void, Void> {
 	private Boolean finalSuccess;
 	private String mFirstName;
 	private String mLastName;
+	private int mErrorCode;
+
 
 	
 	public CreateUserTask(String login, String password, String firstName, String lastName, boolean isGuest, Context context) {
@@ -47,6 +50,7 @@ public class CreateUserTask extends AsyncTask<Void, Void, Void> {
 		finalSuccess = false;
 		mFirstName = firstName;
 		mLastName = lastName;
+		mErrorCode = 0;
 	}
 	
 	@Override
@@ -80,6 +84,9 @@ public class CreateUserTask extends AsyncTask<Void, Void, Void> {
 		try {
 			Logger.d("Token Response: " + mDevResponse);
 			JSONObject json =  new JSONObject(mDevResponse);
+			
+			
+			
 			mSuccess = json.getBoolean(WebKeys.SUCCESS);
 			if(mSuccess) {
 				//JSONObject result = json.getJSONObject(WebKeys.RESULTS);
@@ -90,14 +97,14 @@ public class CreateUserTask extends AsyncTask<Void, Void, Void> {
 				mResponseTicket = json.getString(WebKeys.RESULTS);
 				Logger.d("Sending with TICKET: " + mResponseTicket);
 				//6, 2, 2, 3, 4, 5, 6, 7, 8, 9, and 10
-				if(!checkRegisterConfirmation(2000)) {
-					if(!checkRegisterConfirmation(2000)) {
-						if(!checkRegisterConfirmation(3000)) {
-							if(!checkRegisterConfirmation(3000)) {
-								if(!checkRegisterConfirmation(3000)) {
-									if(!checkRegisterConfirmation(4000)) {
-										if(!checkRegisterConfirmation(5000)) {
-											if(!checkRegisterConfirmation(6000)) {
+				if(!checkRegisterConfirmation(2000) && mErrorCode == 0) {
+					if(!checkRegisterConfirmation(2000) && mErrorCode == 0) {
+						if(!checkRegisterConfirmation(3000) && mErrorCode == 0) {
+							if(!checkRegisterConfirmation(3000) && mErrorCode == 0) {
+								if(!checkRegisterConfirmation(3000) && mErrorCode == 0) {
+									if(!checkRegisterConfirmation(4000) && mErrorCode == 0) {
+										if(!checkRegisterConfirmation(5000) && mErrorCode == 0) {
+											if(!checkRegisterConfirmation(6000) && mErrorCode == 0) {
 												return false;
 											}
 										}
@@ -106,6 +113,15 @@ public class CreateUserTask extends AsyncTask<Void, Void, Void> {
 							}
 						}
 					}
+				}
+			}else{
+				JSONArray errorArray = json.getJSONArray(WebKeys.ERROR_CODES);  // get an array of returned results
+				if (errorArray != null && errorArray.length() > 0){
+					//Error
+					JSONObject error = errorArray.getJSONObject(0);
+					mErrorCode = error.getInt(WebKeys.CODE);
+
+					return false;
 				}
 			}
 
@@ -138,6 +154,16 @@ public class CreateUserTask extends AsyncTask<Void, Void, Void> {
 			mDevResponse = webService.confirmRegister(mResponseTicket);
 			try {
 				JSONObject json =  new JSONObject(mDevResponse);
+				
+				JSONArray errorArray = json.getJSONArray(WebKeys.ERROR_CODES);  // get an array of returned results
+				if (errorArray != null && errorArray.length() > 0){
+					//Error
+					JSONObject error = errorArray.getJSONObject(0);
+					mErrorCode = error.getInt(WebKeys.CODE);
+
+					return false;
+				}
+				
 				JSONObject result = json.getJSONObject(WebKeys.RESULTS);
 				mSuccess = json.getBoolean(WebKeys.SUCCESS);
 
@@ -159,7 +185,6 @@ public class CreateUserTask extends AsyncTask<Void, Void, Void> {
 				
 			} catch (JSONException e) {
 				(new CreateClientLogTask("CreateUserTask.checkRegisterConfirmationJSON", "Exception Caught", "error", e)).execute();
-
 				Logger.e("Error getting confirmation, JSON Exception: " + e.getMessage());
 			}
 			
@@ -205,4 +230,9 @@ public class CreateUserTask extends AsyncTask<Void, Void, Void> {
 	public Context getContext() {
 		return mContext;
 	}
+	
+	public int getErrorCode(){
+		return mErrorCode;
+	}
+	
 }

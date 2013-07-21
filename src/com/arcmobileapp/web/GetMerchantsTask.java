@@ -19,12 +19,14 @@ public class GetMerchantsTask extends AsyncTask<Void, Void, Void> {
 	private Boolean mSuccess;
 	private Context mContext;
 	private ArrayList<MerchantObject> mMerchantList;
+	private int mErrorCode;
 	
 	public GetMerchantsTask(Context context) {
 		super();
 		mResponse = null;
 		mSuccess = false;
 		mContext = context;
+		mErrorCode = 0;
 	}
 	
 	@Override
@@ -54,6 +56,14 @@ public class GetMerchantsTask extends AsyncTask<Void, Void, Void> {
 			mSuccess = json.getBoolean(WebKeys.SUCCESS);
 			if(mSuccess) {
 				parseJSON(json);
+			}else{
+				JSONArray errorArray = json.getJSONArray(WebKeys.ERROR_CODES);  // get an array of returned results
+				if (errorArray != null && errorArray.length() > 0){
+					//Error
+					JSONObject error = errorArray.getJSONObject(0);
+					mErrorCode = error.getInt(WebKeys.CODE);
+
+				}
 			}
 		} catch (JSONException e) {
 			(new CreateClientLogTask("GetMerchantsTask.performTask", "Exception Caught", "error", e)).execute();
@@ -118,4 +128,8 @@ public class GetMerchantsTask extends AsyncTask<Void, Void, Void> {
 	public Context getContext() {
 		return mContext;
 	}	
+	
+	public int getErrorCode(){
+		return mErrorCode;
+	}
 }

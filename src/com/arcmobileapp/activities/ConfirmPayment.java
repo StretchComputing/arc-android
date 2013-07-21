@@ -31,6 +31,7 @@ import com.arcmobileapp.utils.Keys;
 import com.arcmobileapp.utils.Logger;
 import com.arcmobileapp.utils.PaymentFlags;
 import com.arcmobileapp.utils.Security;
+import com.arcmobileapp.web.ErrorCodes;
 import com.arcmobileapp.web.MakePaymentTask;
 import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 
@@ -193,6 +194,8 @@ public class ConfirmPayment extends BaseActivity {
 					try {
 						super.onPostExecute(result);
 						
+						int errorCode = getErrorCode();
+
 
 						loadingDialog.hide();
 						if (getFinalSuccess()) {
@@ -238,7 +241,93 @@ public class ConfirmPayment extends BaseActivity {
 							
 							
 						} else {
-							toastShort("Payment Failed, please try again.");
+							
+							String errorMsg = "";
+							
+							Boolean editCardOption = false;
+							Boolean duplicateTransaction = false;
+							Boolean displayAlert = false;
+							Boolean networkError = false;
+
+							if (errorCode != 0){
+								if(errorCode == ErrorCodes.CANNOT_GET_PAYMENT_AUTHORIZATION) {
+					                //errorMsg = @"Credit card not approved.";
+					                editCardOption = true;
+					            } else if(errorCode == ErrorCodes.FAILED_TO_VALIDATE_CARD) {
+					                // TODO need explanation from Jim to put proper error msg
+					                //errorMsg = @"Failed to validate credit card";
+					                editCardOption = true;
+					            } else if (errorCode == ErrorCodes.FIELD_FORMAT_ERROR){
+					               // errorMsg = @"Invalid Credit Card Field Format";
+					                editCardOption = true;
+					            }else if(errorCode == ErrorCodes.INVALID_ACCOUNT_NUMBER) {
+					                // TODO need explanation from Jim to put proper error msg
+					               // errorMsg = @"Invalid credit/debit card number";
+					                editCardOption = true;
+					            } else if(errorCode == ErrorCodes.MERCHANT_CANNOT_ACCEPT_PAYMENT_TYPE) {
+					                // TODO put exact type of credit card not accepted in msg -- Visa, MasterCard, etc.
+					                errorMsg = "Merchant does not accept credit/debit card";
+					            } else if(errorCode == ErrorCodes.OVER_PAID) {
+					                errorMsg = "Over payment. Please check invoice and try again.";
+					            } else if(errorCode == ErrorCodes.INVALID_AMOUNT) {
+					                errorMsg = "Invalid amount. Please re-enter payment and try again.";
+					            } else if(errorCode == ErrorCodes.INVALID_EXPIRATION_DATE) {
+					               // errorMsg = @"Invalid expiration date.";
+					                editCardOption = true;
+					            }  else if (errorCode == ErrorCodes.UNKOWN_ISIS_ERROR){
+					               // editCardOption = YES;
+					                errorMsg = "Dutch Error, Try Again.";
+					            }else if (errorCode == ErrorCodes.PAYMENT_MAYBE_PROCESSED){
+					                errorMsg = "This payment may have already processed.  To be sure, please wait 30 seconds and then try again.";
+					                displayAlert = true;
+					            }else if(errorCode == ErrorCodes.DUPLICATE_TRANSACTION){
+					                duplicateTransaction = true;
+					            }else if (errorCode == ErrorCodes.CHECK_IS_LOCKED){
+					                errorMsg = "This check is currently locked.  Please try again in a few minutes.";
+					                displayAlert = true;
+					            }else if (errorCode == ErrorCodes.CARD_ALREADY_PROCESSED){
+					                errorMsg = "This card has already been used for payment on this invoice.  A card may only be used once per invoice.  Please try again with a different card.";
+					                displayAlert = true;
+					            }else if (errorCode == ErrorCodes.NO_AUTHORIZATION_PROVIDED){
+					                errorMsg = "Invalid Authorization, please try again.";
+					                displayAlert = true;
+					            }else if (errorCode == ErrorCodes.NETWORK_ERROR){
+					                networkError = true;
+					                errorMsg = "Dutch is having problems connecting to the internet.  Please check your connection and try again.  Thank you!";
+					                
+					            }else if (errorCode == ErrorCodes.NETWORK_ERROR_CONFIRM_PAYMENT){
+					                networkError = true;
+					                errorMsg = "Dutch experienced a problem with your internet connection while trying to confirm your payment.  Please check with your server to see if your payment was accepted.";
+					                
+					            }
+					            else {
+					                errorMsg = "Payment Failed, please try again.";
+					            }
+								
+								
+								if (displayAlert) {
+						            
+						            toastShort("Payment Warning: " + errorMsg);
+						            
+						        }else{
+						            
+						            if (errorMsg.length() > 0) {
+						                if (networkError) {
+								            toastShort("Internet Error: " + errorMsg);
+
+						                }else{
+								            toastShort("Payment Failed: " + errorMsg);
+
+						                }
+						            }            
+						        }
+								
+								
+
+							}else{
+								toastShort("Payment Failed, please try again.");
+
+							}
 
 						}
 					} catch (Exception e) {

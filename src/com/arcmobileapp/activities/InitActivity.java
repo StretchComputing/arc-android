@@ -52,6 +52,11 @@ public class InitActivity extends Activity {
 				protected void onPostExecute(Void result) {
 					try {
 						super.onPostExecute(result);
+						
+						int errorCode = getErrorCode();
+
+						
+						
 						if(getSuccess()) {
 							ArcPreferences myPrefs = new ArcPreferences(getApplicationContext());
 
@@ -62,6 +67,11 @@ public class InitActivity extends Activity {
 							}						
 						
 							doesHaveToken = true;
+						}else{
+							if (errorCode != 0){
+								toast("Unable to retrieve guest token, please try again.", Toast.LENGTH_SHORT);
+
+							}
 						}
 					} catch (Exception e) {
 						(new CreateClientLogTask("InitActivity.getGuestToken.onPostExecute", "Exception Caught", "error", e)).execute();

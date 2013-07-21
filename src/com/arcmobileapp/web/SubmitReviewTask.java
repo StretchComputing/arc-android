@@ -1,5 +1,6 @@
 package com.arcmobileapp.web;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -22,6 +23,7 @@ public class SubmitReviewTask extends AsyncTask<Void, Void, Void> {
 	private Context mContext;
 	private String mResponseTicket;
 	private Boolean finalSuccess;
+	private int mErrorCode;
 
 	public SubmitReviewTask(String token, CreateReview review, Context context) {
 		super();
@@ -31,7 +33,7 @@ public class SubmitReviewTask extends AsyncTask<Void, Void, Void> {
 		mSuccess = false;
 		mResponseTicket = null;
 		finalSuccess = false;
-		
+		mErrorCode = 0;
 		mReview = review;
 	}
 	
@@ -65,6 +67,14 @@ public class SubmitReviewTask extends AsyncTask<Void, Void, Void> {
 				finalSuccess = true;
 				return true;
 				
+			}else{
+				JSONArray errorArray = json.getJSONArray(WebKeys.ERROR_CODES);  // get an array of returned results
+				if (errorArray != null && errorArray.length() > 0){
+					//Error
+					JSONObject error = errorArray.getJSONObject(0);
+					mErrorCode = error.getInt(WebKeys.CODE);
+
+				}
 			}
 		} catch (JSONException e) {
 			(new CreateClientLogTask("SubmitReview.performTask", "Exception Caught", "error", e)).execute();
@@ -103,5 +113,7 @@ public class SubmitReviewTask extends AsyncTask<Void, Void, Void> {
 	public String getResponseTicket() {
 		return mResponseTicket;
 	}
-	
+	public int getErrorCode(){
+		return mErrorCode;
+	}
 }

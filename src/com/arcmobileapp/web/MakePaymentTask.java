@@ -1,6 +1,7 @@
 package com.arcmobileapp.web;
 
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -22,6 +23,7 @@ public class MakePaymentTask extends AsyncTask<Void, Void, Void> {
 	private String mResponseTicket;
 	private Boolean finalSuccess;
 	private int mPaymentId;
+	private int mErrorCode;
 
 	public MakePaymentTask(String token, CreatePayment payment, Context context) {
 		super();
@@ -33,6 +35,7 @@ public class MakePaymentTask extends AsyncTask<Void, Void, Void> {
 		mResponseTicket = null;
 		finalSuccess = false;
 		mPaymentId = 0;
+		mErrorCode = 0;
 
 	}
 	
@@ -64,14 +67,14 @@ public class MakePaymentTask extends AsyncTask<Void, Void, Void> {
 			if(mSuccess) {
 				mResponseTicket = json.getString(WebKeys.RESULTS);
 				//6, 2, 2, 3, 4, 5, 6, 7, 8, 9, and 10
-				if(!checkPaymentConfirmation(6000)) {
-					if(!checkPaymentConfirmation(2000)) {
-						if(!checkPaymentConfirmation(3000)) {
-							if(!checkPaymentConfirmation(3000)) {
-								if(!checkPaymentConfirmation(3000)) {
-									if(!checkPaymentConfirmation(4000)) {
-										if(!checkPaymentConfirmation(5000)) {
-											if(!checkPaymentConfirmation(6000)) {
+				if(!checkPaymentConfirmation(6000) && mErrorCode == 0) {
+					if(!checkPaymentConfirmation(2000) && mErrorCode == 0) {
+						if(!checkPaymentConfirmation(3000) && mErrorCode == 0) {
+							if(!checkPaymentConfirmation(3000) && mErrorCode == 0) {
+								if(!checkPaymentConfirmation(3000) && mErrorCode == 0) {
+									if(!checkPaymentConfirmation(4000) && mErrorCode == 0) {
+										if(!checkPaymentConfirmation(5000) && mErrorCode == 0) {
+											if(!checkPaymentConfirmation(6000) && mErrorCode == 0) {
 												return false;
 											}
 										}
@@ -83,6 +86,16 @@ public class MakePaymentTask extends AsyncTask<Void, Void, Void> {
 				}
 				// if we successfulyl got a response ticket, we need to query with the confirm 
 				// call to know if it was successful or not
+			}else{
+				JSONArray errorArray = json.getJSONArray(WebKeys.ERROR_CODES);  // get an array of returned results
+				
+				if (errorArray != null && errorArray.length() > 0){
+					//Error
+					JSONObject error = errorArray.getJSONObject(0);
+					mErrorCode = error.getInt(WebKeys.CODE);
+
+					return false;
+				}
 			}
 		} catch (JSONException e) {
 			(new CreateClientLogTask("MakePaymentTask.performTask", "Exception Caught", "error", e)).execute();
@@ -101,6 +114,16 @@ public class MakePaymentTask extends AsyncTask<Void, Void, Void> {
 			mResponse = webService.confirmPayment(mToken, getResponseTicket());
 			try {
 				JSONObject json =  new JSONObject(mResponse);
+				
+				JSONArray errorArray = json.getJSONArray(WebKeys.ERROR_CODES);  // get an array of returned results
+				
+				if (errorArray != null && errorArray.length() > 0){
+					//Error
+					JSONObject error = errorArray.getJSONObject(0);
+					mErrorCode = error.getInt(WebKeys.CODE);
+
+					return false;
+				}
 				JSONObject result = json.getJSONObject(WebKeys.RESULTS);
 				mSuccess = json.getBoolean(WebKeys.SUCCESS);
 
@@ -152,5 +175,9 @@ public class MakePaymentTask extends AsyncTask<Void, Void, Void> {
 	
 	public int getPaymentId(){
 		return mPaymentId;
+	}
+	
+	public int getErrorCode(){
+		return mErrorCode;
 	}
 }
