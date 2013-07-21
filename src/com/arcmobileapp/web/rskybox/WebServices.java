@@ -114,8 +114,27 @@ public class WebServices {
 			Logger.d("|rskybox-web-services|", "CREATE CLIENTLOG URL  = " + url);
 			
 			JSONObject json = new JSONObject();
-			// TOOD -- need more than version in summary
-			json.put(WebKeys.SUMMARY, ArcMobileApp.getVersion());
+
+			//Add to the summary
+			String summaryString = "";
+			try{
+				String apiLevel = "" + android.os.Build.VERSION.SDK_INT;
+				String osVersion = "" + android.os.Build.VERSION.RELEASE;
+
+				String device = android.os.Build.MANUFACTURER + " " + android.os.Build.DEVICE + " - " + android.os.Build.BRAND;
+			     
+				
+				//Summary String holds Android OS Version: , Android API Version: , Device: , App Version
+		        summaryString = "Android OS Version: " + osVersion + ", Android API Level: " + apiLevel + ", Device: " + device + ", App Version: " + ArcMobileApp.getVersion();
+			}catch(Exception e){
+				summaryString = "EXCEPTION finding summaryString";
+			}
+			
+			json.put(WebKeys.SUMMARY, summaryString);
+
+			
+			
+			json.put(WebKeys.VERSION, ArcMobileApp.getVersion());
 			json.put(WebKeys.LOG_LEVEL, theLogLevel);
 			json.put(WebKeys.LOG_NAME, theLogName);
 			

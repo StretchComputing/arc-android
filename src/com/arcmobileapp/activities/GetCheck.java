@@ -53,6 +53,8 @@ public class GetCheck extends BaseActivity {
 			loadingDialog.setTitle("Getting Invoice");
 			loadingDialog.setMessage("Please Wait...");
 			loadingDialog.setCancelable(false);
+			
+
 		} catch (Exception e) {
 			(new CreateClientLogTask("GetCheck.onCreate", "Exception Caught", "error", e)).execute();
 
