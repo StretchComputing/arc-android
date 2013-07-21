@@ -16,6 +16,7 @@ import com.arcmobileapp.domain.Check;
 import com.arcmobileapp.utils.Constants;
 import com.arcmobileapp.utils.Logger;
 import com.arcmobileapp.web.GetCheckTask;
+import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 
 public class GetCheck extends BaseActivity {
 
@@ -52,7 +53,8 @@ public class GetCheck extends BaseActivity {
 		loadingDialog.setMessage("Please Wait...");
 		loadingDialog.setCancelable(false);
 		
-		
+		// rSkybox Client Log test
+		(new CreateClientLogTask("dutch android first log", "this is a test by joepwro inside of GetCheck()", "error", null)).execute();
 	}
 	
 	public void onViewBillClick(View v) {

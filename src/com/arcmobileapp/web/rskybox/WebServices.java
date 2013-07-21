@@ -10,9 +10,18 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.util.Base64;
+
+import com.arcmobileapp.ArcMobileApp;
+import com.arcmobileapp.utils.ArcPreferences;
+import com.arcmobileapp.utils.Keys;
 import com.arcmobileapp.utils.Logger;
+import com.arcmobileapp.web.URLs;
 import com.arcmobileapp.web.rskybox.WebKeys;
 
 public class WebServices {
@@ -34,11 +43,17 @@ public class WebServices {
 	private static final String FEEDBACK_RESOURCE_URI = "feedback";
 	private static final String CRASH_DETECT_RESOURCE_URI = "crashDetects";
 	private static final String CLIENT_LOG_RESOURCE_URI = "clientLogs";
-
 	
 	public WebServices() {
 		this.httpClient = new DefaultHttpClient();
-	}	
+	}
+	
+	public String getAuthenticationHeader(String theUnencodedToken) {
+		byte[] tokenBytes = theUnencodedToken.getBytes();
+		String encodedToken = Base64.encodeToString(tokenBytes, Base64.DEFAULT);
+		String authHeader = "Basic " + encodedToken;
+		return authHeader;
+	}
 	
 	private String getResponse(String url, String json, String token) {
 		StringBuilder reply = null;
@@ -49,8 +64,13 @@ public class WebServices {
 			if (json != null && json != "") {
 				httpPost.setEntity(new ByteArrayEntity(json.getBytes("UTF8")));
 				httpPost.setHeader("Content-type", "application/json");
+				//ByteArrayEntity bae = new ByteArrayEntity(json.getBytes("UTF8"));
+				//Long contentLength = bae.getContentLength();
+				//httpPost.setEntity(bae);
+				//httpPost.setHeader("Content-type", "application/json");
+				//httpPost.setHeader("Content-length", contentLength.toString());
+				
 				if(token!=null) {
-					//httpPost.setHeader("Authorization", "Basic VEU5SFNVNWZWRmxRUlY5RFZWTlVUMDFGVWpwcWFXMXRlV1JoWjJobGNrQm5iV0ZwYkM1amIyMDZNVEV4TVE9PQ==");
 					httpPost.setHeader("Authorization", "Basic " + token);
 				}
 			}
@@ -97,56 +117,48 @@ public class WebServices {
 		String resp = "";
 		try {
 	        String url = REST_BASE_URL + "applications/" + APPLICATION_ID + "/" + CLIENT_LOG_RESOURCE_URI;
-			Logger.d("|arc-web-services|", "CREATE CLIENTLOG URL  = " + url);
-			
-	/*
-		[tempDictionary setObject:logName  forKey:@"logName"];
-		[tempDictionary setObject:logLevel forKey:@"logLevel"];
-		
-		if (exception) {
-		    logMessage = [logMessage stringByAppendingFormat:@" - %@ - %@", [exception name], [exception description]];
-		}
-		[tempDictionary setObject:logMessage forKey:@"message"];
-		
-		[tempDictionary setObject:[rSkybox getUserId] forKey:@"userId"];
-		
-		//HardCoded at top of page
-		[tempDictionary setObject:ARC_VERSION_NUMBER forKey:@"version"];
-		
-		++++++ MORE CODE NOT COPIED HERE
-		
-  "summary"        : "<summary_message>",    // Optional. Summary of the crash. OS version and other context.
-  "logLevel"       : "<log_level>",          // Log level. Possible values: [debug, info, warn, error].
-                                             // Default is 'error'.
-  "logName"        : "<log_name>",           // Required. Unique log name assigned by client app code. Used to
-                                             // thread log messages together and enable/disable log entry points.
-  "message"        : "<message>",            // log message
-  "stackBackTrace" : ["part1", "part2", ...] // stack back trace where each 'part' of the stack is passed in
-                                             // as a string.
-  "userId"      : "<user_id>",               // Optional. Unique ID for user that does not change over time.
-  "userName"    : "<user_name>",             // Optional. User name of end user. Does not need to be unique or same over time.
-                                             // No defined format but suggested to include a combination of the following 
-                                             // fields if present: first name, last name, emailAddress, phoneNumber 
-  "localEndpoint"  : "<local_endpoint>",     // Optional. Name of the local end point. If localEndpoint is specified,
-                                             // then remoteEndpoint must also be specified.
-  "remoteEndpoint" : "<remote_endpoint>",    // Optional. Name of the remote end point. If remoteEndpoint is specified,
-                                             // then localEndpoint must also be specified.                                        
-  "date"           : "<created_date>",       // Optional.  If provided, use ISO 8601 format YYYY-MM-DDThh:mm:ss.fffZ
-                                             // If not provided, server will set createdDate to time this API request
-                                             // is received.
-  "appActions"  : [ {                        // FIFO queue of application actions with the most recent on the top
-    "description" : "<description>",         // description of action.
-    "timestamp"   : "<timestamp>",           // timestamp when action taken. Format: YYYY-MM-DDThh:mm:ss.fffZ
-                                             // for backward compatibility, also support YYYY-MM-DD hh:mm:ss.SSS
-    "duration"    : "<duration>",            // milli-seconds since last action. If first action, then -1.
-  }, ...]
-	 */
+			Logger.d("|rskybox-web-services|", "CREATE CLIENTLOG URL  = " + url);
 			
 			JSONObject json = new JSONObject();
-			json.put(WebKeys.SUMMARY newPayment.getTotalAmount());
+			// TOOD -- need more than version in summary
+			json.put(WebKeys.SUMMARY, ArcMobileApp.getVersion());
+			json.put(WebKeys.LOG_LEVEL, theLogLevel);
+			json.put(WebKeys.LOG_NAME, theLogName);
 			
-			resp = this.getResponse(url, json.toString(), BASIC_AUTH_TOKEN);
-			Logger.d("|arc-web-services|", "GET MERCHANTS RESP = " + resp);
+			if(theException != null) {
+				theLogMessage += " - " + theException.getMessage();
+			}
+			json.put(WebKeys.MESSAGE, theLogMessage);
+			
+			String emailAddress = "<not_available>";
+			ArcPreferences myPrefs = new ArcPreferences(ArcMobileApp.getAppContext());
+			emailAddress = myPrefs.getString(Keys.CUSTOMER_EMAIL);
+			json.put(WebKeys.USER_ID, emailAddress);
+			
+			ApplicationInfo applicationInfo = ArcMobileApp.getContext().getApplicationInfo();
+			boolean isDebuggable = (0 != (applicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE));
+			String localEndpoint = "dutch.android";
+			if(isDebuggable) {localEndpoint = "dev." + localEndpoint;}
+			else             {localEndpoint = "prd." + localEndpoint;}
+			json.put(WebKeys.LOCAL_ENDPOINT, localEndpoint);
+			
+			// once env can be chosen in UI by admin, set remoteEndpoint a different way
+			String remoteEndpoint = URLs.getHost(com.arcmobileapp.web.URLs.DEV_SERVER);
+			json.put(WebKeys.REMOTE_ENDPOINT, remoteEndpoint);
+			
+			// TODO -- add app actions
+			
+			if(theException != null) {
+				JSONArray steJsonArray = new JSONArray();
+				for(StackTraceElement ste : theException.getStackTrace()) {
+					steJsonArray.put(ste.toString());
+				}
+				json.put(WebKeys.STACK_BACK_TRACE, steJsonArray);
+			}
+			
+			resp = this.getResponse(url, json.toString(), getAuthenticationHeader(BASIC_AUTH_TOKEN));
+			Logger.d("|rskybox-web-services|", "CREATE CLIENT JSON INPUT = " + json.toString());
+			Logger.d("|rskybox-web-services|", "CREATE CLIENT LOG RESP = " + resp);
 			return resp;
 		} catch (Exception e) {
 			setError(e.getMessage());

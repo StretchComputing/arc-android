@@ -28,5 +28,10 @@ public final class URLs {
 	
 	public static final String CREATE_REVIEW = "/rest/v1/reviews/new";
 
-	
+	public static String getHost(String theUrl) {
+		if(theUrl == null) {return null;}
+		
+		int index = theUrl.indexOf("//");
+		return theUrl.substring(index+2);
+	}
 }
