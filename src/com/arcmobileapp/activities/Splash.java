@@ -32,6 +32,8 @@ public class Splash extends Activity {
 			public void onAnimationRepeat(Animation animation) {
 				// TODO Auto-generated method stub
 				
+              
+				
 			}
 			
 			public void onAnimationEnd(Animation animation) {
@@ -43,8 +45,9 @@ public class Splash extends Activity {
 				//If there is a guest token or customer token, go to HOME
 				String guestToken = myPrefs.getString(Keys.GUEST_TOKEN);
 				String customerToken = myPrefs.getString(Keys.CUSTOMER_TOKEN);
+				Boolean hasAgreed = myPrefs.getBoolean(Keys.AGREED_TERMS);
 
-				if(guestToken == null && customerToken == null){
+				if(guestToken == null && customerToken == null || !hasAgreed){
 					//Go to initPage
 					startActivity(new Intent(getApplicationContext(), InitActivity.class));
 

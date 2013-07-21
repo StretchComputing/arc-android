@@ -69,7 +69,7 @@ public class CreateUserTask extends AsyncTask<Void, Void, Void> {
 		// get a token for the dev server
 		
 		try{
-			WebServices webService = new WebServices(URLs.DEV_SERVER);
+			WebServices webService = new WebServices(URLs.DUTCH_SERVER);
 			mDevResponse = webService.register(mLogin, mPassword, mFirstName, mLastName);
 		}catch (Exception e){
 			return false;

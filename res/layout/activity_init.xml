@@ -18,22 +18,26 @@
     <Button
         android:id="@+id/button_email"
         style="@style/BlueButton"
-        android:layout_width="120dp"
-        android:layout_height="30dp"
+        android:layout_width="125dp"
+        android:layout_height="39dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="20dp"
+        android:background="@drawable/i_button_blue"
+        android:onClick="onTermsClicked"
         android:text="@string/terms_string" />
 
     <Button
         android:id="@+id/Button01"
         style="@style/BlueButton"
-        android:layout_width="120dp"
-        android:layout_height="30dp"
+        android:layout_width="125dp"
+        android:layout_height="39dp"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/text_enter_pin"
         android:layout_marginRight="20dp"
+        android:background="@drawable/i_button_blue"
+        android:onClick="onPrivacyClicked"
         android:text="@string/privacy_string" />
 
     <TextView
@@ -63,8 +67,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/button_email"
-        android:layout_below="@+id/current_merchant"
-        android:layout_marginTop="110dp"
+        android:layout_below="@+id/item_you_pay"
+        android:layout_marginTop="50dp"
         android:text="@string/step_one_text"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/black" />
@@ -72,13 +76,13 @@
     <Button
         android:id="@+id/button_call"
         style="@style/CustomButton"
-        android:layout_width="175dp"
-        android:layout_height="40dp"
+        android:layout_width="204dp"
+        android:layout_height="46dp"
         android:layout_above="@+id/text_enter_pin"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="56dp"
+        android:background="@drawable/i_button_green"
         android:onClick="onStartClicked"
-        
         android:text="@string/start_using_string" />
 
     <TextView
@@ -87,7 +91,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/current_merchant"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="60dp"
         android:text="@string/init_sub_title"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -98,7 +102,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="30dp"
-        android:layout_marginTop="35dp"
+        android:layout_marginTop="14dp"
         android:src="@drawable/ic_launcher" />
 
     <TextView
@@ -107,11 +111,28 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="25dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="25dp"
         android:layout_toRightOf="@+id/imageView1"
         android:text="@string/welcome_string"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@color/black"
         android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/text_enter_pin"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/divider" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageView1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="14dp"
+        android:src="@drawable/divider" />
 
 </RelativeLayout>

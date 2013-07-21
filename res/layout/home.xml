@@ -65,15 +65,16 @@
 
     <Button
         android:id="@+id/pay_bill_button"
-        style="@style/CustomButton"
         android:layout_width="204dp"
-        android:layout_height="wrap_content"
+        android:layout_height="46dp"
         android:layout_gravity="center"
         android:layout_marginBottom="20dp"
         android:layout_marginTop="30dp"
+        android:background="@drawable/i_button_green"
         android:gravity="center_vertical|center_horizontal"
         android:onClick="onPayBillClick"
         android:padding="10dp"
-        android:text="@string/pay_bill" />
+        android:text="@string/pay_bill"
+        android:textColor="@color/white" />
 
 </LinearLayout>

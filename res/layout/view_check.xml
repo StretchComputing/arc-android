@@ -225,11 +225,12 @@
     <Button
         android:id="@+id/invoice_pay_button"
         style="@style/CustomButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="204dp"
+        android:layout_height="46dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="18dp"
+        android:background="@drawable/i_button_green"
         android:minHeight="48dp"
         android:minWidth="146dp"
         android:text="@string/invoicePayString" />

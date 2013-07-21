@@ -17,6 +17,8 @@ import org.json.JSONObject;
 import com.arcmobileapp.domain.CreatePayment;
 import com.arcmobileapp.domain.CreateReview;
 import com.arcmobileapp.domain.LineItem;
+import com.arcmobileapp.utils.ArcPreferences;
+import com.arcmobileapp.utils.Keys;
 import com.arcmobileapp.utils.Logger;
 
 public class WebServices {
@@ -29,7 +31,7 @@ public class WebServices {
 	private String serverAddress;
 	
 	public WebServices() {
-		setServer(URLs.DEV_SERVER);
+		setServer(URLs.DUTCH_SERVER);
 		this.httpClient = new DefaultHttpClient();
 	}	
 
@@ -41,6 +43,8 @@ public class WebServices {
 	private String getResponse(String url, String json, String token) {
 		StringBuilder reply = null;
 		try {
+
+				
 			this.httpClient = new DefaultHttpClient();
 			httpPost = new HttpPost(url);
 

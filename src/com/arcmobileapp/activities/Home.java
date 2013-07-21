@@ -99,7 +99,7 @@ public class Home extends BaseActivity implements ScrollViewListener {
 		btnPayBill = (Button) findViewById(R.id.pay_bill_button);
 		//btnExplore = (Button) findViewById(R.id.explore_button);
 		btnPayBill.setVisibility(View.VISIBLE);
-		//.setVisibility(View.GONE);
+	
 	
 
 		 

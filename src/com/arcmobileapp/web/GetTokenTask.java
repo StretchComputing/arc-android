@@ -57,7 +57,7 @@ public class GetTokenTask extends AsyncTask<Void, Void, Void> {
 	
 	protected boolean performTask() {
 		// get a token for the dev server
-		WebServices webService = new WebServices(URLs.DEV_SERVER);
+		WebServices webService = new WebServices(URLs.DUTCH_SERVER);
 		mDevResponse = webService.getToken(mLogin, mPassword, mIsGuest);
 		
 		// get a token for the prod server

@@ -2,6 +2,8 @@ package com.arcmobileapp.utils;
 
 public final class Keys {
 	
+	public static final String AGREED_TERMS = "AGREED_TERMS";
+
 	public static final String GUEST_ID = "GUEST_ID";
 	public static final String GUEST_TOKEN = "GUEST_TOKEN";
 	
