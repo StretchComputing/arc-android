@@ -143,7 +143,7 @@ public class WebServices {
 			json.put(WebKeys.LOCAL_ENDPOINT, localEndpoint);
 			
 			// once env can be chosen in UI by admin, set remoteEndpoint a different way
-			String remoteEndpoint = URLs.getHost(com.arcmobileapp.web.URLs.DEV_SERVER);
+			String remoteEndpoint = URLs.getHost(com.arcmobileapp.web.URLs.DUTCH_SERVER);
 			json.put(WebKeys.REMOTE_ENDPOINT, remoteEndpoint);
 			
 			// TODO -- add app actions
