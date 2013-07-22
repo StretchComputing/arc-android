@@ -14,7 +14,9 @@ import com.arcmobileapp.domain.Check;
 import com.arcmobileapp.utils.ArcPreferences;
 import com.arcmobileapp.utils.Constants;
 import com.arcmobileapp.utils.Keys;
+import com.arcmobileapp.web.ErrorCodes;
 import com.arcmobileapp.web.UpdateCustomerTask;
+import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 
 public class GuestCreateCustomer extends BaseActivity {
 
@@ -30,18 +32,26 @@ public class GuestCreateCustomer extends BaseActivity {
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_guest_create_customer);
 		
-		theBill =  (Check) getIntent().getSerializableExtra(Constants.INVOICE);
+		try{
+			super.onCreate(savedInstanceState);
+			setContentView(R.layout.activity_guest_create_customer);
+			
+			theBill =  (Check) getIntent().getSerializableExtra(Constants.INVOICE);
 
-		emailTextView = (TextView) findViewById (R.id.guest_email_textv);
-		passwordTextView = (TextView) findViewById (R.id.guest_password_textv);
-		
-		loadingDialog = new ProgressDialog(GuestCreateCustomer.this);
-		loadingDialog.setTitle("Creating Account");
-		loadingDialog.setMessage("Please Wait...");
-		loadingDialog.setCancelable(false);
+			emailTextView = (TextView) findViewById (R.id.guest_email_textv);
+			passwordTextView = (TextView) findViewById (R.id.guest_password_textv);
+			
+			loadingDialog = new ProgressDialog(GuestCreateCustomer.this);
+			loadingDialog.setTitle("Creating Account");
+			loadingDialog.setMessage("Please Wait...");
+			loadingDialog.setCancelable(false);
+			
+		}catch(Exception e){
+			(new CreateClientLogTask("GuestCreateCustomer.onCreate", "Exception Caught", "error", e)).execute();
+
+		}
+	
 
 	}
 
@@ -55,11 +65,15 @@ public class GuestCreateCustomer extends BaseActivity {
 	
 	public void onCreateClicked(View view) {
 
-		if (emailTextView != null && emailTextView.length() > 0 && passwordTextView != null && passwordTextView.length() > 0 ){
-			//Send the login
-			register();
-		}else{
-			toastShort("Please enter an email address and password.");
+		try {
+			if (emailTextView != null && emailTextView.length() > 0 && passwordTextView != null && passwordTextView.length() > 0 ){
+				//Send the login
+				register();
+			}else{
+				toastShort("Please enter an email address and password.");
+			}
+		} catch (Exception e) {
+			(new CreateClientLogTask("GuestCreateCustomer.onCreateClicked", "Exception Caught", "error", e)).execute();
 		}
 		
 		
@@ -69,53 +83,91 @@ public class GuestCreateCustomer extends BaseActivity {
 	public void onNoThanksClicked(View view) {
 
 		
-		Intent goReview = new Intent(getApplicationContext(), Review.class);
-		goReview.putExtra(Constants.INVOICE, theBill);
-		startActivity(goReview);
+		try {
+			Intent goReview = new Intent(getApplicationContext(), Review.class);
+			goReview.putExtra(Constants.INVOICE, theBill);
+			startActivity(goReview);
+		} catch (Exception e) {
+			(new CreateClientLogTask("GuestCreateCustomer.onNoThanksClicked", "Exception Caught", "error", e)).execute();
+		}
 		
 	}
 
 	private void register(){
 		
-		loadingDialog.show();
-		UpdateCustomerTask createUserTask = new UpdateCustomerTask(emailTextView.getText().toString(), passwordTextView.getText().toString(), getApplicationContext()) {
-			@Override
-			protected void onPostExecute(Void result) {
-				super.onPostExecute(result);
-				GuestCreateCustomer.this.loadingDialog.hide();
-				
-				if (getFinalSuccess()){
-					ArcPreferences myPrefs = new ArcPreferences(getApplicationContext());
-					
-					String guestId = myPrefs.getString(Keys.GUEST_ID);
+		try {
+			loadingDialog.show();
+			UpdateCustomerTask createUserTask = new UpdateCustomerTask(emailTextView.getText().toString(), passwordTextView.getText().toString(), getApplicationContext()) {
+				@Override
+				protected void onPostExecute(Void result) {
+					try {
+						super.onPostExecute(result);
+						GuestCreateCustomer.this.loadingDialog.hide();
+						
+						int errorCode = getErrorCode();
 
-					myPrefs.putAndCommitString(Keys.CUSTOMER_TOKEN, getNewCustomerToken());
-					myPrefs.putAndCommitString(Keys.CUSTOMER_ID, guestId);
-					myPrefs.putAndCommitString(Keys.CUSTOMER_EMAIL, GuestCreateCustomer.this.emailTextView.getText().toString());
-					
-					
-					myPrefs.putAndCommitString(Keys.GUEST_TOKEN, getNewCustomerToken());
-					myPrefs.putAndCommitString(Keys.GUEST_ID, guestId);
-					
-					
-					
+						
+						if (getFinalSuccess()){
+							ArcPreferences myPrefs = new ArcPreferences(getApplicationContext());
+							
+							String guestId = myPrefs.getString(Keys.GUEST_ID);
 
-					toastShort("Account created successfully!");
-					
-					Intent goReview = new Intent(getApplicationContext(), Review.class);
-					goReview.putExtra(Constants.INVOICE, theBill);
-					startActivity(goReview);
-					
-					
-				}else{
-					toastShort("Registration error, please try again.");
+							myPrefs.putAndCommitString(Keys.CUSTOMER_TOKEN, getNewCustomerToken());
+							myPrefs.putAndCommitString(Keys.CUSTOMER_ID, guestId);
+							myPrefs.putAndCommitString(Keys.CUSTOMER_EMAIL, GuestCreateCustomer.this.emailTextView.getText().toString());
+							
+							
+							myPrefs.putAndCommitString(Keys.GUEST_TOKEN, getNewCustomerToken());
+							myPrefs.putAndCommitString(Keys.GUEST_ID, guestId);
+							
+							
+							
 
+							toastShort("Account created successfully!");
+							
+							Intent goReview = new Intent(getApplicationContext(), Review.class);
+							goReview.putExtra(Constants.INVOICE, theBill);
+							startActivity(goReview);
+							
+							
+						}else{
+							
+							if (errorCode != 0){
+								
+								String errorMsg = "";
+								
+					            if(errorCode == 103) {
+					                errorMsg = "The email address you entered is already being used.  If you already have an account, please sign in by going to Profile in the left menu";
+					            }else if (errorCode == ErrorCodes.NETWORK_ERROR){
+					                
+					                errorMsg = "Arc is having problems connecting to the internet.  Please check your connection and try again.  Thank you!";
+					                
+					            }else {
+					                errorMsg = "We encountered an error during the registration process, please try again.";
+					            }
+								
+								
+								
+								toastShort(errorMsg);
+								
+							}else{
+								toastShort("We encountered an error during the registration process, please try again.");
+
+							}
+
+
+						}
+					} catch (Exception e) {
+						(new CreateClientLogTask("GuestCreateCustomer.register.onPostExecute", "Exception Caught", "error", e)).execute();
+					}
+					
+					
 				}
-				
-				
-			}
-		};
-		createUserTask.execute();
+			};
+			createUserTask.execute();
+		} catch (Exception e) {
+			(new CreateClientLogTask("GuestCreateCustomer.register", "Exception Caught", "error", e)).execute();
+		}
 		
 		
 	}

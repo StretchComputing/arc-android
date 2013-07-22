@@ -23,6 +23,7 @@ import com.arcmobileapp.activities.Support;
 import com.arcmobileapp.activities.UserProfile;
 import com.arcmobileapp.utils.Enums.ModernPicTypes;
 import com.arcmobileapp.utils.Utils;
+import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 
 public class MenuListFragment extends ListFragment {
 	
@@ -31,14 +32,19 @@ public class MenuListFragment extends ListFragment {
 	}
 
 	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		MenuAdapter adapter = new MenuAdapter(getActivity());
-		adapter.add(new MenuItem(Utils.convertModernPicType(ModernPicTypes.World), "Home"));
-		adapter.add(new MenuItem(Utils.convertModernPicType(ModernPicTypes.Guy), "Profile"));
-		adapter.add(new MenuItem(Utils.convertModernPicType(ModernPicTypes.Dollar), "Funds"));
-		adapter.add(new MenuItem(Utils.convertModernPicType(ModernPicTypes.Info), "About"));
-		//adapter.add(new MenuItem(Utils.convertModernPicType(ModernPicTypes.Girl), "Social"));
-		setListAdapter(adapter);
+		try {
+			super.onActivityCreated(savedInstanceState);
+			MenuAdapter adapter = new MenuAdapter(getActivity());
+			adapter.add(new MenuItem(Utils.convertModernPicType(ModernPicTypes.World), "Home"));
+			adapter.add(new MenuItem(Utils.convertModernPicType(ModernPicTypes.Guy), "Profile"));
+			adapter.add(new MenuItem(Utils.convertModernPicType(ModernPicTypes.Dollar), "Funds"));
+			adapter.add(new MenuItem(Utils.convertModernPicType(ModernPicTypes.Info), "About"));
+			//adapter.add(new MenuItem(Utils.convertModernPicType(ModernPicTypes.Girl), "Social"));
+			setListAdapter(adapter);
+		} catch (Exception e) {
+			(new CreateClientLogTask("MenuListFragment.onActivityCreated", "Exception Caught", "error", e)).execute();
+
+		}
 	}
 
 //	private class SampleItem {
@@ -66,48 +72,58 @@ public class MenuListFragment extends ListFragment {
 		}
 
 		public View getView(final int position, View convertView, ViewGroup parent) {
-			if (convertView == null) {
-				convertView = LayoutInflater.from(getContext()).inflate(R.layout.menu_row, null);
-			}
+			try {
+				if (convertView == null) {
+					convertView = LayoutInflater.from(getContext()).inflate(R.layout.menu_row, null);
+				}
 //			ImageView icon = (ImageView) convertView.findViewById(R.id.row_icon);
 //			icon.setImageResource(getItem(position).iconRes);
-			
-			TextView icon = (TextView) convertView.findViewById(R.id.row_icon);
-			icon.setText(getItem(position).icon);
-			icon.setTextSize(75);
-			icon.setTypeface(ArcMobileApp.getModernPicsTypeface());
-			TextView title = (TextView) convertView.findViewById(R.id.row_title);
-			title.setText(getItem(position).text);
-			convertView.setOnTouchListener(new OnTouchListener() {
 				
-				@Override
-				public boolean onTouch(View v, MotionEvent event) {
-					onMenuTouch(position);		
-					return false;  //consume the view?
-				}
-			});
+				TextView icon = (TextView) convertView.findViewById(R.id.row_icon);
+				icon.setText(getItem(position).icon);
+				icon.setTextSize(75);
+				icon.setTypeface(ArcMobileApp.getModernPicsTypeface());
+				TextView title = (TextView) convertView.findViewById(R.id.row_title);
+				title.setText(getItem(position).text);
+				convertView.setOnTouchListener(new OnTouchListener() {
+					
+					@Override
+					public boolean onTouch(View v, MotionEvent event) {
+						onMenuTouch(position);		
+						return false;  //consume the view?
+					}
+				});
 
-			return convertView;
+				return convertView;
+			} catch (Exception e) {
+				(new CreateClientLogTask("MenuListFragment.getView", "Exception Caught", "error", e)).execute();
+				return null;
+			}
 		}
 		
 		private void onMenuTouch(int position) {
-			switch(position) {
-			case 0:
-				goHome();
-				break;
-			case 1:
-				goToProfile();				
-				break;
-			case 2:
-				goToFunds();				
-				break;
-			case 3:
-				//showInfoDialog();
-				goAboutScreen();
-				break;
-			case 4:
-				goToSocial();
-				break;
+			try {
+				switch(position) {
+				case 0:
+					goHome();
+					break;
+				case 1:
+					goToProfile();				
+					break;
+				case 2:
+					goToFunds();				
+					break;
+				case 3:
+					//showInfoDialog();
+					goAboutScreen();
+					break;
+				case 4:
+					goToSocial();
+					break;
+				}
+			} catch (Exception e) {
+				(new CreateClientLogTask("MenuListFragment.onMenuTouch", "Exception Caught", "error", e)).execute();
+
 			}
 			
 		}

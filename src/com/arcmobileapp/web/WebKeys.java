@@ -25,6 +25,10 @@ public final class WebKeys {
 	
 	public static final String SUCCESS = "Success";
 	public static final String RESULTS = "Results";	
+	public static final String ERROR_CODES = "ErrorCodes";	
+	public static final String CODE = "Code";	
+
+
 	public static final String TOKEN = "Token";
 	public static final String ID = "Id";
 	public static final String NAME = "Name";

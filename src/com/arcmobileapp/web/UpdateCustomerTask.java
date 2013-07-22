@@ -1,6 +1,7 @@
 package com.arcmobileapp.web;
 
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -10,6 +11,7 @@ import android.os.AsyncTask;
 import com.arcmobileapp.utils.ArcPreferences;
 import com.arcmobileapp.utils.Keys;
 import com.arcmobileapp.utils.Logger;
+import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 
 public class UpdateCustomerTask extends AsyncTask<Void, Void, Void> {
 	
@@ -21,7 +23,7 @@ public class UpdateCustomerTask extends AsyncTask<Void, Void, Void> {
 	private boolean mSuccess;
 	private boolean finalSuccess;
 	private Context mContext;
-
+	private int mErrorCode;
 	
 	public UpdateCustomerTask(String login, String password, Context context) {
 		super();
@@ -30,7 +32,7 @@ public class UpdateCustomerTask extends AsyncTask<Void, Void, Void> {
 		mIsGuest = false;
 		mNewCustomerToken = "";
 		mContext = context;
-		
+		mErrorCode = 0;
 	}
 	
 	@Override
@@ -63,7 +65,10 @@ public class UpdateCustomerTask extends AsyncTask<Void, Void, Void> {
 		
 		mDevResponse = webService.updateCustomer(mLogin, mPassword, guestToken);
 		
-		
+		if (mDevResponse == null){
+
+			return false;
+		}
 		try {
 			Logger.d("UPDATE Response: " + mDevResponse);
 			JSONObject json =  new JSONObject(mDevResponse);
@@ -86,10 +91,20 @@ public class UpdateCustomerTask extends AsyncTask<Void, Void, Void> {
 					return true;
 				}
 				
+			}else{
+				JSONArray errorArray = json.getJSONArray(WebKeys.ERROR_CODES);  // get an array of returned results
+				if (errorArray != null && errorArray.length() > 0){
+					//Error
+					JSONObject error = errorArray.getJSONObject(0);
+					mErrorCode = error.getInt(WebKeys.CODE);
+
+				}
 			}
 			
 			
-		} catch (JSONException exc) {
+		} catch (JSONException e) {
+			(new CreateClientLogTask("UpdateCustomerTask.performTask", "Exception Caught", "error", e)).execute();
+
 			Logger.e("Error retrieving token, JSON Exception");
 		}
 		// get a token for the prod server
@@ -129,5 +144,8 @@ public class UpdateCustomerTask extends AsyncTask<Void, Void, Void> {
 	}
 	public Context getContext() {
 		return mContext;
+	}
+	public int getErrorCode(){
+		return mErrorCode;
 	}
 }

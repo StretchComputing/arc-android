@@ -9,13 +9,19 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.arcmobileapp.BaseActivity;
 import com.arcmobileapp.R;
+import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 
 public class Support extends BaseActivity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_support);
+		try {
+			super.onCreate(savedInstanceState);
+			setContentView(R.layout.activity_support);
+		} catch (Exception e) {
+			(new CreateClientLogTask("Support.onCreate", "Exception Caught", "error", e)).execute();
+
+		}
 	}
 
 	
@@ -38,15 +44,25 @@ public class Support extends BaseActivity {
 			startActivity(emailIntent); 
 		}catch (Exception e){
 			toastShort("Error opening email client, please try again");
+			(new CreateClientLogTask("Support.emailNow", "Exception Caught", "error", e)).execute();
+
 		}
 	}
 	
 	public void callNow(View view) {
 
-		Intent intent = new Intent(Intent.ACTION_CALL);
+		try {
+			Intent intent = new Intent(Intent.ACTION_CALL);
 
-		intent.setData(Uri.parse("tel:7083209272"));
-		startActivity(intent);
+			intent.setData(Uri.parse("tel:7083209272"));
+			startActivity(intent);
+		} catch (Exception e) {
+			
+			toastShort("Error opening phone client, please try again");
+
+			(new CreateClientLogTask("Support.callNow", "Exception Caught", "error", e)).execute();
+
+		}
 		
 	}
 }

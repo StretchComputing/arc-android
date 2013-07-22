@@ -27,6 +27,7 @@ import com.arcmobileapp.utils.Keys;
 import com.arcmobileapp.utils.Logger;
 import com.arcmobileapp.utils.Utils;
 import com.arcmobileapp.web.URLs;
+import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.GoogleAnalytics;
 import com.google.analytics.tracking.android.Tracker;
@@ -63,29 +64,33 @@ public class BaseActivity extends SlidingFragmentActivity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setTitle(mTitleRes);
-		// set the Behind View
-		setBehindContentView(R.layout.menu_frame);
-		if (savedInstanceState == null) {
-			FragmentTransaction t = this.getSupportFragmentManager().beginTransaction();
-			mFrag = new MenuListFragment();
-			t.replace(R.id.menu_frame, mFrag);
-			t.commit();
-		} else {
-			mFrag = (ListFragment) this.getSupportFragmentManager().findFragmentById(R.id.menu_frame);
+		try {
+			super.onCreate(savedInstanceState);
+			setTitle(mTitleRes);
+			// set the Behind View
+			setBehindContentView(R.layout.menu_frame);
+			if (savedInstanceState == null) {
+				FragmentTransaction t = this.getSupportFragmentManager().beginTransaction();
+				mFrag = new MenuListFragment();
+				t.replace(R.id.menu_frame, mFrag);
+				t.commit();
+			} else {
+				mFrag = (ListFragment) this.getSupportFragmentManager().findFragmentById(R.id.menu_frame);
+			}
+
+			initSlidingMenu();
+			initActionBar();
+			initContentProvider();
+
+			myPrefs = new ArcPreferences(getApplicationContext());
+			// theView = (LinearLayout) findViewById(R.id.login_layout);
+			// theView.setAnimation(AnimationUtils.loadAnimation(this,
+			// R.anim.login_fade_in));
+			// initActionBar(getResources().getString(R.string.app_name), null);
+		} catch (Exception e) {
+			(new CreateClientLogTask("BaseActivity.onCreate", "Exception Caught", "error", e)).execute();
+
 		}
-
-		initSlidingMenu();
-		initActionBar();
-		initContentProvider();
-
-		myPrefs = new ArcPreferences(getApplicationContext());
-		// theView = (LinearLayout) findViewById(R.id.login_layout);
-		// theView.setAnimation(AnimationUtils.loadAnimation(this,
-		// R.anim.login_fade_in));
-		// initActionBar(getResources().getString(R.string.app_name), null);
-		Logger.d(TAG, "finished onCreate");
 	}
 
 	protected Typeface getModernPicsTypeface() {
@@ -93,12 +98,17 @@ public class BaseActivity extends SlidingFragmentActivity {
 	}
 
 	protected TextView getModernPic(Enums.ModernPicTypes type) {
-		TextView tv = new TextView(getApplicationContext());
-		String symbol = Utils.convertModernPicType(type);
-		tv.setText(symbol);
-		tv.setTextSize(75);
-		tv.setTypeface(getModernPicsTypeface());
-		return tv;
+		try {
+			TextView tv = new TextView(getApplicationContext());
+			String symbol = Utils.convertModernPicType(type);
+			tv.setText(symbol);
+			tv.setTextSize(75);
+			tv.setTypeface(getModernPicsTypeface());
+			return tv;
+		} catch (Exception e) {
+			(new CreateClientLogTask("BaseActivity.getModerPic", "Exception Caught", "error", e)).execute();
+			return null;
+		}
 	}
 
 	private static Interpolator interp = new Interpolator() {
@@ -110,35 +120,45 @@ public class BaseActivity extends SlidingFragmentActivity {
 	};
 
 	protected void initSlidingMenu() {
-		mTransformer = new CanvasTransformer() {
-			@Override
-			public void transformCanvas(Canvas canvas, float percentOpen) {
-				canvas.translate(0, canvas.getHeight() * (1 - interp.getInterpolation(percentOpen)));
-			}
-		};
+		try {
+			mTransformer = new CanvasTransformer() {
+				@Override
+				public void transformCanvas(Canvas canvas, float percentOpen) {
+					canvas.translate(0, canvas.getHeight() * (1 - interp.getInterpolation(percentOpen)));
+				}
+			};
 
-		SlidingMenu sm = getSlidingMenu();
-		sm.setShadowWidthRes(R.dimen.shadow_width);
-		sm.setShadowDrawable(R.drawable.shadow);
-		sm.setBehindOffsetRes(R.dimen.slidingmenu_offset);
-		sm.setFadeDegree(0.35f);
-		sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
-		sm.setBehindScrollScale(0.0f);
-		sm.setBehindCanvasTransformer(mTransformer);
-		sm.setBackgroundColor(0xFF393939);
-		// TODO add an image back there that is hidden when the menu covers it (or something cool..random quote, etc)
+			SlidingMenu sm = getSlidingMenu();
+			sm.setShadowWidthRes(R.dimen.shadow_width);
+			sm.setShadowDrawable(R.drawable.shadow);
+			sm.setBehindOffsetRes(R.dimen.slidingmenu_offset);
+			sm.setFadeDegree(0.35f);
+			sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
+			sm.setBehindScrollScale(0.0f);
+			sm.setBehindCanvasTransformer(mTransformer);
+			sm.setBackgroundColor(0xFF393939);
+			// TODO add an image back there that is hidden when the menu covers it (or something cool..random quote, etc)
+		} catch (Exception e) {
+			(new CreateClientLogTask("BaseActivity.initSlidingMenu", "Exception Caught", "error", e)).execute();
+
+		}
 	}
 
 	// https://github.com/jfeinstein10/SlidingMenu
 	// customize the SlidingMenu
 	protected void initActionBar() {
-		actionBar = getSupportActionBar();
-		actionBar.setIcon(null);
-		//setActionBarIcon(android.R.drawable.ic_menu_view);
-		setActionBarIcon(R.drawable.transparent_action_bar_logo);
-		setActionBarTitle("");
-		setActionBarHomeAsUpEnabled(true);
-		// actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#00853c")));
+		try {
+			actionBar = getSupportActionBar();
+			actionBar.setIcon(null);
+			//setActionBarIcon(android.R.drawable.ic_menu_view);
+			setActionBarIcon(R.drawable.transparent_action_bar_logo);
+			setActionBarTitle("");
+			setActionBarHomeAsUpEnabled(true);
+			// actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#00853c")));
+		} catch (Exception e) {
+			(new CreateClientLogTask("BaseActivity.initActionBar", "Exception Caught", "error", e)).execute();
+
+		}
 	}
 	
 	protected void initContentProvider() {
@@ -173,6 +193,8 @@ public class BaseActivity extends SlidingFragmentActivity {
 				return getString(Keys.GUEST_TOKEN);
 			}
 		}catch(Exception e){
+			(new CreateClientLogTask("BaseActivity.getToken", "Exception Caught", "error", e)).execute();
+
 			return "";
 		}
 		
@@ -187,6 +209,8 @@ public class BaseActivity extends SlidingFragmentActivity {
 				return getString(Keys.GUEST_ID);
 			}
 		}catch(Exception e){
+			(new CreateClientLogTask("BaseActivity.getId", "Exception Caught", "error", e)).execute();
+
 			return "";
 		}
 		
@@ -324,7 +348,13 @@ public class BaseActivity extends SlidingFragmentActivity {
 	}
 
 	protected void toastShort(String message) {
-		toast(message, Toast.LENGTH_SHORT);
+		
+		try {
+			toast(message, Toast.LENGTH_SHORT);
+		} catch (Exception e) {
+			(new CreateClientLogTask("BaseActivity.toastShort", "Exception Caught", "error", e)).execute();
+
+		}
 	}
 
 	protected void toastLong(String message) {

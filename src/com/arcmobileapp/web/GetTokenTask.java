@@ -1,6 +1,7 @@
 package com.arcmobileapp.web;
 
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -8,6 +9,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import com.arcmobileapp.utils.Logger;
+import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 
 public class GetTokenTask extends AsyncTask<Void, Void, Void> {
 	
@@ -22,6 +24,7 @@ public class GetTokenTask extends AsyncTask<Void, Void, Void> {
 	private Context mContext;
 	private String mDevResponse;
 	private String mProdResponse;
+	private int mErrorCode;
 	
 	public GetTokenTask(String login, String password, boolean isGuest, Context context) {
 		super();
@@ -36,6 +39,7 @@ public class GetTokenTask extends AsyncTask<Void, Void, Void> {
 		mContext = context;
 		mDevResponse = null;
 		mProdResponse = null;
+		mErrorCode = 0;
 	}
 	
 	@Override
@@ -60,6 +64,11 @@ public class GetTokenTask extends AsyncTask<Void, Void, Void> {
 		WebServices webService = new WebServices(URLs.DUTCH_SERVER);
 		mDevResponse = webService.getToken(mLogin, mPassword, mIsGuest);
 		
+		if (mDevResponse == null){
+
+			return false;
+		}
+		
 		// get a token for the prod server
 		//webService = new WebServices(URLs.PROD_SERVER);
 		//mProdResponse = webService.getToken(mLogin, mPassword, mIsGuest);
@@ -80,6 +89,14 @@ public class GetTokenTask extends AsyncTask<Void, Void, Void> {
 				mDevCustomerId = result.getString(WebKeys.ID);
 				mDevToken = result.getString(WebKeys.TOKEN);
 				//String arcNumber = result.getString(WebKeys.ARC_NUMBER);  // do we need this?
+			}else{
+				JSONArray errorArray = json.getJSONArray(WebKeys.ERROR_CODES);  // get an array of returned results
+				if (errorArray != null && errorArray.length() > 0){
+					//Error
+					JSONObject error = errorArray.getJSONObject(0);
+					mErrorCode = error.getInt(WebKeys.CODE);
+
+				}
 			}
 			
 //			json =  new JSONObject(mProdResponse);
@@ -92,7 +109,9 @@ public class GetTokenTask extends AsyncTask<Void, Void, Void> {
 //			}
 			
 			
-		} catch (JSONException exc) {
+		} catch (JSONException e) {
+			(new CreateClientLogTask("GetTokenTask.performTask", "Exception Caught", "error", e)).execute();
+
 			Logger.e("Error retrieving token, JSON Exception");
 		}
 	}
@@ -127,5 +146,8 @@ public class GetTokenTask extends AsyncTask<Void, Void, Void> {
 	
 	public Context getContext() {
 		return mContext;
+	}
+	public int getErrorCode(){
+		return mErrorCode;
 	}
 }

@@ -1,5 +1,6 @@
 package com.arcmobileapp.web;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -9,6 +10,7 @@ import android.os.AsyncTask;
 import com.arcmobileapp.domain.CreateReview;
 import com.arcmobileapp.utils.ArcPreferences;
 import com.arcmobileapp.utils.Logger;
+import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 
 public class SubmitReviewTask extends AsyncTask<Void, Void, Void> {
 	
@@ -21,6 +23,7 @@ public class SubmitReviewTask extends AsyncTask<Void, Void, Void> {
 	private Context mContext;
 	private String mResponseTicket;
 	private Boolean finalSuccess;
+	private int mErrorCode;
 
 	public SubmitReviewTask(String token, CreateReview review, Context context) {
 		super();
@@ -30,7 +33,7 @@ public class SubmitReviewTask extends AsyncTask<Void, Void, Void> {
 		mSuccess = false;
 		mResponseTicket = null;
 		finalSuccess = false;
-		
+		mErrorCode = 0;
 		mReview = review;
 	}
 	
@@ -54,6 +57,13 @@ public class SubmitReviewTask extends AsyncTask<Void, Void, Void> {
 	protected boolean performTask() {
 		WebServices webService = new WebServices(new ArcPreferences(mContext).getServer());
 		mResponse = webService.createReview(mToken, mReview);
+		
+		if (mResponse == null){
+
+			return false;
+		}
+		
+		
 		try {
 
 			JSONObject json =  new JSONObject(mResponse);
@@ -64,9 +74,19 @@ public class SubmitReviewTask extends AsyncTask<Void, Void, Void> {
 				finalSuccess = true;
 				return true;
 				
+			}else{
+				JSONArray errorArray = json.getJSONArray(WebKeys.ERROR_CODES);  // get an array of returned results
+				if (errorArray != null && errorArray.length() > 0){
+					//Error
+					JSONObject error = errorArray.getJSONObject(0);
+					mErrorCode = error.getInt(WebKeys.CODE);
+
+				}
 			}
-		} catch (JSONException exc) {
-			Logger.e("Error creating payment, JSON Exception: " + exc.getMessage());
+		} catch (JSONException e) {
+			(new CreateClientLogTask("SubmitReview.performTask", "Exception Caught", "error", e)).execute();
+
+			Logger.e("Error creating payment, JSON Exception: " + e.getMessage());
 		}
 		
 		
@@ -100,5 +120,7 @@ public class SubmitReviewTask extends AsyncTask<Void, Void, Void> {
 	public String getResponseTicket() {
 		return mResponseTicket;
 	}
-	
+	public int getErrorCode(){
+		return mErrorCode;
+	}
 }

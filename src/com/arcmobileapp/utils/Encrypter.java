@@ -23,6 +23,7 @@ import android.telephony.TelephonyManager;
 import android.util.Base64;
 
 import com.arcmobileapp.ArcMobileApp;
+import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 
 /**
  * 
@@ -48,21 +49,26 @@ public class Encrypter {
 	 * @return the encoded string
 	 */
 	public String packString(String s) {
-		if (!mReadytoRun || s == null)
-			return null;
-
-		byte[] bytes = s.getBytes();
 		try {
-			byte[] encryptedBytes = encryptCipher.doFinal(bytes);
-			return Base64.encodeToString(encryptedBytes, Base64.DEFAULT);
-		} catch (IllegalBlockSizeException e) {
-			Logger.d(this.toString(), "Illegal Block Size Exception.");
-			e.printStackTrace();
-		} catch (BadPaddingException e) {
-			Logger.d(this.toString(), "Bad Padding Exception.");
-			e.printStackTrace();
+			if (!mReadytoRun || s == null)
+				return null;
+
+			byte[] bytes = s.getBytes();
+			try {
+				byte[] encryptedBytes = encryptCipher.doFinal(bytes);
+				return Base64.encodeToString(encryptedBytes, Base64.DEFAULT);
+			} catch (IllegalBlockSizeException e) {
+				Logger.d(this.toString(), "Illegal Block Size Exception.");
+				e.printStackTrace();
+			} catch (BadPaddingException e) {
+				Logger.d(this.toString(), "Bad Padding Exception.");
+				e.printStackTrace();
+			}
+			return null;
+		} catch (Exception e) {
+			(new CreateClientLogTask("Encrypter.packString", "Exception Caught", "error", e)).execute();
+			return null;
 		}
-		return null;
 	}
 
 	/**
@@ -87,6 +93,8 @@ public class Encrypter {
 			Logger.d(this.toString(), "Bad Padding exception");
 			e.printStackTrace();
 		} catch (Exception e) {
+			(new CreateClientLogTask("Encrypter.unpackString", "Exception Caught", "error", e)).execute();
+
 			Logger.d(this.toString(), "Some other bad exception");
 			e.printStackTrace();
 		}
@@ -115,6 +123,8 @@ public class Encrypter {
 			setupKey(localKey);
 			mReadytoRun = true;
 		} catch (Exception e) {
+			(new CreateClientLogTask("Encrypter.configureEncrypter", "Exception Caught", "error", e)).execute();
+
 			Logger.d(this.toString(), "Encrypter did not setup correctly.");
 			e.printStackTrace();
 			throw new RuntimeException(e);
@@ -137,20 +147,26 @@ public class Encrypter {
 	}
 
 	private Key generateKey(String seed, KeyStore keyStore) throws NoSuchAlgorithmException, KeyStoreException, NoSuchProviderException {
-		KeyGenerator kg;
+		try {
+			KeyGenerator kg;
 
-		kg = KeyGenerator.getInstance("AES");
-		SecureRandom sr = null;
-		if (android.os.Build.VERSION.SDK_INT >= 17) {
-			sr = SecureRandom.getInstance("SHA1PRNG", "Crypto"); // Needed for >= 4.2
-		} else {
-			sr = SecureRandom.getInstance("SHA1PRNG"); // Needed for < 4.2
+			kg = KeyGenerator.getInstance("AES");
+			SecureRandom sr = null;
+			if (android.os.Build.VERSION.SDK_INT >= 17) {
+				sr = SecureRandom.getInstance("SHA1PRNG", "Crypto"); // Needed for >= 4.2
+			} else {
+				sr = SecureRandom.getInstance("SHA1PRNG"); // Needed for < 4.2
+			}
+			sr.setSeed(seed.getBytes());
+			kg.init(128, sr);
+			SecretKey generateKey = kg.generateKey();
+			keyStore.setKeyEntry("arcMobileApp", generateKey, generatePassword(seed), null);
+			return generateKey;
+		} catch (Exception e) {
+			(new CreateClientLogTask("Encrypter.generateKey", "Exception Caught", "error", e)).execute();
+			return null;
+
 		}
-		sr.setSeed(seed.getBytes());
-		kg.init(128, sr);
-		SecretKey generateKey = kg.generateKey();
-		keyStore.setKeyEntry("arcMobileApp", generateKey, generatePassword(seed), null);
-		return generateKey;
 	}
 
 	/**
@@ -163,18 +179,23 @@ public class Encrypter {
 	}
 
 	public void setupEncrypter() {
-		if (!mReadytoRun) {
-			ArcPreferences prefs = new ArcPreferences();
+		try {
+			if (!mReadytoRun) {
+				ArcPreferences prefs = new ArcPreferences();
 
-			String seed = prefs.getBaseSeed();
+				String seed = prefs.getBaseSeed();
 
-			if (stringIsNullOrEmpty(seed)) {
-				// we only want this to run once...
-				seed = createSeed();
-				prefs.setBaseSeed(seed);
+				if (stringIsNullOrEmpty(seed)) {
+					// we only want this to run once...
+					seed = createSeed();
+					prefs.setBaseSeed(seed);
+				}
+
+				configureEncrypter(seed + Constants.SALT);
 			}
+		} catch (Exception e) {
+			(new CreateClientLogTask("Encrypter.setUpEncrypter", "Exception Caught", "error", e)).execute();
 
-			configureEncrypter(seed + Constants.SALT);
 		}
 	}
 
@@ -189,6 +210,8 @@ public class Encrypter {
 				phoneId = ((TelephonyManager) ArcMobileApp.getContext().getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
 				Logger.d("phone ID = " + phoneId);
 			} catch (Exception e) {
+				(new CreateClientLogTask("Encrypter.createSeed1", "Exception Caught", "error", e)).execute();
+
 				Logger.d("Unable to get the Phone ID");
 				e.printStackTrace();
 			}
@@ -197,6 +220,8 @@ public class Encrypter {
 				androidId = Secure.getString(ArcMobileApp.getContext().getContentResolver(), Secure.ANDROID_ID);
 				Logger.d("android ID = " + androidId);
 			} catch (Exception e) {
+				(new CreateClientLogTask("Encrypter.createSeed2", "Exception Caught", "error", e)).execute();
+
 				Logger.d("Unable to get the Android ID");
 				e.printStackTrace();
 			}

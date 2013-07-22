@@ -16,6 +16,8 @@ import java.security.MessageDigest;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 
+import com.arcmobileapp.web.rskybox.CreateClientLogTask;
+
 public class Security {
 
 
@@ -34,6 +36,8 @@ public class Security {
 			return encrypted;
 
 		} catch (Exception e){
+			(new CreateClientLogTask("Security.encryptBlowfish", "Exception Caught", "error", e)).execute();
+
 			return null; 
 		}
 	}
@@ -46,6 +50,7 @@ public class Security {
 		     byte[] decrypted = cipher.doFinal(to_decrypt.getBytes("ISO-8859-1"));
 		     return new String(decrypted);
 		  } catch (Exception e) { 
+				(new CreateClientLogTask("Security.decryptBlowfish", "Exception Caught", "error", e)).execute();
 
 			  return null;
 
@@ -53,18 +58,7 @@ public class Security {
 		}
 	
 
-	public String encrypt(String pin, String creditCardNumber) {
-	    
-		return creditCardNumber;
-		
-		
-	}
-
-	public String decrypt(String pin, String encryptedCreditCard) {
-	   
-		return encryptedCreditCard;
-		
-	}
+	
 
 
 

@@ -8,6 +8,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
+import android.content.res.Resources.NotFoundException;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.InputFilter;
@@ -45,6 +46,7 @@ import com.arcmobileapp.utils.CurrencyFilter;
 import com.arcmobileapp.utils.Logger;
 import com.arcmobileapp.utils.PaymentFlags;
 import com.arcmobileapp.web.MakePaymentTask;
+import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 
 public class ViewCheck extends BaseActivity {
 
@@ -104,80 +106,85 @@ public class ViewCheck extends BaseActivity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		
-		totalBill = 0d;
-		amountPaid = 0d;
-		setContentView(R.layout.view_check);
-	
-		
-		myTotalTextView = (TextView) findViewById(R.id.myTotalTextView);
-		
-		
-		textSubtotalName = (TextView) findViewById(R.id.text_subtotal_name);
-		textTaxName = (TextView) findViewById(R.id.text_tax_name);
-		textServiceChargeName = (TextView) findViewById(R.id.text_service_charge_name);
-		textDiscountName = (TextView) findViewById(R.id.text_discount_name);
-		textAmountDueName = (TextView) findViewById(R.id.text_amount_due_name);
-		textSubtotalValue = (TextView) findViewById(R.id.text_subtotal_value);
-		textTaxValue = (TextView) findViewById(R.id.text_tax_value);
-		textServiceChargeValue = (TextView) findViewById(R.id.text_service_charge_value);
-		textDiscountValue = (TextView) findViewById(R.id.text_discount_value);
-		textAmountDueValue = (TextView) findViewById(R.id.text_amount_due_value);
-		textAlreadyPaidName = (TextView) findViewById(R.id.text_already_paid_name);
-		textAlreadyPaidValue = (TextView) findViewById(R.id.text_already_paid_value);
+		try {
+			super.onCreate(savedInstanceState);
+			
+			totalBill = 0d;
+			amountPaid = 0d;
+			setContentView(R.layout.view_check);
 
-		myListView = (ListView) findViewById(R.id.invoiceItemList);
-		layoutBottom = (RelativeLayout) findViewById(R.id.invoice_bottom_layout);
-		//layoutBottom = (RelativeLayout) findViewById(R.id.l
+			
+			myTotalTextView = (TextView) findViewById(R.id.myTotalTextView);
+			
+			
+			textSubtotalName = (TextView) findViewById(R.id.text_subtotal_name);
+			textTaxName = (TextView) findViewById(R.id.text_tax_name);
+			textServiceChargeName = (TextView) findViewById(R.id.text_service_charge_name);
+			textDiscountName = (TextView) findViewById(R.id.text_discount_name);
+			textAmountDueName = (TextView) findViewById(R.id.text_amount_due_name);
+			textSubtotalValue = (TextView) findViewById(R.id.text_subtotal_value);
+			textTaxValue = (TextView) findViewById(R.id.text_tax_value);
+			textServiceChargeValue = (TextView) findViewById(R.id.text_service_charge_value);
+			textDiscountValue = (TextView) findViewById(R.id.text_discount_value);
+			textAmountDueValue = (TextView) findViewById(R.id.text_amount_due_value);
+			textAlreadyPaidName = (TextView) findViewById(R.id.text_already_paid_name);
+			textAlreadyPaidValue = (TextView) findViewById(R.id.text_already_paid_value);
 
-		list = (ListView) findViewById(R.id.invoiceItemList);
+			myListView = (ListView) findViewById(R.id.invoiceItemList);
+			layoutBottom = (RelativeLayout) findViewById(R.id.invoice_bottom_layout);
+			//layoutBottom = (RelativeLayout) findViewById(R.id.l
 
-		
-		payBillButton = (Button) findViewById(R.id.invoice_pay_button);
-		payBillButton.setOnClickListener(new Button.OnClickListener() {
-		    public void onClick(View v) {
-		            ViewCheck.this.goAddTip();
-		    }
-		});
-		
-		
-		splitDollarButton = (Button) findViewById(R.id.splitDollarButton);
-		splitDollarButton.setOnClickListener(new Button.OnClickListener() {
-		    public void onClick(View v) {
-		    
-				
-				
-		    	showPayAmountDialog();
-		    }
-		});
-		
-		splitDollarButton.setVisibility(View.GONE);
-		splitPercentButton = (Button) findViewById(R.id.splitPercentButton);
-		splitPercentButton.setOnClickListener(new Button.OnClickListener() {
-		    public void onClick(View v) {
-		    	showPayAmountDialogPercent();
-		    }
-		});
-		splitPercentButton.setVisibility(View.GONE);
+			list = (ListView) findViewById(R.id.invoiceItemList);
 
-		
-		
-		
-		theBill =  (Check) getIntent().getSerializableExtra(Constants.INVOICE);
-		
-		for (int i = 0; i < theBill.getItems().size(); i++){
-			LineItem item = theBill.getItems().get(i);
-			item.setIsSelected(false);
+			
+			payBillButton = (Button) findViewById(R.id.invoice_pay_button);
+			payBillButton.setOnClickListener(new Button.OnClickListener() {
+			    public void onClick(View v) {
+			            ViewCheck.this.goAddTip();
+			    }
+			});
+			
+			
+			splitDollarButton = (Button) findViewById(R.id.splitDollarButton);
+			splitDollarButton.setOnClickListener(new Button.OnClickListener() {
+			    public void onClick(View v) {
+			    
+					
+					
+			    	showPayAmountDialog();
+			    }
+			});
+			
+			splitDollarButton.setVisibility(View.GONE);
+			splitPercentButton = (Button) findViewById(R.id.splitPercentButton);
+			splitPercentButton.setOnClickListener(new Button.OnClickListener() {
+			    public void onClick(View v) {
+			    	showPayAmountDialogPercent();
+			    }
+			});
+			splitPercentButton.setVisibility(View.GONE);
+
+			
+			
+			
+			theBill =  (Check) getIntent().getSerializableExtra(Constants.INVOICE);
+			
+			for (int i = 0; i < theBill.getItems().size(); i++){
+				LineItem item = theBill.getItems().get(i);
+				item.setIsSelected(false);
+			}
+			
+
+			displayBill();
+			
+			populateListView();
+			registerClickCallback();
+			
+			showPaidItems();
+		} catch (Exception e) {
+			(new CreateClientLogTask("ViewCheck.onCreate", "Exception Caught", "error", e)).execute();
+
 		}
-		
-
-		displayBill();
-		
-		populateListView();
-		registerClickCallback();
-		
-		showPaidItems();
 
 
 	}
@@ -191,134 +198,139 @@ public class ViewCheck extends BaseActivity {
 	
 	protected void displayBill(){
 		
-		String check = "";
-		if (theBill == null || theBill.getItems().size() == 0) {
-			toastShort("Could not locate your check");
-			finish();
-			return;
-		}
-		
-		invoiceId = String.valueOf(theBill.getId());
-		if (theBill.getServiceCharge() == null){
-			theBill.setServiceCharge(0.0);
-		}
-		
-		if (theBill.getDiscount() == null){
-			theBill.setDiscount(0.0);
-		}
-		
-		if (theBill.getAmountPaid() == null){
-			theBill.setAmountPaid(0.0);
-		}
+		try {
+			String check = "";
+			if (theBill == null || theBill.getItems().size() == 0) {
+				toastShort("Could not locate your check");
+				finish();
+				return;
+			}
+			
+			invoiceId = String.valueOf(theBill.getId());
+			if (theBill.getServiceCharge() == null){
+				theBill.setServiceCharge(0.0);
+			}
+			
+			if (theBill.getDiscount() == null){
+				theBill.setDiscount(0.0);
+			}
+			
+			if (theBill.getAmountPaid() == null){
+				theBill.setAmountPaid(0.0);
+			}
+					
+			
+			totalBill = myPayment = theBill.getBaseAmount() + theBill.getTaxAmount() + theBill.getServiceCharge() - theBill.getDiscount() - theBill.getAmountPaid();
+			amountPaid = theBill.getAmountPaid();
+			
+			taxPercent = theBill.getTaxAmount() / theBill.getBaseAmount();
+			
+			textSubtotalValue.setText(String.format("%.2f", theBill.getBaseAmount()));
+			textTaxValue.setText(String.format("%.2f", theBill.getTaxAmount()));
+			
+			
+			int nextAboveIdLeft = textTaxName.getId();
+			int nextAboveIdRight = textTaxValue.getId();
+			
+			
+			int added = 0;
+			if (theBill.getServiceCharge() > 0){
+				added += 40;
+				textServiceChargeValue.setText(String.format("%.2f", theBill.getServiceCharge()));
+
+				setServiceChargeLayout(nextAboveIdLeft, nextAboveIdRight);
+				nextAboveIdLeft = textServiceChargeName.getId();
+				nextAboveIdRight = textServiceChargeValue.getId();
 				
-		
-		totalBill = myPayment = theBill.getBaseAmount() + theBill.getTaxAmount() + theBill.getServiceCharge() - theBill.getDiscount() - theBill.getAmountPaid();
-		amountPaid = theBill.getAmountPaid();
-		
-		taxPercent = theBill.getTaxAmount() / theBill.getBaseAmount();
-		
-		textSubtotalValue.setText(String.format("%.2f", theBill.getBaseAmount()));
-		textTaxValue.setText(String.format("%.2f", theBill.getTaxAmount()));
-		
-		
-		int nextAboveIdLeft = textTaxName.getId();
-		int nextAboveIdRight = textTaxValue.getId();
-		
-		
-		int added = 0;
-		if (theBill.getServiceCharge() > 0){
-			added += 40;
-			textServiceChargeValue.setText(String.format("%.2f", theBill.getServiceCharge()));
+				
+			}else{
+				textServiceChargeName.setVisibility(View.GONE);
+				textServiceChargeValue.setVisibility(View.GONE);
 
-			setServiceChargeLayout(nextAboveIdLeft, nextAboveIdRight);
-			nextAboveIdLeft = textServiceChargeName.getId();
-			nextAboveIdRight = textServiceChargeValue.getId();
+			}
+			
+			if (theBill.getDiscount() > 0){
+				added += 40;
+
+				textDiscountValue.setText(String.format("%.2f", theBill.getDiscount()));
+
+				setDiscountLayout(nextAboveIdLeft, nextAboveIdRight);
+				nextAboveIdLeft = textDiscountName.getId();
+				nextAboveIdRight = textDiscountValue.getId();
+				
+				
+			}else{
+				textDiscountName.setVisibility(View.GONE);
+				textDiscountValue.setVisibility(View.GONE);
+
+			}
 			
 			
-		}else{
-			textServiceChargeName.setVisibility(View.GONE);
-			textServiceChargeValue.setVisibility(View.GONE);
+			
+			if (theBill.getAmountPaid() > 0){
+				added += 40;
 
-		}
-		
-		if (theBill.getDiscount() > 0){
-			added += 40;
+				textAlreadyPaidValue.setText(String.format("- %.2f", theBill.getAmountPaid()));
 
-			textDiscountValue.setText(String.format("%.2f", theBill.getDiscount()));
+				setAlreadyPaidLayout(nextAboveIdLeft, nextAboveIdRight);
+				nextAboveIdLeft = textAlreadyPaidName.getId();
+				nextAboveIdRight = textAlreadyPaidValue.getId();
+			}else{
+				textAlreadyPaidName.setVisibility(View.GONE);
+				textAlreadyPaidValue.setVisibility(View.GONE);
 
-			setDiscountLayout(nextAboveIdLeft, nextAboveIdRight);
-			nextAboveIdLeft = textDiscountName.getId();
-			nextAboveIdRight = textDiscountValue.getId();
+			}
+			
+			setAmountDueLayout(nextAboveIdLeft, nextAboveIdRight);
+
+			
+   // RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+			//p.addRule(RelativeLayout.ALIGN_BOTTOM, tv.getId());
 			
 			
-		}else{
-			textDiscountName.setVisibility(View.GONE);
-			textDiscountValue.setVisibility(View.GONE);
+			RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+			//RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, 170 + added);
 
-		}
-		
-		
-		
-		if (theBill.getAmountPaid() > 0){
-			added += 40;
-
-			textAlreadyPaidValue.setText(String.format("- %.2f", theBill.getAmountPaid()));
-
-			setAlreadyPaidLayout(nextAboveIdLeft, nextAboveIdRight);
-			nextAboveIdLeft = textAlreadyPaidName.getId();
-			nextAboveIdRight = textAlreadyPaidValue.getId();
-		}else{
-			textAlreadyPaidName.setVisibility(View.GONE);
-			textAlreadyPaidValue.setVisibility(View.GONE);
-
-		}
-		
-		setAmountDueLayout(nextAboveIdLeft, nextAboveIdRight);
-
-		
-	   // RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-	    //p.addRule(RelativeLayout.ALIGN_BOTTOM, tv.getId());
-		
-		
-		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		//RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, 170 + added);
-
-		params.addRule(RelativeLayout.BELOW, list.getId());
-		//params.addRule(RelativeLayout.ABOVE, myTotalTextView.getId());
-		params.setMargins(0, 10, 0, 20);
-		layoutBottom.setLayoutParams(params);
-		
-		textAmountDueValue.setText(String.format("$%.2f", totalBill));
-
-
-		myTotalTextView.setText(String.format("My Total: $%.2f", totalBill));
-		
-
-		ArrayList<Payments> payments = theBill.getPayments();
-	
-		
-		//set the size of the view
-		int count = theBill.getItems().size();
-	
-		
-		if (count > 5){
+			params.addRule(RelativeLayout.BELOW, list.getId());
+			//params.addRule(RelativeLayout.ABOVE, myTotalTextView.getId());
+			params.setMargins(0, 10, 0, 20);
+			layoutBottom.setLayoutParams(params);
 			
-			RelativeLayout.LayoutParams newparams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-			newparams.setMargins(0, 5, 0, 0);
-			newparams.addRule(RelativeLayout.ABOVE, layoutBottom.getId());
-			newparams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-			myListView.setLayoutParams(newparams);
-			
-			
-			RelativeLayout.LayoutParams newparams1 = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-			newparams1.setMargins(0, 10, 0, 20);
-			newparams1.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-			newparams1.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+			textAmountDueValue.setText(String.format("$%.2f", totalBill));
 
-			newparams1.addRule(RelativeLayout.ABOVE, myTotalTextView.getId());
-			layoutBottom.setLayoutParams(newparams1);
+
+			myTotalTextView.setText(String.format("My Total: $%.2f", totalBill));
 			
+
+			ArrayList<Payments> payments = theBill.getPayments();
+
 			
+			//set the size of the view
+			int count = theBill.getItems().size();
+
+			
+			if (count > 5){
+				
+				RelativeLayout.LayoutParams newparams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+				newparams.setMargins(0, 5, 0, 0);
+				newparams.addRule(RelativeLayout.ABOVE, layoutBottom.getId());
+				newparams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+				myListView.setLayoutParams(newparams);
+				
+				
+				RelativeLayout.LayoutParams newparams1 = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+				newparams1.setMargins(0, 10, 0, 20);
+				newparams1.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+				newparams1.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+
+				newparams1.addRule(RelativeLayout.ABOVE, myTotalTextView.getId());
+				layoutBottom.setLayoutParams(newparams1);
+				
+				
+			}
+		} catch (Exception e) {
+			(new CreateClientLogTask("ViewCheck.displayBill", "Exception Caught", "error", e)).execute();
+
 		}
 
 		
@@ -335,136 +347,163 @@ public class ViewCheck extends BaseActivity {
 	private void registerClickCallback() {
 		
 		
-		list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> parent, View viewClicked,
-					int position, long id) {
-				
-				LineItem clickedItem = theBill.getItems().get(position);
-				
-				
-				if (clickedItem.getIsPaidFor().equals("yes")){
+		try {
+			list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+				@Override
+				public void onItemClick(AdapterView<?> parent, View viewClicked,
+						int position, long id) {
 					
-					toastShort("This Item has already been paid in full.  Please choose a different item.");
-					
-				}else if (clickedItem.getIsSelected()){
-					
-					clickedItem.setIsSelected(false);
-
-					
-					if (areAnyRowsSelected()){
+					try {
+						LineItem clickedItem = theBill.getItems().get(position);
 						
-						if (clickedItem.getMyPayment() > 0){
-							myPayment -= (clickedItem.getMyPayment() + clickedItem.getMyPayment()*taxPercent);
-
-						}else{
-							myPayment -=  clickedItem.getAmount() * (clickedItem.getValue() + clickedItem.getValue()*taxPercent);
-
-						}
 						
-						showMyPayment();
-
-						
-					}else{
-						myTotalTextView.setText(String.format("My Total: $%.2f", totalBill));
-
-					}
-					
-					clickedItem.setMyPayment(0.0);
-					adapter.notifyDataSetChanged();
-
-				}else{
-					
-					if (clickedItem.getIsPaidFor().equals("maybe")){
-
-						toastShort("This Item has already been partially paid for.  If you wish to pay for part of it, press and hold the item.");
-
-						
-					}else if (clickedItem.getAmount() > 1){
-						currentSelectedIndex = position;
-						showHowManyDialog();
-					}else{
-						
-						if (areAnyRowsSelected()){
-
-							myPayment += clickedItem.getValue() + clickedItem.getValue()*taxPercent;							
+						if (clickedItem.getIsPaidFor().equals("yes")){
 							
+							toastShort("This Item has already been paid in full.  Please choose a different item.");
+							
+						}else if (clickedItem.getIsSelected()){
+							
+							clickedItem.setIsSelected(false);
+
+							
+							if (areAnyRowsSelected()){
+								
+								if (clickedItem.getMyPayment() > 0){
+									myPayment -= (clickedItem.getMyPayment() + clickedItem.getMyPayment()*taxPercent);
+
+								}else{
+									myPayment -=  clickedItem.getAmount() * (clickedItem.getValue() + clickedItem.getValue()*taxPercent);
+
+								}
+								
+								showMyPayment();
+
+								
+							}else{
+								myTotalTextView.setText(String.format("My Total: $%.2f", totalBill));
+
+							}
+							
+							clickedItem.setMyPayment(0.0);
+							adapter.notifyDataSetChanged();
+
 						}else{
-							myPayment = clickedItem.getValue() + clickedItem.getValue()*taxPercent;
+							
+							if (clickedItem.getIsPaidFor().equals("maybe")){
+
+								toastShort("This Item has already been partially paid for.  If you wish to pay for part of it, press and hold the item.");
+
+								
+							}else if (clickedItem.getAmount() > 1){
+								currentSelectedIndex = position;
+								showHowManyDialog();
+							}else{
+								
+								if (areAnyRowsSelected()){
+
+									myPayment += clickedItem.getValue() + clickedItem.getValue()*taxPercent;							
+									
+								}else{
+									myPayment = clickedItem.getValue() + clickedItem.getValue()*taxPercent;
+								}
+								
+								showMyPayment();
+								clickedItem.setIsSelected(true);
+								adapter.notifyDataSetChanged();
+
+							}
+							
+
+						}
+					} catch (Exception e) {
+						(new CreateClientLogTask("ViewCheck.onRegisterClickCallBack.onItemClick", "Exception Caught", "error", e)).execute();
+
+					}
+					
+				
+				}
+			});
+			
+			//Long click on the cell
+			list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+				@Override
+				public boolean onItemLongClick(AdapterView<?> parent, View viewClicked,
+						int position, long id) {
+					
+					try {
+						LineItem clickedItem = theBill.getItems().get(position);
+						
+						
+						if (clickedItem.getIsPaidFor().equals("yes")){
+							
+							toastShort("This Item has already been paid in full.  Please choose a different item.");
+							
+						}else if (clickedItem.getIsSelected()){
+							
+						
+
+						}else{
+							
+							currentSelectedIndex = position;
+
+							if (clickedItem.getAmount() > 1){
+								showHowManyDialog();
+							}else{
+						
+								showHowMuchDialog();
+							}
+							
+
 						}
 						
-						showMyPayment();
-						clickedItem.setIsSelected(true);
-						adapter.notifyDataSetChanged();
+
+						return true;
+					} catch (Exception e) {
+						(new CreateClientLogTask("ViewCheck.onRegisterClickCallBack.onItemLongClick", "Exception Caught", "error", e)).execute();
+						return false;
 
 					}
-					
-
 				}
-				
-			
-			}
-		});
-		
-		//Long click on the cell
-		list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-			@Override
-			public boolean onItemLongClick(AdapterView<?> parent, View viewClicked,
-					int position, long id) {
-				
-				LineItem clickedItem = theBill.getItems().get(position);
-				
-				
-                if (clickedItem.getIsPaidFor().equals("yes")){
-					
-					toastShort("This Item has already been paid in full.  Please choose a different item.");
-					
-				}else if (clickedItem.getIsSelected()){
-					
-				
+			});
+		} catch (Exception e) {
+			(new CreateClientLogTask("ViewCheck.registerClickCallback", "Exception Caught", "error", e)).execute();
 
-				}else{
-					
-					currentSelectedIndex = position;
-
-					if (clickedItem.getAmount() > 1){
-						showHowManyDialog();
-					}else{
-				
-						showHowMuchDialog();
-					}
-					
-
-				}
-				
-			
-				return true;
-			}
-		});
+		}
 	}
 	
 	
 	private boolean areAnyRowsSelected(){
 		
-		for (int i = 0; i < theBill.getItems().size(); i++){
-			LineItem item = theBill.getItems().get(i);
-			if (item.getIsSelected()){
-				return true;
+		try {
+			for (int i = 0; i < theBill.getItems().size(); i++){
+				LineItem item = theBill.getItems().get(i);
+				if (item.getIsSelected()){
+					return true;
+				}
+				
 			}
-			
+			return false;
+		} catch (Exception e) {
+			(new CreateClientLogTask("ViewCheck.areAnyRowsSelected", "Exception Caught", "error", e)).execute();
+			return false;
+
 		}
-		return false;
 	}
 	
 	private void deselectAllRows(){
 		
-		for (int i = 0; i < theBill.getItems().size(); i++){
-			LineItem item = theBill.getItems().get(i);
-			item.setIsSelected(false);
+		try {
+			for (int i = 0; i < theBill.getItems().size(); i++){
+				LineItem item = theBill.getItems().get(i);
+				item.setIsSelected(false);
+			}
+			
+			adapter.notifyDataSetChanged();
+			myTotalTextView.setText(String.format("My Total: $%.2f", totalBill));
+		} catch (Exception e) {
+			(new CreateClientLogTask("ViewCheck.deselectAllRows", "Exception Caught", "error", e)).execute();
+
 		}
-		
-		adapter.notifyDataSetChanged();
-		myTotalTextView.setText(String.format("My Total: $%.2f", totalBill));
 
 
 	}
@@ -472,7 +511,12 @@ public class ViewCheck extends BaseActivity {
 	private void showMyPayment(){
 		
 		
-		myTotalTextView.setText(String.format("My Total: $%.2f", myPayment));
+		try {
+			myTotalTextView.setText(String.format("My Total: $%.2f", myPayment));
+		} catch (Exception e) {
+			(new CreateClientLogTask("ViewCheck.showMyPayment", "Exception Caught", "error", e)).execute();
+
+		}
 
 	}
 	private class MyListAdapter extends ArrayAdapter<LineItem> {
@@ -483,128 +527,134 @@ public class ViewCheck extends BaseActivity {
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			// Make sure we have a view to work with (may have been given null)
-			View itemView = convertView;
-			if (itemView == null) {
-				itemView = getLayoutInflater().inflate(R.layout.item_row, parent, false);
-			}
-			
-			// Find the car to work with.
-			LineItem currentItem = theBill.getItems().get(position);
-			
-			
-			// Amount
-			TextView amountText = (TextView) itemView.findViewById(R.id.item_quantity);
-            int amountInt = (int) Math.round(currentItem.getAmount());
-			amountText.setText("" + amountInt);
-			
-			// Name:
-			TextView nameText = (TextView) itemView.findViewById(R.id.item_name);
-			nameText.setText(currentItem.getDescription());
-
-			// Price:
-			TextView priceText = (TextView) itemView.findViewById(R.id.item_price);
-			priceText.setText(String.format("%.2f", currentItem.getValue() * currentItem.getAmount()));
-			
-			// You Pay:
-			TextView youPay = (TextView) itemView.findViewById(R.id.item_you_pay);
-			//priceText.setText(String.format("%.2f", currentItem.getValue()));
-			
-			Boolean isLarge = false;
-			
-			ImageView backImageView = (ImageView) itemView.findViewById(R.id.back_image_view);
-			ImageView backImageView2 = (ImageView) itemView.findViewById(R.id.back_image_view_two);
-			
-			
-			if (currentItem.getIsPaidFor().equals("yes")){
-
-				isLarge = true;
-				youPay.setVisibility(View.VISIBLE);
-				youPay.setText("PAID");
-			}else if (currentItem.getIsSelected()){
+			try {
+				View itemView = convertView;
+				if (itemView == null) {
+					itemView = getLayoutInflater().inflate(R.layout.item_row, parent, false);
+				}
 				
-				if (currentItem.getMyPayment() > 0.0){
+				// Find the car to work with.
+				LineItem currentItem = theBill.getItems().get(position);
+				
+				
+				// Amount
+				TextView amountText = (TextView) itemView.findViewById(R.id.item_quantity);
+				int amountInt = (int) Math.round(currentItem.getAmount());
+				amountText.setText("" + amountInt);
+				
+				// Name:
+				TextView nameText = (TextView) itemView.findViewById(R.id.item_name);
+				nameText.setText(currentItem.getDescription());
+
+				// Price:
+				TextView priceText = (TextView) itemView.findViewById(R.id.item_price);
+				priceText.setText(String.format("%.2f", currentItem.getValue() * currentItem.getAmount()));
+				
+				// You Pay:
+				TextView youPay = (TextView) itemView.findViewById(R.id.item_you_pay);
+				//priceText.setText(String.format("%.2f", currentItem.getValue()));
+				
+				Boolean isLarge = false;
+				
+				ImageView backImageView = (ImageView) itemView.findViewById(R.id.back_image_view);
+				ImageView backImageView2 = (ImageView) itemView.findViewById(R.id.back_image_view_two);
+				
+				
+				if (currentItem.getIsPaidFor().equals("yes")){
+
+					isLarge = true;
 					youPay.setVisibility(View.VISIBLE);
-					youPay.setText("You Pay: $" + String.format("%.2f", currentItem.getMyPayment()));
+					youPay.setText("PAID");
+				}else if (currentItem.getIsSelected()){
+					
+					if (currentItem.getMyPayment() > 0.0){
+						youPay.setVisibility(View.VISIBLE);
+						youPay.setText("You Pay: $" + String.format("%.2f", currentItem.getMyPayment()));
+						isLarge = true;
+
+					}else{
+						youPay.setVisibility(View.GONE);
+					}
+					
+				}else if (currentItem.getIsPaidFor().equals("maybe")){
+					youPay.setVisibility(View.VISIBLE);
+					youPay.setText("% PAID");
 					isLarge = true;
 
 				}else{
 					youPay.setVisibility(View.GONE);
+
+				}
+							
+							
+
+
+				if (isLarge){
+					backImageView2.setVisibility(View.VISIBLE);
+				}else{
+					backImageView2.setVisibility(View.GONE);
+
 				}
 				
-			}else if (currentItem.getIsPaidFor().equals("maybe")){
-				youPay.setVisibility(View.VISIBLE);
-				youPay.setText("% PAID");
-				isLarge = true;
+				backImageView.getLayoutParams().height = 52;
 
-			}else{
-				youPay.setVisibility(View.GONE);
+				backImageView.setImageResource(R.drawable.blue_button);
+				backImageView2.setImageResource(R.drawable.blue_button);
+
+
+				if (currentItem.getIsPaidFor().equals("yes")){
+					
+					backImageView.setVisibility(View.VISIBLE);
+					backImageView.setImageResource(R.drawable.grey_button);
+					backImageView2.setImageResource(R.drawable.grey_button);
+
+					amountText.setTextColor(Color.BLACK);
+					nameText.setTextColor(Color.BLACK);
+					priceText.setTextColor(Color.BLACK);
+					youPay.setTextColor(Color.WHITE);
+
+					
+				}else if (currentItem.getIsSelected()){
+					backImageView.setVisibility(View.VISIBLE);
+
+					amountText.setTextColor(Color.WHITE);
+					nameText.setTextColor(Color.WHITE);
+					priceText.setTextColor(Color.WHITE);
+					youPay.setTextColor(Color.WHITE);
+
+
+				}else if (currentItem.getIsPaidFor().equals("maybe")){
+					
+					backImageView.setVisibility(View.VISIBLE);
+					backImageView.setImageResource(R.drawable.grey_button);
+					backImageView2.setImageResource(R.drawable.grey_button);
+					youPay.setTextColor(Color.WHITE);
+
+					amountText.setTextColor(Color.BLACK);
+					nameText.setTextColor(Color.BLACK);
+					priceText.setTextColor(Color.BLACK);
+					
+					
+				}else{
+				
+					
+				
+					
+					
+					amountText.setTextColor(Color.BLACK);
+					nameText.setTextColor(Color.BLACK);
+					priceText.setTextColor(Color.BLACK);
+					backImageView.setVisibility(View.GONE);
+
+				}
+				
+				
+				return itemView;
+			} catch (Exception e) {
+				(new CreateClientLogTask("ViewCheck.MyListAdapter.getView", "Exception Caught", "error", e)).execute();
+				return convertView;
 
 			}
-						
-						
-		
-
-			if (isLarge){
-				backImageView2.setVisibility(View.VISIBLE);
-			}else{
-				backImageView2.setVisibility(View.GONE);
-
-			}
-			
-			backImageView.getLayoutParams().height = 52;
-
-			backImageView.setImageResource(R.drawable.blue_button);
-			backImageView2.setImageResource(R.drawable.blue_button);
-
-
-			if (currentItem.getIsPaidFor().equals("yes")){
-				
-				backImageView.setVisibility(View.VISIBLE);
-				backImageView.setImageResource(R.drawable.grey_button);
-				backImageView2.setImageResource(R.drawable.grey_button);
-
-				amountText.setTextColor(Color.BLACK);
-				nameText.setTextColor(Color.BLACK);
-				priceText.setTextColor(Color.BLACK);
-				youPay.setTextColor(Color.WHITE);
-
-				
-			}else if (currentItem.getIsSelected()){
-				backImageView.setVisibility(View.VISIBLE);
-
-				amountText.setTextColor(Color.WHITE);
-				nameText.setTextColor(Color.WHITE);
-				priceText.setTextColor(Color.WHITE);
-				youPay.setTextColor(Color.WHITE);
-
-
-			}else if (currentItem.getIsPaidFor().equals("maybe")){
-				
-				backImageView.setVisibility(View.VISIBLE);
-				backImageView.setImageResource(R.drawable.grey_button);
-				backImageView2.setImageResource(R.drawable.grey_button);
-				youPay.setTextColor(Color.WHITE);
-
-				amountText.setTextColor(Color.BLACK);
-				nameText.setTextColor(Color.BLACK);
-				priceText.setTextColor(Color.BLACK);
-				
-				
-			}else{
-			
-				
-			
-				
-				
-				amountText.setTextColor(Color.BLACK);
-				nameText.setTextColor(Color.BLACK);
-				priceText.setTextColor(Color.BLACK);
-				backImageView.setVisibility(View.GONE);
-
-			}
-			
-			
-			return itemView;
 		}				
 	}
 	
@@ -624,538 +674,539 @@ public class ViewCheck extends BaseActivity {
 		showPayAmountDialog();
 	}
 
-	//
-	// LayoutInflater factory = LayoutInflater.from(this);
-	// final View textEntryView = factory.inflate(R.layout.alert_dialog_text_entry, null);
-	// return new AlertDialog.Builder(AlertDialogSamples.this)
-	// .setIcon(R.drawable.alert_dialog_icon)
-	// .setTitle(R.string.alert_dialog_text_entry)
-	// .setView(textEntryView)
-	// .setPositiveButton(R.string.alert_dialog_ok, new DialogInterface.OnClickListener() {
-	// public void onClick(DialogInterface dialog, int whichButton) {
-	//
-	// /* User clicked OK so do some stuff */
-	// }
-	// })
-	// .setNegativeButton(R.string.alert_dialog_cancel, new DialogInterface.OnClickListener() {
-	// public void onClick(DialogInterface dialog, int whichButton) {
-	//
-	// /* User clicked cancel so do some stuff */
-	// }
-	// })
-	// .create();
-
-	private void makePayment() {
-		ArrayList<Cards> cards = DBController.getCards(getContentProvider());
-		if (cards.size() == 0) {
-			toastShort("You must add a card first (see Funds in slide-out menu)");
-			return;
-		}
-
-		Cards useFirstCard = cards.get(0);
-
-		String token = getToken();
-		String customerId = getId();
-
-		String account = ""; //useFirstCard.getNumber().replace(" ", "");
-		String month = useFirstCard.getExpirationMonth();
-		if (month.length() == 1) {
-			month = "0" + month;
-		}
-		String year = useFirstCard.getExpirationYear().substring(2, 4);
-		String expiration = month + "-" + year;
-		String pin = useFirstCard.getCVV();
-		String type = PaymentFlags.PaymentType.CREDIT.toString();
-		String cardType = PaymentFlags.CardType.V.toString();
-		String splitType = PaymentFlags.SplitType.DOLLAR.toString();
 
 
-		Double tipAmount = 0d;
-		CreatePayment newPayment = new CreatePayment(merchantId, customerId, invoiceId, totalBill, myBill, tipAmount, account, type, cardType, expiration, pin, null, splitType, null, null, null);
-
-		MakePaymentTask task = new MakePaymentTask(token, newPayment, getApplicationContext());
-		task.execute();
-	}
+	
 
 	private void showPayAmountDialog() {
-		payDialog = null;
+		try {
+			payDialog = null;
 
-		deselectAllRows();
-		
-		LayoutInflater factory = LayoutInflater.from(this);
-		final View makePaymentView = factory.inflate(R.layout.payment_dialog, null);
-		final EditText input = (EditText) makePaymentView.findViewById(R.id.paymentInput);
-		
-		input.setFocusable(true);
-		input.setFocusableInTouchMode(true);
-		
-		TextView paymentTitle = (TextView) makePaymentView.findViewById(R.id.paymentTitle);
-		paymentTitle.setText("How much would you like to pay?");
-		input.setGravity(Gravity.CENTER | Gravity.BOTTOM);
+			deselectAllRows();
+			
+			LayoutInflater factory = LayoutInflater.from(this);
+			final View makePaymentView = factory.inflate(R.layout.payment_dialog, null);
+			final EditText input = (EditText) makePaymentView.findViewById(R.id.paymentInput);
+			
+			input.setFocusable(true);
+			input.setFocusableInTouchMode(true);
+			
+			TextView paymentTitle = (TextView) makePaymentView.findViewById(R.id.paymentTitle);
+			paymentTitle.setText("How much would you like to pay?");
+			input.setGravity(Gravity.CENTER | Gravity.BOTTOM);
 
-		input.setFilters(new InputFilter[] { new CurrencyFilter() });
-		final TextView remainingBalance = (TextView) makePaymentView.findViewById(R.id.paymentRemaining);
-	
-		int currentapiVersion = android.os.Build.VERSION.SDK_INT;
-	
-		
-		//Set colors
-		if (currentapiVersion <= android.os.Build.VERSION_CODES.GINGERBREAD_MR1){
+			input.setFilters(new InputFilter[] { new CurrencyFilter() });
+			final TextView remainingBalance = (TextView) makePaymentView.findViewById(R.id.paymentRemaining);
 
-			paymentTitle.setTextColor(getResources().getColor(R.color.white));
-			remainingBalance.setTextColor(getResources().getColor(R.color.white));
-		}
+			int currentapiVersion = android.os.Build.VERSION.SDK_INT;
 
-		final Double remainingBill = totalBill;
-		remainingBalance.setText("Remaining balance: " + money.format(remainingBill));
-		AlertDialog.Builder builder = new AlertDialog.Builder(ViewCheck.this);
-		builder.setTitle(getString(R.string.app_dialog_title));
-		builder.setView(makePaymentView);
-		//builder.setIcon(R.drawable.logo);
-		builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+			
+			//Set colors
+			if (currentapiVersion <= android.os.Build.VERSION_CODES.GINGERBREAD_MR1){
 
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-
+				paymentTitle.setTextColor(getResources().getColor(R.color.white));
+				remainingBalance.setTextColor(getResources().getColor(R.color.white));
 			}
-		});
-		builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
 
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
+			final Double remainingBill = totalBill;
+			remainingBalance.setText("Remaining balance: " + money.format(remainingBill));
+			AlertDialog.Builder builder = new AlertDialog.Builder(ViewCheck.this);
+			builder.setTitle(getString(R.string.app_dialog_title));
+			builder.setView(makePaymentView);
+			//builder.setIcon(R.drawable.logo);
+			builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
 
-			}
-		});
-		builder.setOnCancelListener(new OnCancelListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
 
-			@Override
-			public void onCancel(DialogInterface dialog) {
-			}
-		});
-		payDialog = builder.create();
-		
-		payDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+				}
+			});
+			builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
 
-		payDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
 
-			@Override
-			public void onShow(DialogInterface dialog) {
+				}
+			});
+			builder.setOnCancelListener(new OnCancelListener() {
 
-				Button b = payDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-				b.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onCancel(DialogInterface dialog) {
+				}
+			});
+			payDialog = builder.create();
+			
+			payDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
-					@Override
-					public void onClick(View view) {
-						String paymentAmount = input.getText().toString();
-						if (paymentAmount == null || paymentAmount.trim().length() == 0) {
-							toastShort("Please enter an amount or cancel");
-							return;
-						} else {
-							
-							
-							myBill = myPayment = Double.parseDouble(paymentAmount);
-							if (myBill > (remainingBill)) {
-								toastShort("Can't pay more than is remaining");
-								return;
+			payDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+
+				@Override
+				public void onShow(DialogInterface dialog) {
+
+					try {
+						Button b = payDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+						b.setOnClickListener(new View.OnClickListener() {
+
+							@Override
+							public void onClick(View view) {
+								String paymentAmount = input.getText().toString();
+								if (paymentAmount == null || paymentAmount.trim().length() == 0) {
+									toastShort("Please enter an amount or cancel");
+									return;
+								} else {
+									
+									
+									myBill = myPayment = Double.parseDouble(paymentAmount);
+									if (myBill > (remainingBill)) {
+										toastShort("Can't pay more than is remaining");
+										return;
+									}
+									//toastShort("Make payment of $" + paymentAmount);
+									payDialog.dismiss();
+									ViewCheck.this.myTotalTextView.setText(String.format("My Total: $%.2f", myPayment));
+									//makePayment();
+									
+								}
+								payDialog.dismiss();
 							}
-							//toastShort("Make payment of $" + paymentAmount);
-							payDialog.dismiss();
-							ViewCheck.this.myTotalTextView.setText(String.format("My Total: $%.2f", myPayment));
-							//makePayment();
-							
-						}
-						payDialog.dismiss();
+						});
+					} catch (Exception e) {
+						(new CreateClientLogTask("ViewCheck.showPayAmountDialog.onShow.onClick", "Exception Caught", "error", e)).execute();
+
 					}
-				});
-			}
-		});
-		payDialog.show();
+				}
+			});
+			payDialog.show();
+		} catch (NotFoundException e) {
+			(new CreateClientLogTask("ViewCheck.showPayAmountDialog", "Exception Caught", "error", e)).execute();
+
+		}
 	
 	}
 	
 	
 	private void showPayAmountDialogPercent() {
-		payDialog = null;
+		try {
+			payDialog = null;
 
-		deselectAllRows();
-		
-		LayoutInflater factory = LayoutInflater.from(this);
-		final View makePaymentView = factory.inflate(R.layout.payment_dialog, null);
-		final EditText input = (EditText) makePaymentView.findViewById(R.id.paymentInput);
-		input.setFocusable(true);
-		input.setFocusableInTouchMode(true);
-		
-		TextView paymentTitle = (TextView) makePaymentView.findViewById(R.id.paymentTitle);
-		paymentTitle.setText("How many people are splitting the bill?");
-		input.setGravity(Gravity.CENTER | Gravity.BOTTOM);
+			deselectAllRows();
+			
+			LayoutInflater factory = LayoutInflater.from(this);
+			final View makePaymentView = factory.inflate(R.layout.payment_dialog, null);
+			final EditText input = (EditText) makePaymentView.findViewById(R.id.paymentInput);
+			input.setFocusable(true);
+			input.setFocusableInTouchMode(true);
+			
+			TextView paymentTitle = (TextView) makePaymentView.findViewById(R.id.paymentTitle);
+			paymentTitle.setText("How many people are splitting the bill?");
+			input.setGravity(Gravity.CENTER | Gravity.BOTTOM);
 
-		input.setFilters(new InputFilter[] { new CurrencyFilter() });
-		final TextView remainingBalance = (TextView) makePaymentView.findViewById(R.id.paymentRemaining);
-	
+			input.setFilters(new InputFilter[] { new CurrencyFilter() });
+			final TextView remainingBalance = (TextView) makePaymentView.findViewById(R.id.paymentRemaining);
 
-		final Double remainingBill = totalBill;
-		remainingBalance.setText("Remaining balance: " + money.format(remainingBill));
-		
-        int currentapiVersion = android.os.Build.VERSION.SDK_INT;
-	
-		
-		//Set colors
-		if (currentapiVersion <= android.os.Build.VERSION_CODES.GINGERBREAD_MR1){
 
-			paymentTitle.setTextColor(getResources().getColor(R.color.white));
-			remainingBalance.setTextColor(getResources().getColor(R.color.white));
-		}
-		
-		
-		AlertDialog.Builder builder = new AlertDialog.Builder(ViewCheck.this);
-		builder.setTitle(getString(R.string.app_dialog_title));
-		builder.setView(makePaymentView);
-		
-		
-		
-		
-		//builder.setIcon(R.drawable.logo);
-		builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+			final Double remainingBill = totalBill;
+			remainingBalance.setText("Remaining balance: " + money.format(remainingBill));
+			
+			int currentapiVersion = android.os.Build.VERSION.SDK_INT;
 
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
+			
+			//Set colors
+			if (currentapiVersion <= android.os.Build.VERSION_CODES.GINGERBREAD_MR1){
 
+				paymentTitle.setTextColor(getResources().getColor(R.color.white));
+				remainingBalance.setTextColor(getResources().getColor(R.color.white));
 			}
-		});
-		builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+			
+			
+			AlertDialog.Builder builder = new AlertDialog.Builder(ViewCheck.this);
+			builder.setTitle(getString(R.string.app_dialog_title));
+			builder.setView(makePaymentView);
+			
+			
+			
+			
+			//builder.setIcon(R.drawable.logo);
+			builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
 
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
 
-			}
-		});
-		builder.setOnCancelListener(new OnCancelListener() {
+				}
+			});
+			builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
 
-			@Override
-			public void onCancel(DialogInterface dialog) {
-			}
-		});
-		payDialog = builder.create();
-		
-		
-		payDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-		
-		
-		payDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
 
-			@Override
-			public void onShow(DialogInterface dialog) {
+				}
+			});
+			builder.setOnCancelListener(new OnCancelListener() {
 
-				Button b = payDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-				b.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onCancel(DialogInterface dialog) {
+				}
+			});
+			payDialog = builder.create();
+			
+			
+			payDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+			
+			
+			payDialog.setOnShowListener(new DialogInterface.OnShowListener() {
 
-					@Override
-					public void onClick(View view) {
-						String paymentAmount = input.getText().toString();
-						if (paymentAmount == null || paymentAmount.trim().length() == 0) {
-							toastShort("Please enter an number or cancel");
-							return;
-						} else {
-							
-							
-							double numPeople = Double.parseDouble(paymentAmount);
-							
-							myBill = myPayment = ViewCheck.this.totalBill / numPeople;
-							
-							if (myBill > (remainingBill)) {
-								toastShort("Can't pay more than is remaining");
-								return;
+				@Override
+				public void onShow(DialogInterface dialog) {
+
+					Button b = payDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+					b.setOnClickListener(new View.OnClickListener() {
+
+						@Override
+						public void onClick(View view) {
+							try {
+								String paymentAmount = input.getText().toString();
+								if (paymentAmount == null || paymentAmount.trim().length() == 0) {
+									toastShort("Please enter an number or cancel");
+									return;
+								} else {
+									
+									
+									double numPeople = Double.parseDouble(paymentAmount);
+									
+									myBill = myPayment = ViewCheck.this.totalBill / numPeople;
+									
+									if (myBill > (remainingBill)) {
+										toastShort("Can't pay more than is remaining");
+										return;
+									}
+									//toastShort("Make payment of $" + paymentAmount);
+									payDialog.dismiss();
+									ViewCheck.this.myTotalTextView.setText(String.format("My Total: $%.2f", myPayment));
+									//makePayment();
+									
+								}
+								payDialog.dismiss();
+							} catch (NumberFormatException e) {
+								(new CreateClientLogTask("ViewCheck.showPayAmountDialogPercent.onShow.onClick", "Exception Caught", "error", e)).execute();
+
 							}
-							//toastShort("Make payment of $" + paymentAmount);
-							payDialog.dismiss();
-							ViewCheck.this.myTotalTextView.setText(String.format("My Total: $%.2f", myPayment));
-							//makePayment();
-							
 						}
-						payDialog.dismiss();
-					}
-				});
-			}
-		});
-		payDialog.show();
+					});
+				}
+			});
+			payDialog.show();
+		} catch (NotFoundException e) {
+			(new CreateClientLogTask("ViewCheck.showPayAmountDialogPercent", "Exception Caught", "error", e)).execute();
+
+		}
 	}
 	
 	
 	private void showHowManyDialog() {
-		payDialog = null;
-		
-		LayoutInflater factory = LayoutInflater.from(this);
-		final View makePaymentView = factory.inflate(R.layout.payment_dialog, null);
-		final EditText input = (EditText) makePaymentView.findViewById(R.id.paymentInput);
-		input.setFocusable(true);
-		input.setFocusableInTouchMode(true);
-		
-		TextView paymentTitle = (TextView) makePaymentView.findViewById(R.id.paymentTitle);
-		paymentTitle.setText("How many would you like to pay for?");
-		input.setGravity(Gravity.CENTER | Gravity.BOTTOM);
+		try {
+			payDialog = null;
+			
+			LayoutInflater factory = LayoutInflater.from(this);
+			final View makePaymentView = factory.inflate(R.layout.payment_dialog, null);
+			final EditText input = (EditText) makePaymentView.findViewById(R.id.paymentInput);
+			input.setFocusable(true);
+			input.setFocusableInTouchMode(true);
+			
+			TextView paymentTitle = (TextView) makePaymentView.findViewById(R.id.paymentTitle);
+			paymentTitle.setText("How many would you like to pay for?");
+			input.setGravity(Gravity.CENTER | Gravity.BOTTOM);
 
-		input.setFilters(new InputFilter[] { new CurrencyFilter() });
-		final TextView remainingBalance = (TextView) makePaymentView.findViewById(R.id.paymentRemaining);
-	
+			input.setFilters(new InputFilter[] { new CurrencyFilter() });
+			final TextView remainingBalance = (TextView) makePaymentView.findViewById(R.id.paymentRemaining);
 
-		LineItem clickedItem = theBill.getItems().get(currentSelectedIndex);
 
-		String thisValue = String.format("%.2f", clickedItem.getValue());
-		
-		remainingBalance.setText(clickedItem.getAmount() + " " + clickedItem.getDescription() + ", $" + thisValue + " each");
-		
-        int currentapiVersion = android.os.Build.VERSION.SDK_INT;
-	
-		
-		//Set colors
-		if (currentapiVersion <= android.os.Build.VERSION_CODES.GINGERBREAD_MR1){
+			LineItem clickedItem = theBill.getItems().get(currentSelectedIndex);
 
-			paymentTitle.setTextColor(getResources().getColor(R.color.white));
-			remainingBalance.setTextColor(getResources().getColor(R.color.white));
-		}
-		
-		
-		AlertDialog.Builder builder = new AlertDialog.Builder(ViewCheck.this);
-		builder.setTitle(getString(R.string.app_dialog_title));
-		builder.setView(makePaymentView);
-		
-		
-		
-		
-		//builder.setIcon(R.drawable.logo);
-		builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+			String thisValue = String.format("%.2f", clickedItem.getValue());
+			
+			remainingBalance.setText(clickedItem.getAmount() + " " + clickedItem.getDescription() + ", $" + thisValue + " each");
+			
+			int currentapiVersion = android.os.Build.VERSION.SDK_INT;
 
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
+			
+			//Set colors
+			if (currentapiVersion <= android.os.Build.VERSION_CODES.GINGERBREAD_MR1){
 
+				paymentTitle.setTextColor(getResources().getColor(R.color.white));
+				remainingBalance.setTextColor(getResources().getColor(R.color.white));
 			}
-		});
-		builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+			
+			
+			AlertDialog.Builder builder = new AlertDialog.Builder(ViewCheck.this);
+			builder.setTitle(getString(R.string.app_dialog_title));
+			builder.setView(makePaymentView);
+			
+			
+			
+			
+			//builder.setIcon(R.drawable.logo);
+			builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
 
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
 
-			}
-		});
-		builder.setOnCancelListener(new OnCancelListener() {
+				}
+			});
+			builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
 
-			@Override
-			public void onCancel(DialogInterface dialog) {
-			}
-		});
-		payDialog = builder.create();
-		
-		
-		payDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-		
-		
-		payDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
 
-			@Override
-			public void onShow(DialogInterface dialog) {
+				}
+			});
+			builder.setOnCancelListener(new OnCancelListener() {
 
-				Button b = payDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-				b.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onCancel(DialogInterface dialog) {
+				}
+			});
+			payDialog = builder.create();
+			
+			
+			payDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+			
+			
+			payDialog.setOnShowListener(new DialogInterface.OnShowListener() {
 
-					@Override
-					public void onClick(View view) {
-						String paymentAmount = input.getText().toString();
-						Double amountPayingFor = Double.parseDouble(paymentAmount);
-						
-						LineItem clickedItem = theBill.getItems().get(currentSelectedIndex);
-						
-						if (amountPayingFor > clickedItem.getAmount()){
-							toastShort("You cannot pay for more items than are on the bill, please enter a smaller number");
-						}else{
-							Double pricePerItem = clickedItem.getValue();
-							
-							Double amountToPay = amountPayingFor * pricePerItem;
-							
-							//**TODO change the TOTAL AMOUNT based on this click
-							
-							if (areAnyRowsSelected()){
+				@Override
+				public void onShow(DialogInterface dialog) {
 
-								myPayment += amountToPay + amountToPay*taxPercent;								
+					Button b = payDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+					b.setOnClickListener(new View.OnClickListener() {
+
+						@Override
+						public void onClick(View view) {
+							try {
+								String paymentAmount = input.getText().toString();
+								Double amountPayingFor = Double.parseDouble(paymentAmount);
 								
-							}else{
-								myPayment = amountToPay + amountToPay*taxPercent;								
+								LineItem clickedItem = theBill.getItems().get(currentSelectedIndex);
+								
+								if (amountPayingFor > clickedItem.getAmount()){
+									toastShort("You cannot pay for more items than are on the bill, please enter a smaller number");
+								}else{
+									Double pricePerItem = clickedItem.getValue();
+									
+									Double amountToPay = amountPayingFor * pricePerItem;
+									
+									//**TODO change the TOTAL AMOUNT based on this click
+									
+									if (areAnyRowsSelected()){
+
+										myPayment += amountToPay + amountToPay*taxPercent;								
+										
+									}else{
+										myPayment = amountToPay + amountToPay*taxPercent;								
+									}
+									showMyPayment();
+
+									
+									
+									clickedItem.setIsSelected(true);
+									clickedItem.setMyPayment(amountToPay);
+									adapter.notifyDataSetChanged();
+
+									payDialog.dismiss();
+
+								}
+							} catch (NumberFormatException e) {
+								(new CreateClientLogTask("ViewCheck.showHowManyDialog.onShow.onClick", "Exception Caught", "error", e)).execute();
+
 							}
-							showMyPayment();
 
 							
-							
-							clickedItem.setIsSelected(true);
-							clickedItem.setMyPayment(amountToPay);
-							adapter.notifyDataSetChanged();
-
-							payDialog.dismiss();
-
 						}
+					});
+				}
+			});
+			payDialog.show();
+		} catch (NotFoundException e) {
+			(new CreateClientLogTask("ViewCheck.showHowManyDialog", "Exception Caught", "error", e)).execute();
 
-						
-					}
-				});
-			}
-		});
-		payDialog.show();
+		}
 	}
 	
 	
 	
 	private void showHowMuchDialog() {
-		payDialog = null;
-		
-		LayoutInflater factory = LayoutInflater.from(this);
-		final View makePaymentView = factory.inflate(R.layout.payment_dialog, null);
-		final EditText input = (EditText) makePaymentView.findViewById(R.id.paymentInput);
-		input.setFocusable(true);
-		input.setFocusableInTouchMode(true);
-		
-		TextView paymentTitle = (TextView) makePaymentView.findViewById(R.id.paymentTitle);
-		paymentTitle.setText("How many people are splitting this item?");
-		input.setGravity(Gravity.CENTER | Gravity.BOTTOM);
+		try {
+			payDialog = null;
+			
+			LayoutInflater factory = LayoutInflater.from(this);
+			final View makePaymentView = factory.inflate(R.layout.payment_dialog, null);
+			final EditText input = (EditText) makePaymentView.findViewById(R.id.paymentInput);
+			input.setFocusable(true);
+			input.setFocusableInTouchMode(true);
+			
+			TextView paymentTitle = (TextView) makePaymentView.findViewById(R.id.paymentTitle);
+			paymentTitle.setText("How many people are splitting this item?");
+			input.setGravity(Gravity.CENTER | Gravity.BOTTOM);
 
-		input.setFilters(new InputFilter[] { new CurrencyFilter() });
-		final TextView remainingBalance = (TextView) makePaymentView.findViewById(R.id.paymentRemaining);
-	
+			input.setFilters(new InputFilter[] { new CurrencyFilter() });
+			final TextView remainingBalance = (TextView) makePaymentView.findViewById(R.id.paymentRemaining);
 
-		LineItem clickedItem = theBill.getItems().get(currentSelectedIndex);
 
-		String thisValue = String.format("%.2f", clickedItem.getValue()/clickedItem.getAmount());
-		
-		remainingBalance.setText(clickedItem.getDescription() + ": $" + thisValue);
-		
-        int currentapiVersion = android.os.Build.VERSION.SDK_INT;
-	
-		
-		//Set colors
-		if (currentapiVersion <= android.os.Build.VERSION_CODES.GINGERBREAD_MR1){
+			LineItem clickedItem = theBill.getItems().get(currentSelectedIndex);
 
-			paymentTitle.setTextColor(getResources().getColor(R.color.white));
-			remainingBalance.setTextColor(getResources().getColor(R.color.white));
-		}
-		
-		
-		AlertDialog.Builder builder = new AlertDialog.Builder(ViewCheck.this);
-		builder.setTitle(getString(R.string.app_dialog_title));
-		builder.setView(makePaymentView);
-		
-		
-		
-		
-		//builder.setIcon(R.drawable.logo);
-		builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+			String thisValue = String.format("%.2f", clickedItem.getValue()/clickedItem.getAmount());
+			
+			remainingBalance.setText(clickedItem.getDescription() + ": $" + thisValue);
+			
+			int currentapiVersion = android.os.Build.VERSION.SDK_INT;
 
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
+			
+			//Set colors
+			if (currentapiVersion <= android.os.Build.VERSION_CODES.GINGERBREAD_MR1){
 
+				paymentTitle.setTextColor(getResources().getColor(R.color.white));
+				remainingBalance.setTextColor(getResources().getColor(R.color.white));
 			}
-		});
-		builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+			
+			
+			AlertDialog.Builder builder = new AlertDialog.Builder(ViewCheck.this);
+			builder.setTitle(getString(R.string.app_dialog_title));
+			builder.setView(makePaymentView);
+			
+			
+			
+			
+			//builder.setIcon(R.drawable.logo);
+			builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
 
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
 
-			}
-		});
-		builder.setOnCancelListener(new OnCancelListener() {
+				}
+			});
+			builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
 
-			@Override
-			public void onCancel(DialogInterface dialog) {
-			}
-		});
-		payDialog = builder.create();
-		
-		
-		payDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-		
-		
-		payDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
 
-			@Override
-			public void onShow(DialogInterface dialog) {
+				}
+			});
+			builder.setOnCancelListener(new OnCancelListener() {
 
-				Button b = payDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-				b.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onCancel(DialogInterface dialog) {
+				}
+			});
+			payDialog = builder.create();
+			
+			
+			payDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+			
+			
+			payDialog.setOnShowListener(new DialogInterface.OnShowListener() {
 
-					@Override
-					public void onClick(View view) {
-						String paymentAmount = input.getText().toString();
-						Double numberPeopleSplitting = Double.parseDouble(paymentAmount);
-						
-						LineItem clickedItem = theBill.getItems().get(currentSelectedIndex);
-						
-						if (numberPeopleSplitting <= 1){
-							toastShort("You must enter a number greater than 1.");
-						}else{
+				@Override
+				public void onShow(DialogInterface dialog) {
 
-							
-							Double amountToPay = clickedItem.getValue() / numberPeopleSplitting;
-							
-							//**TODO change the TOTAL AMOUNT based on this click
-							
-							if (areAnyRowsSelected()){
+					Button b = payDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+					b.setOnClickListener(new View.OnClickListener() {
 
-								myPayment += amountToPay + amountToPay*taxPercent;								
+						@Override
+						public void onClick(View view) {
+							try {
+								String paymentAmount = input.getText().toString();
+								Double numberPeopleSplitting = Double.parseDouble(paymentAmount);
 								
-							}else{
-								myPayment = amountToPay + amountToPay*taxPercent;								
+								LineItem clickedItem = theBill.getItems().get(currentSelectedIndex);
+								
+								if (numberPeopleSplitting <= 1){
+									toastShort("You must enter a number greater than 1.");
+								}else{
+
+									
+									Double amountToPay = clickedItem.getValue() / numberPeopleSplitting;
+									
+									//**TODO change the TOTAL AMOUNT based on this click
+									
+									if (areAnyRowsSelected()){
+
+										myPayment += amountToPay + amountToPay*taxPercent;								
+										
+									}else{
+										myPayment = amountToPay + amountToPay*taxPercent;								
+									}
+									showMyPayment();
+
+									
+									
+									clickedItem.setIsSelected(true);
+									clickedItem.setMyPayment(amountToPay);
+									adapter.notifyDataSetChanged();
+
+									payDialog.dismiss();
+
+								}
+							} catch (NumberFormatException e) {
+								(new CreateClientLogTask("ViewCheck.showHowMuchDialog.onShow.onClick", "Exception Caught", "error", e)).execute();
+
 							}
-							showMyPayment();
 
 							
-							
-							clickedItem.setIsSelected(true);
-							clickedItem.setMyPayment(amountToPay);
-							adapter.notifyDataSetChanged();
-
-							payDialog.dismiss();
-
 						}
+					});
+				}
+			});
+			payDialog.show();
+		} catch (NotFoundException e) {
+			(new CreateClientLogTask("ViewCheck.showHowMuchDialog", "Exception Caught", "error", e)).execute();
 
-						
-					}
-				});
-			}
-		});
-		payDialog.show();
+		}
 	}
 	
 	
 
 	private void showInfoDialog(String display) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(ViewCheck.this);
-		builder.setTitle(getString(R.string.app_dialog_title));
-		builder.setMessage(display);
-		//builder.setIcon(R.drawable.logo);
-		builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+		try {
+			AlertDialog.Builder builder = new AlertDialog.Builder(ViewCheck.this);
+			builder.setTitle(getString(R.string.app_dialog_title));
+			builder.setMessage(display);
+			//builder.setIcon(R.drawable.logo);
+			builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
 
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				// hideSuccessMessage();
-			}
-		});
-		builder.setOnCancelListener(new OnCancelListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// hideSuccessMessage();
+				}
+			});
+			builder.setOnCancelListener(new OnCancelListener() {
 
-			@Override
-			public void onCancel(DialogInterface dialog) {
-				// hideSuccessMessage();
-			}
-		});
-		builder.create().show();
+				@Override
+				public void onCancel(DialogInterface dialog) {
+					// hideSuccessMessage();
+				}
+			});
+			builder.create().show();
+		} catch (Exception e) {
+			(new CreateClientLogTask("ViewCheck.showInfoDialog", "Exception Caught", "error", e)).execute();
+
+		}
 	}
 	
 	private void goAddTip(){
 		
-		theBill.setMyBasePayment(myPayment);
-		
-		theBill.setMyItems(new ArrayList<LineItem>());
-		buildMyArray();
-		theBill.setMyItems(myItems);
-		
-		Intent viewCheck = new Intent(getApplicationContext(), AdditionalTip.class);
-		viewCheck.putExtra(Constants.INVOICE, theBill);
-		startActivity(viewCheck);
+		try {
+			theBill.setMyBasePayment(myPayment);
+			
+			theBill.setMyItems(new ArrayList<LineItem>());
+			buildMyArray();
+			theBill.setMyItems(myItems);
+			
+			Intent viewCheck = new Intent(getApplicationContext(), AdditionalTip.class);
+			viewCheck.putExtra(Constants.INVOICE, theBill);
+			startActivity(viewCheck);
+		} catch (Exception e) {
+			(new CreateClientLogTask("ViewCheck.goAddTip", "Exception Caught", "error", e)).execute();
+
+		}
 		
 	}
 	
@@ -1171,16 +1222,21 @@ public class ViewCheck extends BaseActivity {
 	
 	private void setAlreadyPaidLayout(int aboveIdLeft, int aboveIdRight){
 
-		RelativeLayout.LayoutParams nameparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-		nameparams.addRule(RelativeLayout.BELOW, aboveIdLeft);
-		nameparams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-		textAlreadyPaidName.setLayoutParams(nameparams);	
-		
-		
-		RelativeLayout.LayoutParams valueparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-		valueparams.addRule(RelativeLayout.BELOW, aboveIdRight);
-		valueparams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-		textAlreadyPaidValue.setLayoutParams(valueparams);
+		try {
+			RelativeLayout.LayoutParams nameparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+			nameparams.addRule(RelativeLayout.BELOW, aboveIdLeft);
+			nameparams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+			textAlreadyPaidName.setLayoutParams(nameparams);	
+			
+			
+			RelativeLayout.LayoutParams valueparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+			valueparams.addRule(RelativeLayout.BELOW, aboveIdRight);
+			valueparams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+			textAlreadyPaidValue.setLayoutParams(valueparams);
+		} catch (Exception e) {
+			(new CreateClientLogTask("ViewCheck.setAlreadyPaidLayout", "Exception Caught", "error", e)).execute();
+
+		}
 		
 		
 		
@@ -1189,16 +1245,21 @@ public class ViewCheck extends BaseActivity {
 	private void setAmountDueLayout(int aboveIdLeft, int aboveIdRight){
 
 		
-		RelativeLayout.LayoutParams nameparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-		nameparams.addRule(RelativeLayout.BELOW, aboveIdLeft);
-		nameparams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-		textAmountDueName.setLayoutParams(nameparams);	
-		
-		
-		RelativeLayout.LayoutParams valueparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-		valueparams.addRule(RelativeLayout.BELOW, aboveIdRight);
-		valueparams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-		textAmountDueValue.setLayoutParams(valueparams);
+		try {
+			RelativeLayout.LayoutParams nameparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+			nameparams.addRule(RelativeLayout.BELOW, aboveIdLeft);
+			nameparams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+			textAmountDueName.setLayoutParams(nameparams);	
+			
+			
+			RelativeLayout.LayoutParams valueparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+			valueparams.addRule(RelativeLayout.BELOW, aboveIdRight);
+			valueparams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+			textAmountDueValue.setLayoutParams(valueparams);
+		} catch (Exception e) {
+			(new CreateClientLogTask("ViewCheck.setAmoutnDueLayout", "Exception Caught", "error", e)).execute();
+
+		}
 		
 		
 		
@@ -1208,191 +1269,201 @@ public class ViewCheck extends BaseActivity {
 	
 	public void buildMyArray(){
 		
-		 myItems = new ArrayList<LineItem>();
+		 try {
+			myItems = new ArrayList<LineItem>();
 
-		 
-		 if (areAnyRowsSelected()) {
-             
 			 
-             for (int i = 0; i < theBill.getItems().size(); i++){
-            	 
-            	 LineItem tmpItem = theBill.getItems().get(i);
-            	 LineItem sendInItem = new LineItem();
-            	 
-            	if (tmpItem.getIsSelected()){
-            		
-            		double myAmount = tmpItem.getMyPayment();
-            		
-            		if (myAmount == 0.0){
-            			//Selected and 0.0 = paying for 1 whole item
-            			
-            			LineItem newItem = new LineItem();
-            			
-            			newItem.setAmount(1.0);
-            			newItem.setId(tmpItem.getId());
-            			newItem.setPercent(1.0);
-            			myItems.add(newItem);
-            			
-            			
-            		}else{
-            			
-            			double totalAmount = tmpItem.getValue();
+			 if (areAnyRowsSelected()) {
+			     
+				 
+			     for (int i = 0; i < theBill.getItems().size(); i++){
+			    	 
+			    	 LineItem tmpItem = theBill.getItems().get(i);
+			    	 LineItem sendInItem = new LineItem();
+			    	 
+			    	if (tmpItem.getIsSelected()){
+			    		
+			    		double myAmount = tmpItem.getMyPayment();
+			    		
+			    		if (myAmount == 0.0){
+			    			//Selected and 0.0 = paying for 1 whole item
+			    			
+			    			LineItem newItem = new LineItem();
+			    			
+			    			newItem.setAmount(1.0);
+			    			newItem.setId(tmpItem.getId());
+			    			newItem.setPercent(1.0);
+			    			myItems.add(newItem);
+			    			
+			    			
+			    		}else{
+			    			
+			    			double totalAmount = tmpItem.getValue();
 
-                		double myPercent = myAmount/totalAmount;
-                		while (myPercent > 1){
-                			
-                			myPercent -= 1;
-                			
-                			LineItem newItem = new LineItem();
-                			
-                			newItem.setAmount(1.0);
-                			newItem.setId(tmpItem.getId());
-                			newItem.setPercent(1.0);
-                			myItems.add(newItem);
-                			
-                		}
-                		
-                	
-                		sendInItem.setAmount(1.0);
-                		sendInItem.setId(tmpItem.getId());
-                		sendInItem.setPercent(myPercent);
-                		myItems.add(sendInItem);
-                		
-            		}
-            		
-            		
-            		
-            	}
-             }
-             
+			        		double myPercent = myAmount/totalAmount;
+			        		while (myPercent > 1){
+			        			
+			        			myPercent -= 1;
+			        			
+			        			LineItem newItem = new LineItem();
+			        			
+			        			newItem.setAmount(1.0);
+			        			newItem.setId(tmpItem.getId());
+			        			newItem.setPercent(1.0);
+			        			myItems.add(newItem);
+			        			
+			        		}
+			        		
+			        	
+			        		sendInItem.setAmount(1.0);
+			        		sendInItem.setId(tmpItem.getId());
+			        		sendInItem.setPercent(myPercent);
+			        		myItems.add(sendInItem);
+			        		
+			    		}
+			    		
+			    		
+			    		
+			    	}
+			     }
+			     
 
 
 
 
-         }
+			 }
+		} catch (Exception e) {
+			(new CreateClientLogTask("ViewCheck.buildMyArray", "Exception Caught", "error", e)).execute();
+
+		}
 
 	}
 	
 	
 	public void showPaidItems(){
 	    
-	    if (true) {
-	        
-	        //self.didShowPaidItems = YES;
-	        
-	        consolidatePartialPayments();
-	        
-	        ArrayList<PaidItems> myPaidItemsArray = theBill.getPaidItems();
-	
-	  	        
-	        
-	        for (int i = 0; i < theBill.getItems().size(); i++) {
-	            
-	            LineItem item = theBill.getItems().get(i);
-	            
-	            
-	            for (int j = 0; j < myPaidItemsArray.size(); j++) {
-	                
-	            	PaidItems paidItem = myPaidItemsArray.get(j);
-	                
-	                
-	                if (paidItem.getItemId() == item.getId()) {
-	                    
-	                    //Item is at least partially paid for
-	                    
-	                    if (paidItem.getPercentPaid() == 1.0) {
-	                        
-	                        double paidItemAmount = paidItem.getAmount();
-	                        double myItemAmount = item.getAmount();
-	                        
-	                        if (paidItemAmount >= myItemAmount) {
-	                        	
-	                        	item.setIsPaidFor("yes");
-	                            myPaidItemsArray.remove(j);
-	                            break;
-	                        }else{
-	                        	item.setIsPaidFor("maybe");
-	                            myPaidItemsArray.remove(j);
-	                            break;
-	                        }
-	                        
-	                    }else{
-	                        //[item setValue:@"maybe" forKey:@"isPaidFor"];
-	                        
-	                    }
-	                    
-	                }
-	                
-                	item.setIsPaidFor("ano");
+	    try {
+			if (true) {
+			    
+			    //self.didShowPaidItems = YES;
+			    
+			    consolidatePartialPayments();
+			    
+			    ArrayList<PaidItems> myPaidItemsArray = theBill.getPaidItems();
 
-	                
-	            }
-	            
-	            
-	        }
+			        
+			    
+			    for (int i = 0; i < theBill.getItems().size(); i++) {
+			        
+			        LineItem item = theBill.getItems().get(i);
+			        
+			        
+			        for (int j = 0; j < myPaidItemsArray.size(); j++) {
+			            
+			        	PaidItems paidItem = myPaidItemsArray.get(j);
+			            
+			            
+			            if (paidItem.getItemId() == item.getId()) {
+			                
+			                //Item is at least partially paid for
+			                
+			                if (paidItem.getPercentPaid() == 1.0) {
+			                    
+			                    double paidItemAmount = paidItem.getAmount();
+			                    double myItemAmount = item.getAmount();
+			                    
+			                    if (paidItemAmount >= myItemAmount) {
+			                    	
+			                    	item.setIsPaidFor("yes");
+			                        myPaidItemsArray.remove(j);
+			                        break;
+			                    }else{
+			                    	item.setIsPaidFor("maybe");
+			                        myPaidItemsArray.remove(j);
+			                        break;
+			                    }
+			                    
+			                }else{
+			                    //[item setValue:@"maybe" forKey:@"isPaidFor"];
+			                    
+			                }
+			                
+			            }
+			            
+			        	item.setIsPaidFor("ano");
 
-	        currentPaidItemsArray = myPaidItemsArray;
-	        
-	        
-	        
-	        //myPaidItems array still contains payments of partial Items, go through again
-	        
-	        for (int i = 0; i < theBill.getItems().size(); i++) {
-	            
-	            LineItem item = theBill.getItems().get(i);
-	            
-	            
-	            if (item.getIsPaidFor().equals("ano")) {
-	                
-	            	
-	            	 for (int j = 0; j < myPaidItemsArray.size(); j++) {
-		                    
-		           
-	                     PaidItems paidItem = myPaidItemsArray.get(j);
-		                    
-		                    
-	                     if (paidItem.getItemId() == item.getId()) {
-		                        
-		                        //Item is at least partially paid for
-	                     	item.setIsPaidFor("maybe");
+			            
+			        }
+			        
+			        
+			    }
 
-		                        
-                            myPaidItemsArray.remove(j);
-		                        
-                            break;
-		                        
-		                        
-		                  
-	                     }
-		                    
-	                 	item.setIsPaidFor("ano");
-		                    
-		                
-	            	 }
-		                
-	                
-	            }
-	            
-	            
-	            
-	            
-	        }
-	        
-	        
-	        
-	        /* sort and reload the table
-	        NSSortDescriptor *sorter = [[NSSortDescriptor alloc] initWithKey:@"isPaidFor" ascending:YES];
-	        NSArray *sortDescriptors = [NSArray arrayWithObject:sorter];
-	        self.myInvoice.items = [NSMutableArray arrayWithArray:[self.myInvoice.items sortedArrayUsingDescriptors:sortDescriptors]];
-	        
-	        
-	        
-	        */
+			    currentPaidItemsArray = myPaidItemsArray;
+			    
+			    
+			    
+			    //myPaidItems array still contains payments of partial Items, go through again
+			    
+			    for (int i = 0; i < theBill.getItems().size(); i++) {
+			        
+			        LineItem item = theBill.getItems().get(i);
+			        
+			        
+			        if (item.getIsPaidFor().equals("ano")) {
+			            
+			        	
+			        	 for (int j = 0; j < myPaidItemsArray.size(); j++) {
+			                    
+			           
+			                 PaidItems paidItem = myPaidItemsArray.get(j);
+			                    
+			                    
+			                 if (paidItem.getItemId() == item.getId()) {
+			                        
+			                        //Item is at least partially paid for
+			                 	item.setIsPaidFor("maybe");
 
-			adapter.notifyDataSetChanged();
+			                        
+			                    myPaidItemsArray.remove(j);
+			                        
+			                    break;
+			                        
+			                        
+			                  
+			                 }
+			                    
+			             	item.setIsPaidFor("ano");
+			                    
+			                
+			        	 }
+			                
+			            
+			        }
+			        
+			        
+			        
+			        
+			    }
+			    
+			    
+			    
+			    /* sort and reload the table
+			    NSSortDescriptor *sorter = [[NSSortDescriptor alloc] initWithKey:@"isPaidFor" ascending:YES];
+			    NSArray *sortDescriptors = [NSArray arrayWithObject:sorter];
+			    self.myInvoice.items = [NSMutableArray arrayWithArray:[self.myInvoice.items sortedArrayUsingDescriptors:sortDescriptors]];
+			    
+			    
+			    
+			    */
 
-	        
-	    }
+				adapter.notifyDataSetChanged();
+
+			    
+			}
+		} catch (Exception e) {
+			(new CreateClientLogTask("ViewCheck.showPaidItems", "Exception Caught", "error", e)).execute();
+
+		}
 	    
 	    
 	}
@@ -1458,8 +1529,9 @@ public class ViewCheck extends BaseActivity {
 	         
 
 	    }
-	    catch (Exception exception) {
-		    Logger.d("Exception Consolidating");
+	    catch (Exception e) {
+			(new CreateClientLogTask("ViewCheck.consolidatePartialPayments", "Exception Caught", "error", e)).execute();
+
 
 	    }
 	}
@@ -1491,107 +1563,117 @@ public class ViewCheck extends BaseActivity {
 	}
 	
 	private void showAlreadyPaidDialog() {
-		alreadyPaidDialog = null;
+		try {
+			alreadyPaidDialog = null;
 
-		
-		LayoutInflater factory = LayoutInflater.from(this);
-		final View makePaymentView = factory.inflate(R.layout.who_paid, null);
-		final ScrollView myScroll = (ScrollView) makePaymentView.findViewById(R.id.whoPaidScroll);
-		myScroll.setBackgroundColor(Color.WHITE);
-		TextView remainingText = (TextView) makePaymentView.findViewById(R.id.remainingText);
-		TextView paymentsText = (TextView) makePaymentView.findViewById(R.id.paymentsText);
-		
-		remainingText.setText(String.format("$%.2f", totalBill));
-		if (theBill.getPayments().size() > 0){
-			paymentsText.setText("Payments:");
 			
-			LinearLayout child = (LinearLayout) makePaymentView.findViewById(R.id.scrollerLayout);
+			LayoutInflater factory = LayoutInflater.from(this);
+			final View makePaymentView = factory.inflate(R.layout.who_paid, null);
+			final ScrollView myScroll = (ScrollView) makePaymentView.findViewById(R.id.whoPaidScroll);
+			myScroll.setBackgroundColor(Color.WHITE);
+			TextView remainingText = (TextView) makePaymentView.findViewById(R.id.remainingText);
+			TextView paymentsText = (TextView) makePaymentView.findViewById(R.id.paymentsText);
+			
+			remainingText.setText(String.format("$%.2f", totalBill));
+			if (theBill.getPayments().size() > 0){
+				paymentsText.setText("Payments:");
+				
+				LinearLayout child = (LinearLayout) makePaymentView.findViewById(R.id.scrollerLayout);
 
-			for (int i = 0; i < theBill.getPayments().size(); i++){
-				
-				Payments payment = theBill.getPayments().get(i);
-				
-				LayoutInflater inflater = LayoutInflater.from(this);
-				View paymentView = inflater.inflate(R.layout.who_paid_sub, null);
-				
-				TextView nameText = (TextView) paymentView.findViewById(R.id.nameText);
-				TextView amountText = (TextView) paymentView.findViewById(R.id.amountText);
-				TextView notesText = (TextView) paymentView.findViewById(R.id.notesText);
-				
-				nameText.setText("Name: " + payment.getCustomerName());
-				amountText.setText(String.format("Amount: $%.2f", payment.getAmount()));
-				notesText.setText("Notes: " + payment.getNotes());
-				
-				child.addView(paymentView);
+				for (int i = 0; i < theBill.getPayments().size(); i++){
+					
+					Payments payment = theBill.getPayments().get(i);
+					
+					LayoutInflater inflater = LayoutInflater.from(this);
+					View paymentView = inflater.inflate(R.layout.who_paid_sub, null);
+					
+					TextView nameText = (TextView) paymentView.findViewById(R.id.nameText);
+					TextView amountText = (TextView) paymentView.findViewById(R.id.amountText);
+					TextView notesText = (TextView) paymentView.findViewById(R.id.notesText);
+					
+					nameText.setText("Name: " + payment.getCustomerName());
+					amountText.setText(String.format("Amount: $%.2f", payment.getAmount()));
+					notesText.setText("Notes: " + payment.getNotes());
+					
+					child.addView(paymentView);
 
-				
+					
+				}
 			}
+
+			
+
+			
+			AlertDialog.Builder builder = new AlertDialog.Builder(ViewCheck.this);
+			builder.setTitle("Remaining Balance");
+			builder.setView(makePaymentView);
+			//builder.setIcon(R.drawable.logo);
+			builder.setPositiveButton("Pay Remaining", new DialogInterface.OnClickListener() {
+
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+
+				}
+			});
+			
+			builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+
+				}
+			});
+
+			builder.setOnCancelListener(new OnCancelListener() {
+
+				@Override
+				public void onCancel(DialogInterface dialog) {
+				}
+			});
+			alreadyPaidDialog = builder.create();
+			
+
+			alreadyPaidDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+
+				@Override
+				public void onShow(DialogInterface dialog) {
+
+					Button b = alreadyPaidDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+					b.setOnClickListener(new View.OnClickListener() {
+
+						@Override
+						public void onClick(View view) {
+							
+							try {
+								ViewCheck.this.deselectAllRows();
+								ViewCheck.this.myPayment = ViewCheck.this.totalBill;
+								ViewCheck.this.goAddTip();
+								alreadyPaidDialog.dismiss();
+							} catch (Exception e) {
+								(new CreateClientLogTask("ViewCheck.showAlreadyPaidDialog.onShow.onClickPositive", "Exception Caught", "error", e)).execute();
+
+							}
+						}
+					});
+					
+					Button c = alreadyPaidDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+					c.setOnClickListener(new View.OnClickListener() {
+
+						@Override
+						public void onClick(View view) {
+							
+							alreadyPaidDialog.dismiss();
+						}
+					});
+					
+					
+				}
+			});
+			alreadyPaidDialog.show();
+		} catch (Exception e) {
+			(new CreateClientLogTask("ViewCheck.showAlreadyPaidDialog", "Exception Caught", "error", e)).execute();
+
 		}
-
-		
-
-		
-		AlertDialog.Builder builder = new AlertDialog.Builder(ViewCheck.this);
-		builder.setTitle("Remaining Balance");
-		builder.setView(makePaymentView);
-		//builder.setIcon(R.drawable.logo);
-		builder.setPositiveButton("Pay Remaining", new DialogInterface.OnClickListener() {
-
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-
-			}
-		});
-		
-		builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-
-			}
-		});
-	
-		builder.setOnCancelListener(new OnCancelListener() {
-
-			@Override
-			public void onCancel(DialogInterface dialog) {
-			}
-		});
-		alreadyPaidDialog = builder.create();
-		
-
-		alreadyPaidDialog.setOnShowListener(new DialogInterface.OnShowListener() {
-
-			@Override
-			public void onShow(DialogInterface dialog) {
-
-				Button b = alreadyPaidDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-				b.setOnClickListener(new View.OnClickListener() {
-
-					@Override
-					public void onClick(View view) {
-						
-						ViewCheck.this.deselectAllRows();
-						ViewCheck.this.myPayment = ViewCheck.this.totalBill;
-						ViewCheck.this.goAddTip();
-						alreadyPaidDialog.dismiss();
-					}
-				});
-				
-				Button c = alreadyPaidDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
-				c.setOnClickListener(new View.OnClickListener() {
-
-					@Override
-					public void onClick(View view) {
-						
-						alreadyPaidDialog.dismiss();
-					}
-				});
-				
-				
-			}
-		});
-		alreadyPaidDialog.show();
 	
 	}
 	

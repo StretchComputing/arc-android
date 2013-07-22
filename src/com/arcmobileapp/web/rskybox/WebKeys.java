@@ -3,6 +3,8 @@ package com.arcmobileapp.web.rskybox;
 public final class WebKeys {
 		
 	public static final String SUMMARY = "summary";
+	public static final String VERSION = "version";
+
 	public static final String LOG_LEVEL = "logLevel";
 	public static final String LOG_NAME = "logName";
 	public static final String MESSAGE = "message";
