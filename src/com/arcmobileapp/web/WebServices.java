@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -17,8 +18,6 @@ import org.json.JSONObject;
 import com.arcmobileapp.domain.CreatePayment;
 import com.arcmobileapp.domain.CreateReview;
 import com.arcmobileapp.domain.LineItem;
-import com.arcmobileapp.utils.ArcPreferences;
-import com.arcmobileapp.utils.Keys;
 import com.arcmobileapp.utils.Logger;
 import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 
@@ -26,6 +25,7 @@ public class WebServices {
 	
 	private DefaultHttpClient httpClient;
 	private HttpPost httpPost;
+
 	private HttpResponse httpResponse;
 	private HttpEntity httpEntity;
 	private String errorMsg = "";
@@ -105,6 +105,8 @@ public class WebServices {
 		return reply.toString();
 	}
 
+	
+	
 
 	public String getError() {
 		if (this.errorMsg == null || this.errorMsg == "")
