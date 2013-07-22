@@ -4,6 +4,8 @@ package com.arcmobileapp.web.rskybox;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -13,7 +15,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.util.Base64;
 
@@ -22,7 +23,6 @@ import com.arcmobileapp.utils.ArcPreferences;
 import com.arcmobileapp.utils.Keys;
 import com.arcmobileapp.utils.Logger;
 import com.arcmobileapp.web.URLs;
-import com.arcmobileapp.web.rskybox.WebKeys;
 
 public class WebServices {
 	
@@ -140,7 +140,19 @@ public class WebServices {
 			String remoteEndpoint = URLs.getHost(com.arcmobileapp.web.URLs.DUTCH_SERVER);
 			json.put(WebKeys.REMOTE_ENDPOINT, remoteEndpoint);
 			
-			// TODO -- add app actions
+			List<String> appActions = new ArrayList<String>();
+			List<String> timestamps = new ArrayList<String>();
+			AppActions.getAll(appActions, timestamps);
+			JSONArray appActionsJsonArray = new JSONArray();
+			for(int i=0; i<appActions.size(); i++) {
+				JSONObject appActionJsonObject = new JSONObject();
+				appActionJsonObject.put(WebKeys.DESCRIPTION, appActions.get(i));
+				appActionJsonObject.put(WebKeys.TIMESTAMP, timestamps.get(i));
+				// TODO -- add duration
+				appActionJsonObject.put(WebKeys.DURATION, "0");
+				appActionsJsonArray.put(appActionJsonObject);
+			}
+			json.put(WebKeys.APP_ACTIONS, appActionsJsonArray);
 			
 			if(theException != null) {
 				JSONArray steJsonArray = new JSONArray();

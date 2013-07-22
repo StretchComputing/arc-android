@@ -1,5 +1,8 @@
 package com.arcmobileapp.utils;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Formatter;
 
 import android.content.Context;
@@ -28,6 +31,15 @@ public class Utils {
 		}
 		return formatter.toString();
 	}
+	
+	// returns ISO 8601 format: yyyy-MM-ddTHH:mm:ss.SSSZ
+	public static String convertToIsoDate(Date theGmtDate) {
+		if(theGmtDate == null) {return null;}
+	    String dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+	    DateFormat df = new SimpleDateFormat(dateFormat);
+	    return df.format(theGmtDate);
+	}
+
 
 	public static String convertModernPicType(Enums.ModernPicTypes type) {
 		String symbol = "";
