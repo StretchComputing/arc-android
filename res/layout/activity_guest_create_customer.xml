@@ -31,7 +31,7 @@
  
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/help_item_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/remainingText"
@@ -46,7 +46,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignRight="@+id/guest_password_textv"
-        android:layout_below="@+id/textView2"
+        android:layout_below="@+id/help_item_text"
         android:layout_marginTop="6dp"
         android:ems="10"
         android:hint="@string/email_hint"
@@ -60,7 +60,7 @@
         android:id="@+id/button1"
         android:layout_width="130dp"
         android:layout_height="46dp"
-        android:layout_alignRight="@+id/textView2"
+        android:layout_alignRight="@+id/help_item_text"
         android:layout_below="@+id/guest_password_textv"
         android:layout_marginTop="10dp"
         android:background="@drawable/i_button_grey"
@@ -73,7 +73,7 @@
         android:layout_height="46dp"
         android:layout_alignBaseline="@+id/button1"
         android:layout_alignBottom="@+id/button1"
-        android:layout_alignLeft="@+id/textView2"
+        android:layout_alignLeft="@+id/help_item_text"
         android:background="@drawable/i_button_grey"
         android:onClick="onNoThanksClicked"
         android:text="@string/nothanks_string" />

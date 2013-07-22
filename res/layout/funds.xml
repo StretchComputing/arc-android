@@ -13,7 +13,7 @@
         android:layout_height="wrap_content" >
 
         <ImageView
-            android:id="@+id/imageView1"
+            android:id="@+id/help_dollar_arrow"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_centerVertical="true"
@@ -28,7 +28,7 @@
             android:layout_centerVertical="true"
             android:layout_gravity="fill"
             android:layout_marginLeft="17dp"
-            android:layout_toRightOf="@+id/imageView1"
+            android:layout_toRightOf="@+id/help_dollar_arrow"
             android:text="@string/funds_secure_text"
             android:textSize="12sp" />
 

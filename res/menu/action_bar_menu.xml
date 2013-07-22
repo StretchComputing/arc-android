@@ -4,7 +4,8 @@
         android:id="@+id/menu_settings"
         android:orderInCategory="0"
         android:showAsAction="ifRoom"
-        android:title="help">
+        android:title="help"
+        >
         <menu>
             <item
                 android:id="@+id/whatIsArc"

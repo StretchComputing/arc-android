@@ -16,4 +16,8 @@ public final class Keys {
 	public static final String SERVER = "SERVER";
 	
 	
+	public static final String SEEN_CHECKNUMBER_HELP = "SEEN_CHECKNUMBER_HELP";
+	public static final String SEEN_INVOICE_HELP = "SEEN_INVOICE_HELP";
+
+	
 }

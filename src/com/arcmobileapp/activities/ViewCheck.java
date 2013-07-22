@@ -11,9 +11,11 @@ import android.content.Intent;
 import android.content.res.Resources.NotFoundException;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.InputFilter;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -41,8 +43,10 @@ import com.arcmobileapp.domain.CreatePayment;
 import com.arcmobileapp.domain.LineItem;
 import com.arcmobileapp.domain.Payments;
 import com.arcmobileapp.domain.Payments.PaidItems;
+import com.arcmobileapp.utils.ArcPreferences;
 import com.arcmobileapp.utils.Constants;
 import com.arcmobileapp.utils.CurrencyFilter;
+import com.arcmobileapp.utils.Keys;
 import com.arcmobileapp.utils.Logger;
 import com.arcmobileapp.utils.PaymentFlags;
 import com.arcmobileapp.web.MakePaymentTask;
@@ -94,6 +98,25 @@ public class ViewCheck extends BaseActivity {
 	NumberFormat quantity = new DecimalFormat("#");
 	ListView myListView;
 	
+	private RelativeLayout helpLayout;
+	private TextView helpItemText;
+	private TextView helpDollarText;
+	private TextView helpTitleText;
+	private TextView helpTotalText;
+
+	private ImageView helpTotalArrow;
+
+	private ImageView helpDollarArrow;
+	
+	private int helpStage;
+	
+	Handler handler = new Handler();
+	    
+	Runnable runnable = new Runnable() {
+	        public void run() {
+	        	hideHelp();
+	        }
+	};
 	private Button payBillButton;
 
 	public ViewCheck() {
@@ -181,6 +204,53 @@ public class ViewCheck extends BaseActivity {
 			registerClickCallback();
 			
 			showPaidItems();
+			
+			
+			helpLayout = (RelativeLayout) findViewById(R.id.help_layout);
+			helpItemText = (TextView) findViewById(R.id.help_item_text);
+			helpDollarText = (TextView) findViewById(R.id.help_dollar_text);
+			helpTitleText = (TextView) findViewById(R.id.help_title_text);
+			helpTotalText = (TextView) findViewById(R.id.help_total_text);
+
+			helpDollarArrow = (ImageView) findViewById(R.id.help_dollar_arrow);
+			helpTotalArrow = (ImageView) findViewById(R.id.help_total_arrow);
+
+			ArcPreferences myPrefs = new ArcPreferences(getApplicationContext());
+			
+			Boolean hasSeenCheckHelp = myPrefs.getBoolean(Keys.SEEN_INVOICE_HELP);
+			
+			if (hasSeenCheckHelp){
+				helpLayout.setVisibility(View.GONE);
+			}else{
+
+		        handler.postDelayed(runnable, 5000);
+
+				helpDollarArrow.setVisibility(View.INVISIBLE);
+				helpDollarText.setVisibility(View.INVISIBLE);
+				helpTotalText.setVisibility(View.INVISIBLE);
+				helpTotalArrow.setVisibility(View.INVISIBLE);
+
+
+
+				helpStage = 1;
+				myPrefs.putAndCommitBoolean(Keys.SEEN_CHECKNUMBER_HELP, true);
+				
+				helpLayout.setOnTouchListener(new View.OnTouchListener(){
+					 
+					@Override
+					public boolean onTouch(View v, MotionEvent event) {
+						
+						hideHelp();
+						
+						return false;
+					}
+			 
+				});
+	
+			}
+			
+			
+			
 		} catch (Exception e) {
 			(new CreateClientLogTask("ViewCheck.onCreate", "Exception Caught", "error", e)).execute();
 
@@ -189,6 +259,39 @@ public class ViewCheck extends BaseActivity {
 
 	}
 
+	 public void hideHelp()
+     {
+		 if (helpStage == 1){
+			 helpStage = 2;
+			 
+			 handler = new Handler();
+		      handler.postDelayed(runnable, 5000);
+		      helpItemText.setVisibility(View.INVISIBLE);
+		      	helpTitleText.setVisibility(View.INVISIBLE);
+
+				helpDollarArrow.setVisibility(View.VISIBLE);
+				helpDollarText.setVisibility(View.VISIBLE);
+
+
+		 }else if (helpStage == 2){
+			 helpStage = 3;
+			 handler = new Handler();
+
+		        handler.postDelayed(runnable, 5000);
+
+		        helpDollarArrow.setVisibility(View.INVISIBLE);
+				helpDollarText.setVisibility(View.INVISIBLE);
+				helpTotalText.setVisibility(View.VISIBLE);
+				helpTotalArrow.setVisibility(View.VISIBLE);
+
+
+			 
+		 }else{
+				helpLayout.setVisibility(View.GONE);
+
+		 }
+
+     }
 	@Override
 	protected void onResume() {
 		super.onResume();

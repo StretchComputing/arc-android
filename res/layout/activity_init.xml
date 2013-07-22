@@ -96,7 +96,7 @@
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <ImageView
-        android:id="@+id/imageView1"
+        android:id="@+id/help_dollar_arrow"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_alignParentLeft="true"
@@ -112,7 +112,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginLeft="25dp"
         android:layout_marginTop="25dp"
-        android:layout_toRightOf="@+id/imageView1"
+        android:layout_toRightOf="@+id/help_dollar_arrow"
         android:text="@string/welcome_string"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@color/black"
@@ -130,7 +130,7 @@
         android:id="@+id/imageView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/imageView1"
+        android:layout_below="@+id/help_dollar_arrow"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="14dp"
         android:src="@drawable/divider" />

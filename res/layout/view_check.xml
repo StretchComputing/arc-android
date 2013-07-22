@@ -234,5 +234,87 @@
         android:minHeight="48dp"
         android:minWidth="146dp"
         android:text="@string/invoicePayString" />
+    
+    
+    <RelativeLayout
+    	android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#CC000000"
+        android:id="@+id/help_layout">
+
+        <ImageView
+            android:id="@+id/help_dollar_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="90dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignRight="@+id/help_title_text"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="16dp"
+            android:src="@drawable/straight_arrow" />
+
+        <TextView
+            android:id="@+id/help_title_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:text="@string/view_check_help_splitting"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/white"
+            android:textSize="28sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/help_item_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/help_title_text"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="50dp"
+            android:text="@string/view_check_help_item"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/help_dollar_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/help_dollar_arrow"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="20dp"
+            android:layout_marginTop="21dp"
+            android:text="@string/view_check_help_dollar_percent"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/help_total_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@+id/help_item_text"
+            android:layout_below="@+id/help_dollar_arrow"
+            android:layout_margin="15dp"
+            android:layout_marginTop="35dp"
+            android:text="@string/view_check_help_total"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/white"
+            android:textSize="21sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/help_total_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="90dp"
+            android:layout_below="@+id/help_total_text"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/straight_arrow_down" />
+ 
+    </RelativeLayout>
 
 </RelativeLayout>

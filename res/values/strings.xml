@@ -95,6 +95,12 @@
     <string name="nothanks_string">No Thanks</string>
     <string name="no_payments_string">No payments have been made on this invoice.</string>
     <string name="title_activity_terms">TermsActivity</string>
+    <string name="check_help_string_one">Can\'t find your check #?</string>
+    <string name="check_help_two">"Click the "</string>
+    <string name="view_check_help_splitting">Splitting the Check!</string>
+    <string name="view_check_help_item">To pay for a single item, just touch that item on your bill!</string>
+    <string name="view_check_help_dollar_percent">To pay a dollar amount, or split evenly between a certain number of people, click here!</string>
+    <string name="view_check_help_total">The amount you are about to pay will always be shown as \"My Total\" at the bottom of the page.</string>
 
     
     

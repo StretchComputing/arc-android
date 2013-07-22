@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/get_check_layout"
     style="@style/ParentView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:padding="0dp"
     tools:context=".activities.GetCheck" >
     
     <LinearLayout 
@@ -27,15 +28,14 @@
          android:textStyle="bold" />
      
      <TextView
-     android:layout_width="wrap_content"
-     android:layout_height="match_parent"
-     android:padding="10dp"
-     android:text="Enter your check number"
-     android:textStyle="bold"
-     android:textSize="18sp"
-     android:gravity="center"/>
-
-
+         android:id="@+id/check_enter"
+         android:layout_width="wrap_content"
+         android:layout_height="match_parent"
+         android:gravity="center"
+         android:padding="10dp"
+         android:text="Enter your check number"
+         android:textSize="18sp"
+         android:textStyle="bold" />
      
      <EditText
      android:id="@+id/invoice"
@@ -63,4 +63,77 @@
     </LinearLayout>
     
     
-</LinearLayout>
+    <RelativeLayout
+    	android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#CC000000"
+        android:id="@+id/top_layout">
+
+        <TextView
+            android:id="@+id/help_item_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/help_title_text"
+            android:layout_below="@+id/help_title_text"
+            android:layout_marginLeft="55dp"
+            android:layout_marginTop="20dp"
+            android:textStyle="bold"
+            android:text="@string/check_help_two"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+
+        <ImageView
+            android:id="@+id/help_dollar_arrow"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignBottom="@+id/help_item_text"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@+id/help_item_text"
+            android:src="@drawable/qmark" />
+
+        <TextView
+            android:id="@+id/help_title_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/check_help_string_one"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="60dp"
+            android:layout_height="90dp"
+            android:layout_alignBottom="@+id/help_dollar_arrow"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/up_arrow" />
+ 
+    </RelativeLayout>
+    
+    
+     <RelativeLayout
+    	android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#CC444444"
+         android:layout_alignParentTop="true"
+        android:id="@+id/help_image_layout">
+        
+         <ImageView
+            android:id="@+id/help_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/defaultreceipt"
+             />
+         
+         
+    </RelativeLayout>
+    
+    
+</RelativeLayout>
