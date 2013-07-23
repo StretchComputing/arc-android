@@ -37,6 +37,7 @@ import com.arcmobileapp.utils.Keys;
 import com.arcmobileapp.utils.Logger;
 import com.arcmobileapp.web.ErrorCodes;
 import com.arcmobileapp.web.GetCheckTask;
+import com.arcmobileapp.web.rskybox.AppActions;
 import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 
 public class GetCheck extends BaseActivity {
@@ -71,6 +72,8 @@ public class GetCheck extends BaseActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		try {
+			
+
 			super.onCreate(savedInstanceState);
 			setContentView(R.layout.get_check);
 			invoice = (EditText) findViewById(R.id.invoice);
@@ -79,6 +82,11 @@ public class GetCheck extends BaseActivity {
 			//activityBar.setVisibility(View.INVISIBLE);
 			
 			venueName = getIntent().getStringExtra(Constants.VENUE);
+			
+			AppActions.add("Get Check - OnCreate - Merchant Name:" + venueName);
+
+			
+			
 			merchantId = getIntent().getStringExtra(Constants.VENUE_ID);
 			title.setText(venueName);
 			textEnter = (TextView) findViewById(R.id.check_enter);
@@ -155,6 +163,11 @@ public class GetCheck extends BaseActivity {
 	public void onViewBillClick(View v) {
 		try {
 			String checkNum = invoice.getText().toString();
+			
+			AppActions.add("Get Check - View Bill Clicked - Check Number:" + checkNum + ", Merchant:" + venueName);
+
+			
+			
 			if(checkNum == null || checkNum.trim().length() == 0) {
 				toastLong("Please enter your check number");
 				return;
@@ -201,6 +214,9 @@ public class GetCheck extends BaseActivity {
 							
 							if (getFinalSuccess() && errorCode == 0) {
 
+								AppActions.add("Get Check - Get Invoice Successful");
+
+								
 								Check theBill = getTheBill();
 
 								if (theBill == null || theBill.getItems().size() == 0) {
@@ -220,6 +236,8 @@ public class GetCheck extends BaseActivity {
 							} else {
 								//Not Succes
 								
+								AppActions.add("Get Check - Get Invoice Failed - Error Code:" + errorCode);
+
 								if (errorCode != 0){
 									
 									String errorMsg = "";
@@ -286,6 +304,8 @@ public class GetCheck extends BaseActivity {
 		helpLayout.setVisibility(View.GONE);
 		
 		if (helpImageLayout.getVisibility() == View.VISIBLE){
+			AppActions.add("Get Check - Hiding Check Help");
+
 			helpImageLayout.setVisibility(View.INVISIBLE);
 			
 			InputMethodManager imm = (InputMethodManager)getSystemService(
@@ -293,6 +313,8 @@ public class GetCheck extends BaseActivity {
 				imm.showSoftInput(invoice, 0);
 		}else{
 			
+			AppActions.add("Get Check - Showing Check Help");
+
 			InputMethodManager imm = (InputMethodManager)getSystemService(
 				      Context.INPUT_METHOD_SERVICE);
 				imm.hideSoftInputFromWindow(invoice.getWindowToken(), 0);
@@ -306,6 +328,10 @@ public class GetCheck extends BaseActivity {
 	public void setHelpImage(){
 		
 		try{
+			
+			AppActions.add("Get Check - Setting Help Image");
+
+			
 			String url = "http://arc.dagher.mobi/Images/App/Receipts/"+merchantId+ ".jpg";
 			
 			GetXMLTask task = new GetXMLTask();

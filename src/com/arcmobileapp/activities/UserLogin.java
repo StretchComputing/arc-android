@@ -14,6 +14,7 @@ import com.arcmobileapp.utils.ArcPreferences;
 import com.arcmobileapp.utils.Keys;
 import com.arcmobileapp.web.ErrorCodes;
 import com.arcmobileapp.web.GetTokenTask;
+import com.arcmobileapp.web.rskybox.AppActions;
 import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 
 public class UserLogin extends BaseActivity {
@@ -25,6 +26,9 @@ public class UserLogin extends BaseActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		try {
+			
+			AppActions.add("User Login - OnCreate");
+
 			super.onCreate(savedInstanceState);
 			setContentView(R.layout.activity_user_login);
 			
@@ -50,9 +54,12 @@ public class UserLogin extends BaseActivity {
 	
 	public void onLogInClicked(View view) {
 
+
 		try {
 			if (emailTextView != null && emailTextView.length() > 0 && passwordTextView != null && passwordTextView.length() > 0 ){
 				//Send the login
+				AppActions.add("User Login - Login Clicked - Email: " + emailTextView.getText().toString());
+
 				login();
 			}else{
 				toastShort("Please enter your email address and password.");
@@ -83,6 +90,8 @@ public class UserLogin extends BaseActivity {
 
 							if(getDevToken()!=null) {
 
+								AppActions.add("User Login - Login Succeeded");
+
 								myPrefs.putAndCommitString(Keys.CUSTOMER_TOKEN, getDevToken());
 								myPrefs.putAndCommitString(Keys.CUSTOMER_ID, getDevCustomerId());
 								myPrefs.putAndCommitString(Keys.CUSTOMER_EMAIL, UserLogin.this.emailTextView.getText().toString());
@@ -103,6 +112,8 @@ public class UserLogin extends BaseActivity {
 							
 							int errorCode = getErrorCode();
 							
+							AppActions.add("User Login - Login Failed - ErrorCode: " + errorCode);
+
 							if (errorCode == ErrorCodes.INCORRECT_LOGIN_INFO){
 								toastShort("Invalid username/password, please try again.");
 

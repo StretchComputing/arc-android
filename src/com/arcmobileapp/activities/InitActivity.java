@@ -14,6 +14,7 @@ import com.arcmobileapp.R;
 import com.arcmobileapp.utils.ArcPreferences;
 import com.arcmobileapp.utils.Keys;
 import com.arcmobileapp.web.GetTokenTask;
+import com.arcmobileapp.web.rskybox.AppActions;
 import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 
 public class InitActivity extends Activity {
@@ -58,6 +59,9 @@ public class InitActivity extends Activity {
 						
 						
 						if(getSuccess()) {
+							
+							AppActions.add("Init Activity - Get Token Succeeded");
+
 							ArcPreferences myPrefs = new ArcPreferences(getApplicationContext());
 
 							if(getDevToken()!=null) {
@@ -68,6 +72,9 @@ public class InitActivity extends Activity {
 						
 							doesHaveToken = true;
 						}else{
+							
+							AppActions.add("Init Activity - Get Token Failed - Error Code:" + errorCode);
+
 							if (errorCode != 0){
 								toast("Unable to retrieve guest token, please try again.", Toast.LENGTH_SHORT);
 
@@ -95,6 +102,9 @@ public class InitActivity extends Activity {
 			
 			if (doesHaveToken){
 				
+				AppActions.add("Init Activity - Clicked Start - Have Guest Token");
+
+						
 				ArcPreferences myPrefs = new ArcPreferences(getApplicationContext());
 
 				myPrefs.putAndCommitBoolean(Keys.AGREED_TERMS, true);
@@ -103,6 +113,9 @@ public class InitActivity extends Activity {
 				overridePendingTransition(0, 0);
 				finish();
 			}else{
+				
+				AppActions.add("Init Activity - Clicked Start - No Guest Token Yet");
+
 				toast("Registering you as a guest, please wait a second then try again.", Toast.LENGTH_SHORT);
 			}
 		} catch (Exception e) {
@@ -120,6 +133,8 @@ public class InitActivity extends Activity {
 	public void onTermsClicked(View view){
 		
 		try {
+			AppActions.add("Init Activity - Terms Clicked");
+
 			Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://arc.dagher.mobi/html/docs/terms.html"));
 			startActivity(browserIntent);
 		} catch (Exception e) {
@@ -134,6 +149,8 @@ public class InitActivity extends Activity {
 	public void onPrivacyClicked(View view){
 		
 		try {
+			AppActions.add("Init Activity - Privacy Clicked");
+
 			Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://arc.dagher.mobi/html/docs/privacy.html"));
 			startActivity(browserIntent);
 		} catch (Exception e) {

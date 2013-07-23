@@ -34,6 +34,7 @@ import com.arcmobileapp.utils.Logger;
 import com.arcmobileapp.utils.Security;
 import com.arcmobileapp.web.CreateUserTask;
 import com.arcmobileapp.web.ErrorCodes;
+import com.arcmobileapp.web.rskybox.AppActions;
 import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 
 public class UserCreateNew extends BaseActivity {
@@ -52,6 +53,9 @@ public class UserCreateNew extends BaseActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		try {
+			
+			AppActions.add("User Create New - OnCreate");
+
 			super.onCreate(savedInstanceState);
 			setContentView(R.layout.activity_user_create_new);
 			
@@ -82,6 +86,8 @@ public class UserCreateNew extends BaseActivity {
 		try {
 			if (emailTextView != null && emailTextView.length() > 0 && passwordTextView != null && passwordTextView.length() > 0 ){
 				//Send the login
+				AppActions.add("User Create New - Register Clicked - Email:" + emailTextView.getText().toString());
+
 				login();
 			}else{
 				toastShort("Please enter an email address and password.");
@@ -116,6 +122,9 @@ public class UserCreateNew extends BaseActivity {
 						int errorCode = getErrorCode();
 
 						if (getFinalSuccess() && errorCode == 0){
+							
+							AppActions.add("User Create New - Register Succeeded");
+
 							ArcPreferences myPrefs = new ArcPreferences(getApplicationContext());
 							
 							myPrefs.putAndCommitString(Keys.CUSTOMER_TOKEN, getDevToken());
@@ -130,7 +139,8 @@ public class UserCreateNew extends BaseActivity {
 							
 						}else{
 							
-							
+							AppActions.add("User Create New - Register Failed - Error Code: " + errorCode);
+
 							if (errorCode != 0){
 								
 								String errorMsg = "";
@@ -254,6 +264,9 @@ public class UserCreateNew extends BaseActivity {
 	public void showCardIo(){
 		
 		try {
+			
+			AppActions.add("User Create New - Show CardIO");
+
 			Intent scanIntent = new Intent(this, CardIOActivity.class);
 			// required for authentication with card.io
 			scanIntent.putExtra(CardIOActivity.EXTRA_APP_TOKEN, Constants.MY_CARDIO_APP_TOKEN);
@@ -272,6 +285,9 @@ public class UserCreateNew extends BaseActivity {
 	
 	private void showPinDialog() {
 		try {
+			
+			AppActions.add("User Create New - Show PIN Dialog");
+
 			pinDialog = null;
 			
 			LayoutInflater factory = LayoutInflater.from(this);
@@ -364,6 +380,9 @@ public class UserCreateNew extends BaseActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		try {
+			
+			AppActions.add("User Create New - CardIO Scan Completed");
+
 			super.onActivityResult(requestCode, resultCode, data);
 
 			String resultDisplayStr = "no response";
@@ -373,12 +392,16 @@ public class UserCreateNew extends BaseActivity {
 					CreditCard scanResult = data.getParcelableExtra(CardIOActivity.EXTRA_SCAN_RESULT);
 					
 					if(!scanResult.isExpiryValid()) {
+						AppActions.add("User Create New - CardIO Scan Expiry Not Valid");
+
 						resultDisplayStr = "Your credit card is not valid (expired)";
 						showInfoDialog(resultDisplayStr);
 						return;
 					}
 					
 					if(scanResult.getCardType() == CardType.INSUFFICIENT_DIGITS || scanResult.getCardType() == CardType.UNKNOWN || scanResult.getCardType() == CardType.JCB) {
+						AppActions.add("User Create New - CardIO Scan Credit Card Not Valid");
+
 						resultDisplayStr = "Your credit card is not valid (type unknown)";
 						showInfoDialog(resultDisplayStr);
 						return;
@@ -452,6 +475,9 @@ public class UserCreateNew extends BaseActivity {
 	protected void saveCard() {
 	
 		try {
+			
+			AppActions.add("User Create New - New Card Added");
+
 			DBController.saveCreditCard(getContentProvider(), enteredCard);
 		} catch (Exception e) {
 			(new CreateClientLogTask("UserCreateNew.saveCard", "Exception Caught", "error", e)).execute();
@@ -534,7 +560,6 @@ public class UserCreateNew extends BaseActivity {
 	        //String encrypted = s.encrypt(myPIN, cardNumber);
 	        String encrypted = s.encryptBlowfish(cardNumber, myPIN);
 
-	        Logger.d("Encrypted: " + encrypted);
 	        
 	        return encrypted;
 		}catch (Exception e){

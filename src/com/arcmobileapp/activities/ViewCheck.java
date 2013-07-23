@@ -50,6 +50,7 @@ import com.arcmobileapp.utils.Keys;
 import com.arcmobileapp.utils.Logger;
 import com.arcmobileapp.utils.PaymentFlags;
 import com.arcmobileapp.web.MakePaymentTask;
+import com.arcmobileapp.web.rskybox.AppActions;
 import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 
 public class ViewCheck extends BaseActivity {
@@ -130,6 +131,9 @@ public class ViewCheck extends BaseActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		try {
+			
+			AppActions.add("View Check - OnCreate");
+
 			super.onCreate(savedInstanceState);
 			
 			totalBill = 0d;
@@ -261,6 +265,8 @@ public class ViewCheck extends BaseActivity {
 
 	 public void hideHelp()
      {
+			AppActions.add("View Check - Hiding Help - Stage:" + helpStage);
+
 		 if (helpStage == 1){
 			 helpStage = 2;
 			 
@@ -302,6 +308,8 @@ public class ViewCheck extends BaseActivity {
 	protected void displayBill(){
 		
 		try {
+			
+
 			String check = "";
 			if (theBill == null || theBill.getItems().size() == 0) {
 				toastShort("Could not locate your check");
@@ -324,6 +332,8 @@ public class ViewCheck extends BaseActivity {
 					
 			
 			totalBill = myPayment = theBill.getBaseAmount() + theBill.getTaxAmount() + theBill.getServiceCharge() - theBill.getDiscount() - theBill.getAmountPaid();
+			AppActions.add("View Check - Displaying Bill - Total:" + totalBill + ", Tax:" + theBill.getTaxAmount() + ", Service Charge:" + theBill.getServiceCharge() + ", Discount:" + theBill.getDiscount() + ", Amount Paid:" + theBill.getAmountPaid());
+
 			amountPaid = theBill.getAmountPaid();
 			
 			taxPercent = theBill.getTaxAmount() / theBill.getBaseAmount();
@@ -457,8 +467,10 @@ public class ViewCheck extends BaseActivity {
 						int position, long id) {
 					
 					try {
-						LineItem clickedItem = theBill.getItems().get(position);
 						
+						LineItem clickedItem = theBill.getItems().get(position);
+						AppActions.add("View Check - Line Item Clicked: " + clickedItem.getDescription());
+
 						
 						if (clickedItem.getIsPaidFor().equals("yes")){
 							
@@ -535,7 +547,8 @@ public class ViewCheck extends BaseActivity {
 					
 					try {
 						LineItem clickedItem = theBill.getItems().get(position);
-						
+						AppActions.add("View Check - Line Item Long Clicked: " + clickedItem.getDescription());
+
 						
 						if (clickedItem.getIsPaidFor().equals("yes")){
 							
@@ -783,6 +796,9 @@ public class ViewCheck extends BaseActivity {
 
 	private void showPayAmountDialog() {
 		try {
+			
+			AppActions.add("View Check - Showing Dollar Split Dialog");
+
 			payDialog = null;
 
 			deselectAllRows();
@@ -858,7 +874,8 @@ public class ViewCheck extends BaseActivity {
 									return;
 								} else {
 									
-									
+									AppActions.add("View Check - Dollar Split Amount Enetered:" + paymentAmount);
+
 									myBill = myPayment = Double.parseDouble(paymentAmount);
 									if (myBill > (remainingBill)) {
 										toastShort("Can't pay more than is remaining");
@@ -890,6 +907,9 @@ public class ViewCheck extends BaseActivity {
 	
 	private void showPayAmountDialogPercent() {
 		try {
+			
+			AppActions.add("View Check - Showing Percent Split Dialog");
+
 			payDialog = null;
 
 			deselectAllRows();
@@ -973,7 +993,8 @@ public class ViewCheck extends BaseActivity {
 									return;
 								} else {
 									
-									
+									AppActions.add("View Check - Percent Split Amount Enetered:" + paymentAmount);
+
 									double numPeople = Double.parseDouble(paymentAmount);
 									
 									myBill = myPayment = ViewCheck.this.totalBill / numPeople;
@@ -1007,6 +1028,10 @@ public class ViewCheck extends BaseActivity {
 	
 	private void showHowManyDialog() {
 		try {
+			
+			AppActions.add("View Check - Showing Split Item (Multi Amount)");
+
+			
 			payDialog = null;
 			
 			LayoutInflater factory = LayoutInflater.from(this);
@@ -1093,6 +1118,9 @@ public class ViewCheck extends BaseActivity {
 								if (amountPayingFor > clickedItem.getAmount()){
 									toastShort("You cannot pay for more items than are on the bill, please enter a smaller number");
 								}else{
+									
+									AppActions.add("View Check - Showing Split Item (Multi Amount) - Amount Paying For:" + amountPayingFor);
+
 									Double pricePerItem = clickedItem.getValue();
 									
 									Double amountToPay = amountPayingFor * pricePerItem;
@@ -1138,6 +1166,9 @@ public class ViewCheck extends BaseActivity {
 	
 	private void showHowMuchDialog() {
 		try {
+			
+			AppActions.add("View Check - Showing Split Item (Single Amount)");
+
 			payDialog = null;
 			
 			LayoutInflater factory = LayoutInflater.from(this);
@@ -1225,6 +1256,8 @@ public class ViewCheck extends BaseActivity {
 									toastShort("You must enter a number greater than 1.");
 								}else{
 
+									AppActions.add("View Check - Showing Split Item (Single Amount) - Number people splitting:" + numberPeopleSplitting);
+
 									
 									Double amountToPay = clickedItem.getValue() / numberPeopleSplitting;
 									
@@ -1297,12 +1330,16 @@ public class ViewCheck extends BaseActivity {
 	private void goAddTip(){
 		
 		try {
+			
+
 			theBill.setMyBasePayment(myPayment);
 			
 			theBill.setMyItems(new ArrayList<LineItem>());
 			buildMyArray();
 			theBill.setMyItems(myItems);
 			
+			AppActions.add("View Check - Pay Bill Clicked - My Payment:" + theBill.getMyBasePayment() + ", Number Of Items:" + myItems.size());
+
 			Intent viewCheck = new Intent(getApplicationContext(), AdditionalTip.class);
 			viewCheck.putExtra(Constants.INVOICE, theBill);
 			startActivity(viewCheck);
@@ -1454,7 +1491,8 @@ public class ViewCheck extends BaseActivity {
 			    
 			    ArrayList<PaidItems> myPaidItemsArray = theBill.getPaidItems();
 
-			        
+				AppActions.add("View Check - Showing Paid Items - Count:" + myPaidItemsArray.size());
+
 			    
 			    for (int i = 0; i < theBill.getItems().size(); i++) {
 			        

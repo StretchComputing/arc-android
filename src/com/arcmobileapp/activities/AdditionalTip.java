@@ -39,6 +39,7 @@ import com.arcmobileapp.utils.Constants;
 import com.arcmobileapp.utils.Logger;
 */
 import com.arcmobileapp.utils.Security;
+import com.arcmobileapp.web.rskybox.AppActions;
 import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 
 
@@ -64,6 +65,9 @@ public class AdditionalTip extends BaseActivity {
     @Override
 	public void onCreate(Bundle savedInstanceState) {
 		try {
+			
+			AppActions.add("Additional Tip - OnCreate");
+
 			super.onCreate(savedInstanceState);
 			setContentView(R.layout.activity_additional_tip);
 			
@@ -147,14 +151,20 @@ public class AdditionalTip extends BaseActivity {
 			switch(view.getId()) {
 			    case R.id.radio_eightteen:
 			        if (checked)
+						AppActions.add("Additional Tip - 18% selected");
+
 						myTipText.setText(String.format("%.2f", theBill.getMyBasePayment() * .18));
 			        break;
 			    case R.id.radio_twenty:
 			        if (checked)
+						AppActions.add("Additional Tip - 20% selected");
+
 						myTipText.setText(String.format("%.2f", theBill.getMyBasePayment() * .20));
 			        break;
 			    case R.id.radio_twenty_two:
 			        if (checked)
+						AppActions.add("Additional Tip - 22% selected");
+
 						myTipText.setText(String.format("%.2f", theBill.getMyBasePayment() * .22));
 			        break;
 			}
@@ -179,6 +189,7 @@ public class AdditionalTip extends BaseActivity {
    
 			//set MyTip()
 			
+			AppActions.add("Additional Tip - Continue selected - Additional Tip: " + Double.parseDouble(myTipText.getText().toString()) + ", Total Payment: " + theBill.getMyBasePayment());
 
 			theBill.setMyTip(Double.parseDouble(myTipText.getText().toString()));
 			
@@ -189,6 +200,7 @@ public class AdditionalTip extends BaseActivity {
 
 				if (cards.size() == 1){
 					//Go straight to Payment screen with this card
+					AppActions.add("Additional Tip - Continue selected - Number of stored cards:1");
 					selectedCard = cards.get(0);
 					goConfirmPayment();
 					
@@ -198,6 +210,8 @@ public class AdditionalTip extends BaseActivity {
 				}
 				
 			}else{
+				AppActions.add("Additional Tip - Continue selected - Number of stored cards:" + cards.size());
+
 				   showCardIo();
 
 			}
@@ -210,6 +224,9 @@ public class AdditionalTip extends BaseActivity {
 	public void showCardIo(){
 		
 		try {
+			
+			AppActions.add("Additional Tip - Adding Card");
+
 			Intent scanIntent = new Intent(this, CardIOActivity.class);
 			// required for authentication with card.io
 			scanIntent.putExtra(CardIOActivity.EXTRA_APP_TOKEN, Constants.MY_CARDIO_APP_TOKEN);
@@ -230,6 +247,7 @@ public class AdditionalTip extends BaseActivity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		try {
 			super.onActivityResult(requestCode, resultCode, data);
+			AppActions.add("Additional Tip - CardIO Scan Complete");
 
 			String resultDisplayStr = "no response";
 
@@ -238,12 +256,16 @@ public class AdditionalTip extends BaseActivity {
 					CreditCard scanResult = data.getParcelableExtra(CardIOActivity.EXTRA_SCAN_RESULT);
 					
 					if(!scanResult.isExpiryValid()) {
+						AppActions.add("Additional Tip - CardIO Scan Expiry Not Valid");
+
 						resultDisplayStr = "Your credit card is not valid (expired)";
 						showInfoDialog(resultDisplayStr);
 						return;
 					}
 					
 					if(scanResult.getCardType() == CardType.INSUFFICIENT_DIGITS || scanResult.getCardType() == CardType.UNKNOWN || scanResult.getCardType() == CardType.JCB) {
+						AppActions.add("Additional Tip - CardIO Scan Credit Card Not Valid");
+
 						resultDisplayStr = "Your credit card is not valid (type unknown)";
 						showInfoDialog(resultDisplayStr);
 						return;

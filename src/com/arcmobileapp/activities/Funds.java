@@ -42,6 +42,7 @@ import com.arcmobileapp.utils.CurrencyFilter;
 import com.arcmobileapp.utils.Logger;
 import com.arcmobileapp.utils.Security;
 import com.arcmobileapp.utils.Utils;
+import com.arcmobileapp.web.rskybox.AppActions;
 import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 
 public class Funds extends BaseActivity {
@@ -66,6 +67,9 @@ public class Funds extends BaseActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		try {
+			
+			AppActions.add("Funds - OnCreate");
+
 			super.onCreate(savedInstanceState);
 			setContentView(R.layout.funds);
 			theView = (LinearLayout) findViewById(R.id.funds_layout);
@@ -84,7 +88,9 @@ public class Funds extends BaseActivity {
 			Logger.d("PRINT CARD INFO");
 			storedCardsView.removeAllViews();  //clear any views in this object
 			ArrayList<Cards> cards = DBController.getCards(getContentProvider());
-			
+		
+			AppActions.add("Funds - initStoredCards - Number of Cards:" + cards.size());
+
 			for(Cards card:cards) {
 				LinearLayout addMe = createCardLayout(card);
 				storedCardsView.addView(addMe);
@@ -141,6 +147,10 @@ public class Funds extends BaseActivity {
 	
 	private void cardClicked(final Cards card) {
 		try {
+			
+			AppActions.add("Funds - Card Clicked");
+
+			
 			//toastLong("clicked " + card.getNumber());
 			AlertDialog.Builder builder = new AlertDialog.Builder(Funds.this);
 			builder.setTitle("Delete card?");
@@ -150,6 +160,9 @@ public class Funds extends BaseActivity {
 
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
+							
+							AppActions.add("Funds - Card Deleted");
+
 							 try {
 								DBController.deleteCard(getContentProvider(), card.getId());
 								 initStoredCards();  //refresh that view
@@ -163,6 +176,7 @@ public class Funds extends BaseActivity {
 
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
+							AppActions.add("Funds - Card Not Deleted");
 
 						}
 					});
@@ -201,6 +215,9 @@ public class Funds extends BaseActivity {
 	
 	public void onAddCardClick(View v) {
 		try {
+			
+			AppActions.add("Funds - Add Card Clicked");
+
 			hideSuccessMessage();
 			Intent scanIntent = new Intent(this, CardIOActivity.class);
 			// required for authentication with card.io
@@ -218,6 +235,10 @@ public class Funds extends BaseActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		try {
+			
+			AppActions.add("Funds - CardIO Scan Complete");
+
+			
 			super.onActivityResult(requestCode, resultCode, data);
 
 			String resultDisplayStr = "no response";
@@ -227,12 +248,17 @@ public class Funds extends BaseActivity {
 					CreditCard scanResult = data.getParcelableExtra(CardIOActivity.EXTRA_SCAN_RESULT);
 					
 					if(!scanResult.isExpiryValid()) {
+						AppActions.add("Funds - CardIO Scan Expiry Not Valid");
+
 						resultDisplayStr = "Your credit card is not valid (expired)";
 						showInfoDialog(resultDisplayStr);
 						return;
 					}
 					
 					if(scanResult.getCardType() == CardType.INSUFFICIENT_DIGITS || scanResult.getCardType() == CardType.UNKNOWN || scanResult.getCardType() == CardType.JCB) {
+						
+						AppActions.add("Funds - CardIO Scan Credit Card Not Valid");
+
 						resultDisplayStr = "Your credit card is not valid (type unknown)";
 						showInfoDialog(resultDisplayStr);
 						return;
@@ -303,6 +329,9 @@ public class Funds extends BaseActivity {
 		
 		
 		try {
+			
+			AppActions.add("Funds - New Card Added");
+
 			DBController.saveCreditCard(getContentProvider(), enteredCard);
 		} catch (Exception e) {
 			(new CreateClientLogTask("Funds.saveCard", "Exception Caught", "error", e)).execute();
@@ -345,10 +374,7 @@ public class Funds extends BaseActivity {
 			Security s = new Security();
 			
 	        //String encrypted = s.encrypt(myPIN, cardNumber);
-	        String encrypted = s.encryptBlowfish(cardNumber, myPIN);
-
-	        Logger.d("Encrypted: " + encrypted);
-	        
+	        String encrypted = s.encryptBlowfish(cardNumber, myPIN);	        
 	        return encrypted;
 		}catch (Exception e){
 			
@@ -362,6 +388,9 @@ public class Funds extends BaseActivity {
 	
 	private void showPinDialog() {
 		try {
+			
+			AppActions.add("Funds -Show PIN Dialog");
+
 			pinDialog = null;
 			
 			LayoutInflater factory = LayoutInflater.from(this);

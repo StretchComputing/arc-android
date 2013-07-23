@@ -9,6 +9,9 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.arcmobileapp.BaseActivity;
 import com.arcmobileapp.R;
+import com.arcmobileapp.utils.ArcPreferences;
+import com.arcmobileapp.utils.Keys;
+import com.arcmobileapp.web.rskybox.AppActions;
 import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 
 public class Support extends BaseActivity {
@@ -16,8 +19,28 @@ public class Support extends BaseActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		try {
+			
+
+			
 			super.onCreate(savedInstanceState);
 			setContentView(R.layout.activity_support);
+			
+			
+			ArcPreferences myPrefs = new ArcPreferences(getApplicationContext());
+			
+			//If there is a guest token or customer token, go to HOME
+			String customerToken = myPrefs.getString(Keys.CUSTOMER_TOKEN);
+			String customerEmail = myPrefs.getString(Keys.CUSTOMER_EMAIL);
+
+			if (customerToken != null && customerToken.length() > 0){
+				AppActions.add("Support - OnCreate - Viewed As Customer: " + customerEmail);
+
+			}else{
+				AppActions.add("Support - OnCreate - Viewed As Guest ");
+
+			}
+			
+			
 		} catch (Exception e) {
 			(new CreateClientLogTask("Support.onCreate", "Exception Caught", "error", e)).execute();
 
@@ -37,12 +60,16 @@ public class Support extends BaseActivity {
 
 		
 		try{
+			
+			AppActions.add("Support - Send Email");
+
 			Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
 			emailIntent.setType("text/plain");
 			emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{ "support@arcmobileapp.com" });
 			emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Android Feedback");
 			startActivity(emailIntent); 
 		}catch (Exception e){
+
 			toastShort("Error opening email client, please try again");
 			(new CreateClientLogTask("Support.emailNow", "Exception Caught", "error", e)).execute();
 
@@ -52,6 +79,9 @@ public class Support extends BaseActivity {
 	public void callNow(View view) {
 
 		try {
+			
+			AppActions.add("Support - Phone Call");
+
 			Intent intent = new Intent(Intent.ACTION_CALL);
 
 			intent.setData(Uri.parse("tel:7083209272"));

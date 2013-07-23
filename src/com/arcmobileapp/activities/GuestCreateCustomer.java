@@ -16,6 +16,7 @@ import com.arcmobileapp.utils.Constants;
 import com.arcmobileapp.utils.Keys;
 import com.arcmobileapp.web.ErrorCodes;
 import com.arcmobileapp.web.UpdateCustomerTask;
+import com.arcmobileapp.web.rskybox.AppActions;
 import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 
 public class GuestCreateCustomer extends BaseActivity {
@@ -34,6 +35,9 @@ public class GuestCreateCustomer extends BaseActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		
 		try{
+			
+			AppActions.add("Guest Create Customer - OnCreate");
+
 			super.onCreate(savedInstanceState);
 			setContentView(R.layout.activity_guest_create_customer);
 			
@@ -68,6 +72,8 @@ public class GuestCreateCustomer extends BaseActivity {
 		try {
 			if (emailTextView != null && emailTextView.length() > 0 && passwordTextView != null && passwordTextView.length() > 0 ){
 				//Send the login
+				AppActions.add("Guest Create Customer - Create Clicked - Email: " + emailTextView.getText().toString());
+
 				register();
 			}else{
 				toastShort("Please enter an email address and password.");
@@ -84,6 +90,8 @@ public class GuestCreateCustomer extends BaseActivity {
 
 		
 		try {
+			AppActions.add("Guest Create Customer - No Thanks Clicked");
+
 			Intent goReview = new Intent(getApplicationContext(), Review.class);
 			goReview.putExtra(Constants.INVOICE, theBill);
 			startActivity(goReview);
@@ -108,6 +116,9 @@ public class GuestCreateCustomer extends BaseActivity {
 
 						
 						if (getFinalSuccess()){
+							
+							AppActions.add("Guest Create Customer - Register Successful");
+
 							ArcPreferences myPrefs = new ArcPreferences(getApplicationContext());
 							
 							String guestId = myPrefs.getString(Keys.GUEST_ID);
@@ -131,7 +142,8 @@ public class GuestCreateCustomer extends BaseActivity {
 							
 							
 						}else{
-							
+							AppActions.add("Guest Create Customer - Register Failed - Error Code:" + errorCode);
+
 							if (errorCode != 0){
 								
 								String errorMsg = "";

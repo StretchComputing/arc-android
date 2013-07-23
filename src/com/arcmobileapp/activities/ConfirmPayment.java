@@ -33,6 +33,7 @@ import com.arcmobileapp.utils.PaymentFlags;
 import com.arcmobileapp.utils.Security;
 import com.arcmobileapp.web.ErrorCodes;
 import com.arcmobileapp.web.MakePaymentTask;
+import com.arcmobileapp.web.rskybox.AppActions;
 import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 
 public class ConfirmPayment extends BaseActivity {
@@ -57,6 +58,8 @@ public class ConfirmPayment extends BaseActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		try {
+			
+			AppActions.add("Confirm Payment - onCreate");
 			super.onCreate(savedInstanceState);
 			setContentView(R.layout.activity_confirm_payment);
 			
@@ -108,10 +111,13 @@ public class ConfirmPayment extends BaseActivity {
 			String cardNumber = "";
 			
 			if (justAddedCard){
-				
+				AppActions.add("Confirm Payment - Make Payment Clicked - Just Added Card");
+
 				decryptedCC = selectedCard.getNumber();
 			}else{
 				try{
+					AppActions.add("Confirm Payment - Make Payment Clicked - Picked Stored Card");
+
 					decryptedCC = decryptCreditCardNumber(selectedCard.getNumber());
 
 				}catch(Exception e){
@@ -122,8 +128,13 @@ public class ConfirmPayment extends BaseActivity {
 			
 			if (decryptedCC.length() > 0){
 				
+				AppActions.add("Confirm Payment - Make Payment Clicked - Entered Correct PIN");
+
 				makePayment();
 			}else{
+				
+				AppActions.add("Confirm Payment - Make Payment Clicked - Entered Incorrect PIN");
+
 				toastShort("Invalid PIN, please try again");
 			}
 		} catch (Exception e) {
@@ -150,7 +161,6 @@ public class ConfirmPayment extends BaseActivity {
 	        //String decrypted = s.decrypt(myPinText.getText().toString(), encryptedNumber);
 	        String decrypted = s.decryptBlowfish(encryptedNumber, myPinText.getText().toString());
 			
-	        Logger.d("DECRYPTED: " + decrypted);
 	        if (decrypted == null){
 	        	return "";
 	        }
@@ -168,6 +178,10 @@ public class ConfirmPayment extends BaseActivity {
 		
 		
 		try {
+			
+			AppActions.add("Confirm Payment - Making Payment - My Base:" + theBill.getMyBasePayment() + ", My Tip:" + theBill.getMyTip());
+
+			
 			loadingDialog.show();
 			String token = getToken();
 			String customerId = getId();
@@ -200,6 +214,8 @@ public class ConfirmPayment extends BaseActivity {
 						loadingDialog.hide();
 						if (getFinalSuccess()) {
 
+
+							
 							toastShort("Your payment has been processed successfully!");
 
 							
@@ -210,6 +226,8 @@ public class ConfirmPayment extends BaseActivity {
 							if(customerToken == null && customerToken == null){
 								//Offer Registration Screen
 								
+								AppActions.add("Confirm Payment - Payment Successful as Guest");
+
 								theBill.setPaymentId(getPaymentId());
 								Intent goReview = new Intent(getApplicationContext(), GuestCreateCustomer.class);
 								goReview.putExtra(Constants.INVOICE, theBill);
@@ -219,12 +237,14 @@ public class ConfirmPayment extends BaseActivity {
 								
 								if (justAddedCard){
 									//Offer saving the card;
-									
+									AppActions.add("Confirm Payment - Payment Successful Customer Just added Card");
+
 									myPaymentId = getPaymentId();
 									showPinDialog();
 								}else{
 									
-									
+									AppActions.add("Confirm Payment - Payment Successful Customer Picked Stored Card");
+
 									theBill.setPaymentId(getPaymentId());
 									Intent goReview = new Intent(getApplicationContext(), Review.class);
 									goReview.putExtra(Constants.INVOICE, theBill);
@@ -250,6 +270,9 @@ public class ConfirmPayment extends BaseActivity {
 							Boolean networkError = false;
 
 							if (errorCode != 0){
+								
+								AppActions.add("Confirm Payment - Payment Failed - Error Code:" + errorCode);
+
 								if(errorCode == ErrorCodes.CANNOT_GET_PAYMENT_AUTHORIZATION) {
 					                //errorMsg = @"Credit card not approved.";
 					                editCardOption = true;
@@ -325,6 +348,8 @@ public class ConfirmPayment extends BaseActivity {
 								
 
 							}else{
+								AppActions.add("Confirm Payment - Payment Failed - Error Code:" + errorCode);
+
 								toastShort("Payment Failed, please try again.");
 
 							}
@@ -351,6 +376,9 @@ public class ConfirmPayment extends BaseActivity {
 	
 	private void showPinDialog() {
 		try {
+			
+			AppActions.add("Confirm Payment - Show PIN Dialog");
+
 			pinDialog = null;
 			
 			LayoutInflater factory = LayoutInflater.from(this);
@@ -506,7 +534,6 @@ public class ConfirmPayment extends BaseActivity {
 	        //String encrypted = s.encrypt(myPIN, cardNumber);
 	        String encrypted = s.encryptBlowfish(cardNumber, myPIN);
 
-	        Logger.d("Encrypted: " + encrypted);
 	        
 	        return encrypted;
 		}catch (Exception e){
@@ -521,6 +548,10 @@ public class ConfirmPayment extends BaseActivity {
      protected void saveCard() {
 		
 		try {
+			
+			
+			AppActions.add("Confirm Payment - New Card Added");
+
 			DBController.saveCreditCard(getContentProvider(), selectedCard);
 		} catch (Exception e) {
 			(new CreateClientLogTask("ConfirmPayment.saveCard", "Exception Caught", "error", e)).execute();

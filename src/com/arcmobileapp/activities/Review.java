@@ -16,6 +16,7 @@ import com.arcmobileapp.domain.CreateReview;
 import com.arcmobileapp.utils.Constants;
 import com.arcmobileapp.utils.Keys;
 import com.arcmobileapp.web.SubmitReviewTask;
+import com.arcmobileapp.web.rskybox.AppActions;
 //import android.view.Menu;
 import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 
@@ -36,6 +37,9 @@ public class Review extends BaseActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		try {
+			
+			AppActions.add("Review - OnCreate");
+
 			super.onCreate(savedInstanceState);
 			setContentView(R.layout.activity_review);
 
@@ -95,6 +99,9 @@ public class Review extends BaseActivity {
 			String token = getToken();
 			double numStars = (double) starRating.getNumStars();
 			
+			
+			AppActions.add("Review - Submitting Review - Num Stars:" + numStars + ", Comments:" + textAdditionalComments.getText().toString());
+
 			
 			loadingDialog.show();
 			CreateReview newReview = new CreateReview(String.valueOf(theBill.getId()), String.valueOf(theBill.getPaymentId()),

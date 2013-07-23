@@ -38,6 +38,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.arcmobileapp.BaseActivity;
 import com.arcmobileapp.R;
+import com.arcmobileapp.utils.ArcPreferences;
 import com.arcmobileapp.utils.CarouselScrollView;
 import com.arcmobileapp.utils.Constants;
 import com.arcmobileapp.utils.Keys;
@@ -47,6 +48,7 @@ import com.arcmobileapp.utils.ScrollViewListener;
 import com.arcmobileapp.web.ErrorCodes;
 import com.arcmobileapp.web.GetMerchantsTask;
 import com.arcmobileapp.web.GetTokenTask;
+import com.arcmobileapp.web.rskybox.AppActions;
 import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 
 public class Home extends BaseActivity implements ScrollViewListener {
@@ -77,6 +79,20 @@ public class Home extends BaseActivity implements ScrollViewListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		try {
+			
+			ArcPreferences myPrefs = new ArcPreferences(getApplicationContext());
+			
+			//If there is a guest token or customer token, go to HOME
+			String customerToken = myPrefs.getString(Keys.CUSTOMER_TOKEN);
+			
+			if (customerToken != null && customerToken.length() > 0){
+				AppActions.add("Home - On Create - Using as Guest");
+
+			}else{
+				AppActions.add("Home - On Create - Using as Customer");
+
+			}
+			
 			super.onCreate(savedInstanceState);
 			setContentView(R.layout.home);
 			
@@ -147,6 +163,8 @@ public class Home extends BaseActivity implements ScrollViewListener {
 						loadingDialog.hide();
 						if (merchants != null && merchants.size() > 0){
 						
+							AppActions.add("Home - Get Merchants Succeeded - Number Of Merchants:" + merchants.size());
+
 							MerchantObject merchant = merchants.get(0);
 							
 							currentMerchantText.setText(merchant.merchantName);
@@ -155,7 +173,8 @@ public class Home extends BaseActivity implements ScrollViewListener {
 							initCarousel();
 										        
 						}else{
-							
+							AppActions.add("Home - Get Merchants Failed - Error Code:" + errorCode);
+
 							//Remove carousel view?
 							scrollView.setVisibility(View.INVISIBLE);
 							currentMerchantText.setVisibility(View.INVISIBLE);
@@ -221,11 +240,15 @@ public class Home extends BaseActivity implements ScrollViewListener {
 	
 	protected void clickCarousel(int pos){
 		try {
+			
+
 			String name = "";
 			String theId = "";
 			
 			name = merchants.get(pos).merchantName;
 			theId = merchants.get(pos).merchantId;
+
+			AppActions.add("Home - Carousel Item Clicked - Index:" + pos + ", Merchant Name:" + name);
 
 			
 			Intent viewCheck = new Intent(getApplicationContext(), GetCheck.class);
@@ -242,6 +265,9 @@ public class Home extends BaseActivity implements ScrollViewListener {
 	//http://mobile.smashingmagazine.com/2013/02/01/android-carousel-design-pattern/
 	protected void initCarousel() {
         try {
+        	
+			AppActions.add("Home - Initializing Carousel");
+
 			// Compute the width of a carousel item based on the screen width and number of initial items.
 			final DisplayMetrics displayMetrics = new DisplayMetrics();
 			getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -402,10 +428,16 @@ public class Home extends BaseActivity implements ScrollViewListener {
 		try {
 			
 			if (merchants != null && merchants.size() > 0){
+				
+
 				int index = getCurrentIndex(currentScrollPos);        
+				AppActions.add("Home - Pay Bill Clicked - Determined Index: " + index);
 
 				this.clickCarousel(index);
 			}else{
+				
+				AppActions.add("Home - Pay Bill Clicked - No Merchants");
+
 				toastShort("No nearby merchants found, please try again.");
 			}
 			

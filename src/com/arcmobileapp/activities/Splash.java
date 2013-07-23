@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import com.arcmobileapp.R;
 import com.arcmobileapp.utils.ArcPreferences;
 import com.arcmobileapp.utils.Keys;
+import com.arcmobileapp.web.rskybox.AppActions;
 import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 
 public class Splash extends Activity {
@@ -53,10 +54,15 @@ public class Splash extends Activity {
 
 						if(guestToken == null && customerToken == null || !hasAgreed){
 							//Go to initPage
+							AppActions.add("Splash - No Tokens Found - Going to Init");
+
 							startActivity(new Intent(getApplicationContext(), InitActivity.class));
 
 						}else{
 							//Go Home
+							
+							AppActions.add("Splash - Token Found - Going Home");
+
 							startActivity(new Intent(getApplicationContext(), Home.class));
 
 						}

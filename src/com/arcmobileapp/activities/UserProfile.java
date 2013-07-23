@@ -13,6 +13,7 @@ import com.arcmobileapp.R;
 import com.arcmobileapp.utils.ArcPreferences;
 import com.arcmobileapp.utils.Constants;
 import com.arcmobileapp.utils.Keys;
+import com.arcmobileapp.web.rskybox.AppActions;
 import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 
 public class UserProfile extends BaseActivity {
@@ -25,6 +26,7 @@ public class UserProfile extends BaseActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		try {
+			AppActions.add("UserProfile - OnCreate");
 			super.onCreate(savedInstanceState);
 			setContentView(R.layout.activity_user_profile);
 			
@@ -57,6 +59,9 @@ public class UserProfile extends BaseActivity {
 
 
 			if (customerToken != null && customerToken.length() > 0){
+				
+				AppActions.add("UserProfile - OnResume - As Customer");
+
 				loggedInView.setVisibility(View.VISIBLE);
 				loggedOutView.setVisibility(View.INVISIBLE);
 				
@@ -65,6 +70,9 @@ public class UserProfile extends BaseActivity {
 				passwordTextView.setText(passwordText);
 				
 			}else{
+				
+				AppActions.add("UserProfile - OnResume - As Guest");
+
 				loggedInView.setVisibility(View.INVISIBLE);
 				loggedOutView.setVisibility(View.VISIBLE);
 			}
@@ -85,6 +93,9 @@ public class UserProfile extends BaseActivity {
 	public void onLogInClicked(View view) {
 
 		try {
+			
+			AppActions.add("UserProfile - Login Clicked");
+
 			Intent social = (new Intent(getApplicationContext(), UserLogin.class));
 			startActivity(social);
 		} catch (Exception e) {
@@ -97,6 +108,9 @@ public class UserProfile extends BaseActivity {
 	public void onCreateNewClicked(View view) {
 
 		try {
+			
+			AppActions.add("UserProfile - Create Clicked");
+
 			Intent social = (new Intent(getApplicationContext(), UserCreateNew.class));
 			startActivity(social);
 		} catch (Exception e) {
@@ -109,6 +123,9 @@ public class UserProfile extends BaseActivity {
 	public void onLogoutClicked(View view) {
 
 		try {
+			
+			AppActions.add("UserProfile - Logout Clicked");
+
 			ArcPreferences myPrefs = new ArcPreferences(getApplicationContext());
 
 			myPrefs.putAndCommitString(Keys.CUSTOMER_TOKEN, "");
