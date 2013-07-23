@@ -101,7 +101,8 @@
     <string name="view_check_help_item">To pay for a single item, just touch that item on your bill!</string>
     <string name="view_check_help_dollar_percent">To pay a dollar amount, or split evenly between a certain number of people, click here!</string>
     <string name="view_check_help_total">The amount you are about to pay will always be shown as \"My Total\" at the bottom of the page.</string>
-
-    
-    
+    <string name="title_activity_edit_server">EditServer</string>
+    <string name="edit_server_string">View/Change Dutch Server</string>
+    <string name="new_server_string">Choose your new server:</string>
+	<string name="view_check_help_item_hold">(press and hold to split a single item)</string>
 </resources>

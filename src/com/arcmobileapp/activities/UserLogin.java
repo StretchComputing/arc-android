@@ -96,6 +96,13 @@ public class UserLogin extends BaseActivity {
 								myPrefs.putAndCommitString(Keys.CUSTOMER_ID, getDevCustomerId());
 								myPrefs.putAndCommitString(Keys.CUSTOMER_EMAIL, UserLogin.this.emailTextView.getText().toString());
 
+								if (getIsAdmin()){
+									myPrefs.putAndCommitBoolean(Keys.IS_ADMIN, true);
+
+								}else{
+									myPrefs.putAndCommitBoolean(Keys.IS_ADMIN, false);
+
+								}
 								toastShort("Login Successful!");
 								
 								Intent goBackProfile = new Intent(getApplicationContext(), Home.class);

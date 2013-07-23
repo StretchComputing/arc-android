@@ -136,6 +136,9 @@ public class GuestCreateCustomer extends BaseActivity {
 
 							toastShort("Account created successfully!");
 							
+							getCurrentServer();
+
+							
 							Intent goReview = new Intent(getApplicationContext(), Review.class);
 							goReview.putExtra(Constants.INVOICE, theBill);
 							startActivity(goReview);

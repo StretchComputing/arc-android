@@ -44,6 +44,17 @@
             android:onClick="onLogoutClicked"
             android:text="@string/sign_out_text" />
 
+        <Button
+            android:id="@+id/edit_server_button"
+            android:layout_width="wrap_content"
+            android:layout_height="46dp"
+            android:layout_below="@+id/button1"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="115dp"
+            android:background="@drawable/i_button_grey"
+            android:onClick="onEditServerClicked"
+            android:text="@string/edit_server_string" />
+
     </RelativeLayout>
 
     <RelativeLayout

@@ -163,6 +163,10 @@
             android:name="com.arcmobileapp.activities.TermsActivity"
             android:label="@string/title_activity_terms" >
         </activity>
+        <activity
+            android:name="com.arcmobileapp.activities.EditServer"
+            android:label="@string/title_activity_edit_server" >
+        </activity>
     </application>
 
 </manifest>

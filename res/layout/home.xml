@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/home_layout"
     style="@style/ParentView"
@@ -23,6 +23,7 @@
     <com.arcmobileapp.utils.CarouselScrollView android:id="@+id/scroll"
         	android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/home_title"
             android:scrollbars="none">
 
         
@@ -43,13 +44,15 @@
         android:text="Small Text"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textSize="27sp"
+        android:layout_below="@+id/scroll"
         android:textStyle="bold" />
 
     <TextView
         android:id="@+id/current_address"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="35dp"
+        android:layout_below="@+id/current_merchant"
+        android:layout_marginBottom="15dp"
         android:gravity="center"
         android:text="Small Text"
         android:textAppearance="?android:attr/textAppearanceSmall"
@@ -61,15 +64,17 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
+        android:layout_below="@+id/current_address"
+        
         android:src="@drawable/divider" />
 
     <Button
         android:id="@+id/pay_bill_button"
         android:layout_width="204dp"
         android:layout_height="46dp"
-        android:layout_gravity="center"
-        android:layout_marginBottom="20dp"
-        android:layout_marginTop="30dp"
+        android:layout_below="@+id/help_dollar_arrow"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="35dp"
         android:background="@drawable/i_button_green"
         android:gravity="center_vertical|center_horizontal"
         android:onClick="onPayBillClick"
@@ -77,4 +82,4 @@
         android:text="@string/pay_bill"
         android:textColor="@color/white" />
 
-</LinearLayout>
+</RelativeLayout>

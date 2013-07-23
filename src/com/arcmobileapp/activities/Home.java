@@ -54,7 +54,7 @@ import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 public class Home extends BaseActivity implements ScrollViewListener {
 
 	private TextView txtTitle;
-	private LinearLayout theView;
+	private RelativeLayout theView;
 	private Button btnPayBill;
 	private Button btnExplore;
 	private CarouselScrollView scrollView;
@@ -96,7 +96,7 @@ public class Home extends BaseActivity implements ScrollViewListener {
 			super.onCreate(savedInstanceState);
 			setContentView(R.layout.home);
 			
-			theView = (LinearLayout) findViewById(R.id.home_layout);
+			theView = (RelativeLayout) findViewById(R.id.home_layout);
 			scrollView = (CarouselScrollView) findViewById(R.id.scroll);
 			mCarouselContainer = (LinearLayout) findViewById(R.id.carousel);
 			theView.setAnimation(AnimationUtils.loadAnimation(this,

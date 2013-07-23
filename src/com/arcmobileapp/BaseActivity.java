@@ -1,8 +1,14 @@
 package com.arcmobileapp;
 
+import java.util.List;
+
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningTaskInfo;
 import android.app.AlertDialog;
+import android.content.ComponentName;
 import android.content.ContentProviderClient;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Canvas;
@@ -26,7 +32,7 @@ import com.arcmobileapp.utils.Enums;
 import com.arcmobileapp.utils.Keys;
 import com.arcmobileapp.utils.Logger;
 import com.arcmobileapp.utils.Utils;
-import com.arcmobileapp.web.URLs;
+import com.arcmobileapp.web.GetServerTask;
 import com.arcmobileapp.web.rskybox.AppActions;
 import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 import com.google.analytics.tracking.android.EasyTracker;
@@ -42,6 +48,7 @@ public class BaseActivity extends SlidingFragmentActivity {
 	//
 	// -keep class io.card.**
 	// -keepclassmembers class io.card.** {
+	private static Integer activityCount = 0;
 
 	private ActionBar actionBar;
 	private ArcPreferences myPrefs;
@@ -52,7 +59,7 @@ public class BaseActivity extends SlidingFragmentActivity {
 	protected ContentProviderClient mProvider;
 	public ContentResolver contentResolver;
 	private CanvasTransformer mTransformer;
-
+	
 	public String TAG = "BaseActivity";
 
 	public BaseActivity() {
@@ -377,6 +384,7 @@ public class BaseActivity extends SlidingFragmentActivity {
 	}
 
 	protected void showChangeServerDialog() {
+		/*
 		final String[] servers = { "Dev", "Production" };
 		AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
 		alertDialog.setTitle("Change server");
@@ -398,6 +406,7 @@ public class BaseActivity extends SlidingFragmentActivity {
 		});
 		AlertDialog alert = alertDialog.create();
 		alert.show();
+		*/
 	}
 
 	@Override
@@ -458,25 +467,88 @@ public class BaseActivity extends SlidingFragmentActivity {
 
 	@Override
 	protected void onStart() {
+	
 		super.onStart();
 		EasyTracker.getInstance().activityStart(this); // Google Analytics
+	
+		if (activityCount == 0){
+			getCurrentServer();
+		}
+		activityCount++;
+
 	}
 
 	@Override
 	protected void onStop() {
+		
+		activityCount--;
+		
 		super.onStop();
 		EasyTracker.getInstance().activityStop(this); // Google Analytics
+	
+
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
 		setupAnalytics();
+	  
 	}
 
+	@Override
+	protected void onPause(){
+		super.onPause();
+	
+	}
+	
+	
 	@Override
 	public void finish() {
 		super.finish();
 		slideLeftRight();
 	}
+	
+	
+	protected void getCurrentServer() {
+		try {
+			
+			ArcPreferences myPrefs = new ArcPreferences(getApplicationContext());
+			String customerToken = myPrefs.getString(Keys.CUSTOMER_TOKEN);
+			
+			if (customerToken != null && customerToken.length() > 0){
+				
+				GetServerTask getServerTask = new GetServerTask(customerToken, getApplicationContext()) {
+
+					@Override
+					protected void onPostExecute(Void result) {
+						try {
+							super.onPostExecute(result);
+							int errorCode = getErrorCode();
+
+							if (getSuccess()){
+
+								AppActions.add("BaseActivity - Get Server Succeeded");
+
+							}else{
+								AppActions.add("EditServer - Get Servers Failed - Error Code:" + errorCode);
+							}
+						} catch (Exception e) {
+
+							(new CreateClientLogTask("BaseActivity.getServer.onPostExecute", "Exception Caught", "error", e)).execute();
+						}
+
+					}
+					
+				};
+				getServerTask.execute();
+				
+			}
+		
+		} catch (Exception e) {
+			(new CreateClientLogTask("BaseActivity.getServer", "Exception Caught", "error", e)).execute();
+
+		}
+	}
+	
 }

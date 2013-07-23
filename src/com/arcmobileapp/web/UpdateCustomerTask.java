@@ -56,7 +56,7 @@ public class UpdateCustomerTask extends AsyncTask<Void, Void, Void> {
 		// get a token for the dev server
 		
 		
-		WebServices webService = new WebServices(URLs.DUTCH_SERVER);
+		WebServices webService = new WebServices(new ArcPreferences(mContext).getServer());
 		
 		ArcPreferences myPrefs = new ArcPreferences(mContext);
 		String guestToken = myPrefs.getString(Keys.GUEST_TOKEN);

@@ -10,6 +10,11 @@ public final class Keys {
 	public static final String CUSTOMER_ID = "CUSTOMER_ID";
 	public static final String CUSTOMER_TOKEN = "CUSTOMER_TOKEN";
 	public static final String CUSTOMER_EMAIL = "CUSTOMER_EMAIL";
+	
+	public static final String DUTCH_URL = "DUTCH_URL";
+
+	
+	public static final String IS_ADMIN = "IS_ADMIN";
 
 	
 	public static final String MY_UUID = "MY_UUID";

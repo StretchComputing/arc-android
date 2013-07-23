@@ -19,7 +19,9 @@ public final class WebKeys {
 	public static final String POS = "POS";
 	public static final String PROCESS = "Process";
 
+	public static final String ADMIN = "Admin";
 
+	public static final String URL = "URL";
 
 	public static final String GET_MERCHANT_ID = "Id";
 	
@@ -28,6 +30,8 @@ public final class WebKeys {
 	public static final String ERROR_CODES = "ErrorCodes";	
 	public static final String CODE = "Code";	
 
+	public static final String SERVER = "Server";
+	public static final String SSL = "SSL";
 
 	public static final String TOKEN = "Token";
 	public static final String ID = "Id";

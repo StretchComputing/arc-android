@@ -74,7 +74,7 @@ public class CreateUserTask extends AsyncTask<Void, Void, Void> {
 		// get a token for the dev server
 		
 		try{
-			WebServices webService = new WebServices(URLs.DUTCH_SERVER);
+			WebServices webService = new WebServices(new ArcPreferences(mContext).getServer());
 			mDevResponse = webService.register(mLogin, mPassword, mFirstName, mLastName);
 			
 			if (mDevResponse == null){

@@ -18,6 +18,7 @@ import org.json.JSONObject;
 import com.arcmobileapp.domain.CreatePayment;
 import com.arcmobileapp.domain.CreateReview;
 import com.arcmobileapp.domain.LineItem;
+import com.arcmobileapp.utils.ArcPreferences;
 import com.arcmobileapp.utils.Logger;
 import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 
@@ -25,6 +26,8 @@ public class WebServices {
 	
 	private DefaultHttpClient httpClient;
 	private HttpPost httpPost;
+	private HttpGet httpGet;
+
 
 	private HttpResponse httpResponse;
 	private HttpEntity httpEntity;
@@ -33,10 +36,7 @@ public class WebServices {
 	private int httpStatusCode;
 	private String currentAPI;
 	
-	public WebServices() {
-		setServer(URLs.DUTCH_SERVER);
-		this.httpClient = new DefaultHttpClient();
-	}	
+		
 
 	public WebServices(String server) {
 		setServer(server);
@@ -95,6 +95,8 @@ public class WebServices {
 			}
 			
 		} catch (IOException e) {
+			
+
 			(new CreateClientLogTask("WebServices.getResponse", "Exception Caught", "error", e)).execute();
 
 			Logger.e("|POST RESONSE ERROR| " + e.getMessage());
@@ -105,6 +107,56 @@ public class WebServices {
 		return reply.toString();
 	}
 
+	
+	
+	private String getResponseGet(String url, String token) {
+		StringBuilder reply = null;
+		try {
+
+			this.httpClient = new DefaultHttpClient();
+			httpGet = new HttpGet(url);
+			httpGet.setHeader("Content-type", "application/json");
+			if(token!=null) {
+				httpGet.setHeader("Authorization", "Basic " + token);
+			}
+		
+			httpResponse = httpClient.execute(httpGet);
+
+			httpStatusCode = httpResponse.getStatusLine().getStatusCode();
+
+			if (httpStatusCode != 200 && httpStatusCode != 201 && httpStatusCode != 422){
+				handleHttpStatusError();
+				return null;
+			}else{
+				httpEntity = httpResponse.getEntity();
+
+				BufferedReader in = new BufferedReader(new InputStreamReader(
+						httpEntity.getContent()));
+				String inputLine;
+
+				reply = new StringBuilder();
+
+				while ((inputLine = in.readLine()) != null) {
+					reply.append(inputLine);
+				}
+				in.close();
+
+				httpEntity.consumeContent();
+				httpClient.getConnectionManager().shutdown();
+			}
+			
+		} catch (IOException e) {
+			
+
+			(new CreateClientLogTask("WebServices.getResponseGet", "Exception Caught", "error", e)).execute();
+
+			Logger.e("|GET RESONSE ERROR| " + e.getMessage());
+			setError(e.getMessage());
+			return null;
+		}
+
+		return reply.toString();
+	}
 	
 	
 
@@ -139,11 +191,73 @@ public class WebServices {
 		} catch (Exception e) {
 			(new CreateClientLogTask("WebServices.getMerchants", "Exception Caught", "error", e)).execute();
 
-			Logger.d("************EXCEPTION IN GET MERCHANTS()");
 			setError(e.getMessage());
 			return resp;
 		}
 	}
+	
+	public String getDutchServers(String token) {
+		String resp = "";
+		try {
+
+			String url = "http://arc-servers.dagher.net.co/rest/v1/servers/list";
+			Logger.d("|arc-web-services|", "GET SERVERS URL  = " + url);
+			
+			JSONObject json = new JSONObject();
+			//json.put("id","12");
+			
+			resp = this.getResponseGet(url, token);
+			Logger.d("|arc-web-services|", "GET SERVERS RESP = " + resp);
+			return resp;
+		} catch (Exception e) {
+			(new CreateClientLogTask("WebServices.getDutchServers", "Exception Caught", "error", e)).execute();
+
+			setError(e.getMessage());
+			return resp;
+		}
+	}
+	
+	public String setDutchServer(String token, String customerId, int serverId) {
+		String resp = "";
+		try {
+
+			String url = "http://arc-servers.dagher.net.co/rest/v1/servers/" + customerId + "/setserver/" + serverId;
+			Logger.d("SET SERVER URL: " + url);
+			
+		
+			
+			resp = this.getResponseGet(url, token);
+			Logger.d("|arc-web-services|", "SET SERVER RESP = " + resp);
+			return resp;
+		} catch (Exception e) {
+			(new CreateClientLogTask("WebServices.setDutchServers", "Exception Caught", "error", e)).execute();
+
+			setError(e.getMessage());
+			return resp;
+		}
+	}
+	
+	public String getServer(String token) {
+		String resp = "";
+		try {
+
+			String url = "http://gateway.dagher.mobi/rest/v1/servers/assign/current";
+			Logger.d("|arc-web-services|", "GET SERVER URL  = " + url);
+			
+		
+			
+			resp = this.getResponseGet(url, token);
+			Logger.d("|arc-web-services|", "GET SERVER RESP = " + resp);
+			return resp;
+		} catch (Exception e) {
+			(new CreateClientLogTask("WebServices.getServer", "Exception Caught", "error", e)).execute();
+
+			setError(e.getMessage());
+			return resp;
+		}
+	}
+	
+	
 	
 	
 	public String register(String login, String password, String firstName, String lastName) {

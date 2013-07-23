@@ -3,6 +3,7 @@ package com.arcmobileapp.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -22,6 +23,7 @@ public class UserProfile extends BaseActivity {
 	private RelativeLayout loggedOutView;
 	private TextView emailTextView;
 	private TextView passwordTextView;
+	private Button editServerButton;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -34,6 +36,14 @@ public class UserProfile extends BaseActivity {
 			loggedOutView = (RelativeLayout) findViewById(R.id.logged_out_view);
 			emailTextView = (TextView) findViewById(R.id.email_text);
 			passwordTextView = (TextView) findViewById(R.id.password_text);
+			
+			editServerButton = (Button) findViewById(R.id.edit_server_button);
+			
+		
+			
+			
+			
+			
 		} catch (Exception e) {
 			(new CreateClientLogTask("UserProfile.onCreate", "Exception Caught", "error", e)).execute();
 
@@ -49,6 +59,7 @@ public class UserProfile extends BaseActivity {
 		try {
 			super.onResume();
 			
+
 			ArcPreferences myPrefs = new ArcPreferences(getApplicationContext());
 
 			String customerToken = myPrefs.getString(Keys.CUSTOMER_TOKEN);
@@ -57,7 +68,7 @@ public class UserProfile extends BaseActivity {
 			String passwordText = "**********";
 
 
-
+			//Show "logged in" or "logged out" view
 			if (customerToken != null && customerToken.length() > 0){
 				
 				AppActions.add("UserProfile - OnResume - As Customer");
@@ -76,6 +87,15 @@ public class UserProfile extends BaseActivity {
 				loggedInView.setVisibility(View.INVISIBLE);
 				loggedOutView.setVisibility(View.VISIBLE);
 			}
+			
+			//Show/hide edit server button
+			if (customerToken != null && customerToken.length() > 0 && myPrefs.getBoolean(Keys.IS_ADMIN)){
+				editServerButton.setVisibility(View.VISIBLE);
+			}else{
+				editServerButton.setVisibility(View.INVISIBLE);
+			}
+			
+			
 		} catch (Exception e) {
 			(new CreateClientLogTask("UserProfile.onResume", "Exception Caught", "error", e)).execute();
 
@@ -131,7 +151,10 @@ public class UserProfile extends BaseActivity {
 			myPrefs.putAndCommitString(Keys.CUSTOMER_TOKEN, "");
 			myPrefs.putAndCommitString(Keys.CUSTOMER_ID, "");
 			myPrefs.putAndCommitString(Keys.CUSTOMER_EMAIL, "");
-			
+			myPrefs.putAndCommitString(Keys.DUTCH_URL, "");
+
+			myPrefs.putAndCommitBoolean(Keys.IS_ADMIN, false);
+
 			Intent goHome = new Intent(getApplicationContext(), Home.class);
 			goHome.putExtra(Constants.LOGGED_OUT, true);
 			goHome.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -144,4 +167,13 @@ public class UserProfile extends BaseActivity {
 
 		}
 	}
+	
+	public void onEditServerClicked(View view) {
+		
+		AppActions.add("UserProfile - Edit Server Clicked");
+
+		Intent social = (new Intent(getApplicationContext(), EditServer.class));
+		startActivity(social);
+	}
+
 }

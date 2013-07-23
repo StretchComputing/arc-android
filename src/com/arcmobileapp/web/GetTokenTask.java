@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import com.arcmobileapp.utils.ArcPreferences;
 import com.arcmobileapp.utils.Logger;
 import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 
@@ -25,6 +26,7 @@ public class GetTokenTask extends AsyncTask<Void, Void, Void> {
 	private String mDevResponse;
 	private String mProdResponse;
 	private int mErrorCode;
+	private Boolean isAdmin;
 	
 	public GetTokenTask(String login, String password, boolean isGuest, Context context) {
 		super();
@@ -40,6 +42,7 @@ public class GetTokenTask extends AsyncTask<Void, Void, Void> {
 		mDevResponse = null;
 		mProdResponse = null;
 		mErrorCode = 0;
+		isAdmin = false;
 	}
 	
 	@Override
@@ -61,7 +64,7 @@ public class GetTokenTask extends AsyncTask<Void, Void, Void> {
 	
 	protected boolean performTask() {
 		// get a token for the dev server
-		WebServices webService = new WebServices(URLs.DUTCH_SERVER);
+		WebServices webService = new WebServices(new ArcPreferences(mContext).getServer());
 		mDevResponse = webService.getToken(mLogin, mPassword, mIsGuest);
 		
 		if (mDevResponse == null){
@@ -88,6 +91,12 @@ public class GetTokenTask extends AsyncTask<Void, Void, Void> {
 				JSONObject result = json.getJSONObject(WebKeys.RESULTS);
 				mDevCustomerId = result.getString(WebKeys.ID);
 				mDevToken = result.getString(WebKeys.TOKEN);
+				
+				try{
+					isAdmin = result.getBoolean(WebKeys.ADMIN);
+				}catch(Exception e){
+					
+				}
 				//String arcNumber = result.getString(WebKeys.ARC_NUMBER);  // do we need this?
 			}else{
 				JSONArray errorArray = json.getJSONArray(WebKeys.ERROR_CODES);  // get an array of returned results
@@ -99,14 +108,7 @@ public class GetTokenTask extends AsyncTask<Void, Void, Void> {
 				}
 			}
 			
-//			json =  new JSONObject(mProdResponse);
-//			mSuccess = json.getBoolean(WebKeys.SUCCESS);
-//			if(mSuccess) {
-//				JSONObject result = json.getJSONObject(WebKeys.RESULTS);
-//				mProdCustomerId = result.getString(WebKeys.ID);
-//				mProdToken = result.getString(WebKeys.TOKEN);
-//				//String arcNumber = result.getString(WebKeys.ARC_NUMBER);  // do we need this?
-//			}
+
 			
 			
 		} catch (JSONException e) {
@@ -149,5 +151,9 @@ public class GetTokenTask extends AsyncTask<Void, Void, Void> {
 	}
 	public int getErrorCode(){
 		return mErrorCode;
+	}
+	
+	public Boolean getIsAdmin(){
+		return isAdmin;
 	}
 }

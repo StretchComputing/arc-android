@@ -104,7 +104,7 @@ public class ViewCheck extends BaseActivity {
 	private TextView helpDollarText;
 	private TextView helpTitleText;
 	private TextView helpTotalText;
-
+	private TextView helpItemHoldText;
 	private ImageView helpTotalArrow;
 
 	private ImageView helpDollarArrow;
@@ -113,10 +113,23 @@ public class ViewCheck extends BaseActivity {
 	
 	Handler handler = new Handler();
 	    
-	Runnable runnable = new Runnable() {
+	Runnable runnableTwo = new Runnable() {
 	        public void run() {
-	        	hideHelp();
+	        	goStage2();
 	        }
+	};
+	
+	Runnable runnableThree = new Runnable() {
+        public void run() {
+        	goStage3();
+        }
+	};
+
+
+	Runnable runnableFour = new Runnable() {
+		public void run() {
+    	goStage4();
+		}
 	};
 	private Button payBillButton;
 
@@ -216,6 +229,7 @@ public class ViewCheck extends BaseActivity {
 			helpTitleText = (TextView) findViewById(R.id.help_title_text);
 			helpTotalText = (TextView) findViewById(R.id.help_total_text);
 
+			helpItemHoldText = (TextView) findViewById(R.id.help_item_hold_text);
 			helpDollarArrow = (ImageView) findViewById(R.id.help_dollar_arrow);
 			helpTotalArrow = (ImageView) findViewById(R.id.help_total_arrow);
 
@@ -223,11 +237,13 @@ public class ViewCheck extends BaseActivity {
 			
 			Boolean hasSeenCheckHelp = myPrefs.getBoolean(Keys.SEEN_INVOICE_HELP);
 			
+
 			if (hasSeenCheckHelp){
 				helpLayout.setVisibility(View.GONE);
 			}else{
+				myPrefs.putAndCommitBoolean(Keys.SEEN_INVOICE_HELP, true);
 
-		        handler.postDelayed(runnable, 5000);
+		        handler.postDelayed(runnableTwo, 6000);
 
 				helpDollarArrow.setVisibility(View.INVISIBLE);
 				helpDollarText.setVisibility(View.INVISIBLE);
@@ -237,7 +253,6 @@ public class ViewCheck extends BaseActivity {
 
 
 				helpStage = 1;
-				myPrefs.putAndCommitBoolean(Keys.SEEN_CHECKNUMBER_HELP, true);
 				
 				helpLayout.setOnTouchListener(new View.OnTouchListener(){
 					 
@@ -262,6 +277,46 @@ public class ViewCheck extends BaseActivity {
 
 
 	}
+	
+	public void goStage2(){
+		if (helpStage == 1){
+			 helpStage = 2;
+			 
+			 handler = new Handler();
+		      handler.postDelayed(runnableThree, 6000);
+		      helpItemText.setVisibility(View.INVISIBLE);
+		      helpItemHoldText.setVisibility(View.INVISIBLE);
+
+		      	helpTitleText.setVisibility(View.INVISIBLE);
+
+				helpDollarArrow.setVisibility(View.VISIBLE);
+				helpDollarText.setVisibility(View.VISIBLE);
+
+
+		 }
+	}
+	
+	public void goStage3(){
+		if (helpStage == 2){
+			 helpStage = 3;
+			 handler = new Handler();
+
+		        handler.postDelayed(runnableFour, 6000);
+
+		        helpDollarArrow.setVisibility(View.INVISIBLE);
+				helpDollarText.setVisibility(View.INVISIBLE);
+				helpTotalText.setVisibility(View.VISIBLE);
+				helpTotalArrow.setVisibility(View.VISIBLE);
+
+
+			 
+		 }
+	}
+
+	public void goStage4(){
+		helpLayout.setVisibility(View.GONE);
+
+	}
 
 	 public void hideHelp()
      {
@@ -271,8 +326,10 @@ public class ViewCheck extends BaseActivity {
 			 helpStage = 2;
 			 
 			 handler = new Handler();
-		      handler.postDelayed(runnable, 5000);
+		      handler.postDelayed(runnableThree, 6000);
 		      helpItemText.setVisibility(View.INVISIBLE);
+		      helpItemHoldText.setVisibility(View.INVISIBLE);
+
 		      	helpTitleText.setVisibility(View.INVISIBLE);
 
 				helpDollarArrow.setVisibility(View.VISIBLE);
@@ -283,7 +340,7 @@ public class ViewCheck extends BaseActivity {
 			 helpStage = 3;
 			 handler = new Handler();
 
-		        handler.postDelayed(runnable, 5000);
+		        handler.postDelayed(runnableFour, 6000);
 
 		        helpDollarArrow.setVisibility(View.INVISIBLE);
 				helpDollarText.setVisibility(View.INVISIBLE);
@@ -672,8 +729,8 @@ public class ViewCheck extends BaseActivity {
 				
 				Boolean isLarge = false;
 				
-				ImageView backImageView = (ImageView) itemView.findViewById(R.id.back_image_view);
-				ImageView backImageView2 = (ImageView) itemView.findViewById(R.id.back_image_view_two);
+				RelativeLayout backImageView = (RelativeLayout) itemView.findViewById(R.id.back_image_view);
+				RelativeLayout backImageView2 = (RelativeLayout) itemView.findViewById(R.id.back_image_view_two);
 				
 				
 				if (currentItem.getIsPaidFor().equals("yes")){
@@ -712,17 +769,16 @@ public class ViewCheck extends BaseActivity {
 
 				}
 				
-				backImageView.getLayoutParams().height = 52;
 
-				backImageView.setImageResource(R.drawable.blue_button);
-				backImageView2.setImageResource(R.drawable.blue_button);
+				backImageView.setBackgroundColor(Color.BLUE);
+				backImageView2.setBackgroundColor(Color.BLUE);
 
 
 				if (currentItem.getIsPaidFor().equals("yes")){
 					
 					backImageView.setVisibility(View.VISIBLE);
-					backImageView.setImageResource(R.drawable.grey_button);
-					backImageView2.setImageResource(R.drawable.grey_button);
+					backImageView.setBackgroundColor(Color.LTGRAY);
+					backImageView2.setBackgroundColor(Color.LTGRAY);
 
 					amountText.setTextColor(Color.BLACK);
 					nameText.setTextColor(Color.BLACK);
@@ -742,8 +798,8 @@ public class ViewCheck extends BaseActivity {
 				}else if (currentItem.getIsPaidFor().equals("maybe")){
 					
 					backImageView.setVisibility(View.VISIBLE);
-					backImageView.setImageResource(R.drawable.grey_button);
-					backImageView2.setImageResource(R.drawable.grey_button);
+					backImageView.setBackgroundColor(Color.LTGRAY);
+					backImageView2.setBackgroundColor(Color.LTGRAY);
 					youPay.setTextColor(Color.WHITE);
 
 					amountText.setTextColor(Color.BLACK);

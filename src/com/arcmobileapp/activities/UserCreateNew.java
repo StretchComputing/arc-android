@@ -132,6 +132,8 @@ public class UserCreateNew extends BaseActivity {
 							myPrefs.putAndCommitString(Keys.CUSTOMER_EMAIL, UserCreateNew.this.emailTextView.getText().toString());
 							
 							
+							getCurrentServer();
+							
 							showSuccessDialog();
 							
 
