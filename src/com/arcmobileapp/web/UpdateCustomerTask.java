@@ -70,7 +70,8 @@ public class UpdateCustomerTask extends AsyncTask<Void, Void, Void> {
 			return false;
 		}
 		try {
-			Logger.d("UPDATE Response: " + mDevResponse);
+			Logger.d("*******UPDATE Response: " + mDevResponse);
+			
 			JSONObject json =  new JSONObject(mDevResponse);
 			mSuccess = json.getBoolean(WebKeys.SUCCESS);
 			if(mSuccess) {
@@ -103,9 +104,12 @@ public class UpdateCustomerTask extends AsyncTask<Void, Void, Void> {
 			
 			
 		} catch (JSONException e) {
-			(new CreateClientLogTask("UpdateCustomerTask.performTask", "Exception Caught", "error", e)).execute();
+			(new CreateClientLogTask("UpdateCustomerTask.performTask", "JSON Exception Caught", "error", e)).execute();
 
 			Logger.e("Error retrieving token, JSON Exception");
+		} catch (Exception e){
+			(new CreateClientLogTask("UpdateCustomerTask.performTask", "Exception Caught", "error", e)).execute();
+
 		}
 		// get a token for the prod server
 		//webService = new WebServices(URLs.PROD_SERVER);

@@ -178,7 +178,7 @@ public class WebServices {
 	public String getMerchants() {
 		String resp = "";
 		try {
-
+			currentAPI = "GetMerchants";
 			String url = this.serverAddress + URLs.GET_MERCHANT_LIST;
 			Logger.d("|arc-web-services|", "GET MERCHANTS URL  = " + url);
 			
@@ -199,6 +199,7 @@ public class WebServices {
 	public String getDutchServers(String token) {
 		String resp = "";
 		try {
+			currentAPI = "getDutchServers";
 
 			String url = "http://arc-servers.dagher.net.co/rest/v1/servers/list";
 			Logger.d("|arc-web-services|", "GET SERVERS URL  = " + url);
@@ -220,6 +221,7 @@ public class WebServices {
 	public String setDutchServer(String token, String customerId, int serverId) {
 		String resp = "";
 		try {
+			currentAPI = "setDutchServer";
 
 			String url = "http://arc-servers.dagher.net.co/rest/v1/servers/" + customerId + "/setserver/" + serverId;
 			Logger.d("SET SERVER URL: " + url);
@@ -240,6 +242,7 @@ public class WebServices {
 	public String getServer(String token) {
 		String resp = "";
 		try {
+			currentAPI = "GetServer";
 
 			String url = "http://gateway.dagher.mobi/rest/v1/servers/assign/current";
 			Logger.d("|arc-web-services|", "GET SERVER URL  = " + url);
@@ -263,6 +266,7 @@ public class WebServices {
 	public String register(String login, String password, String firstName, String lastName) {
 		String resp = "";
 		try {
+			currentAPI = "Register";
 
 			String url = this.serverAddress + URLs.REGISTER;
 			Logger.d("|arc-web-services|", "REGISTER URL  = " + url);
@@ -293,6 +297,7 @@ public class WebServices {
 	public String updateCustomer(String login, String password, String token) {
 		String resp = "";
 		try {
+			currentAPI = "UpdateCustomer";
 
 			String url = this.serverAddress + URLs.UPDATE_CUSTOMER;
 			Logger.d("|arc-web-services|", "REGISTER URL  = " + url);
@@ -319,6 +324,7 @@ public class WebServices {
 	public String confirmRegister(String ticketId) {
 		String resp = "";
 		try {
+			currentAPI = "ConfirmRegister";
 
 			String url = this.serverAddress + URLs.CONFIRM_REGISTER;
 			Logger.d("|arc-web-services|", "CONFIRM REGISTER URL  = " + url);
@@ -344,6 +350,8 @@ public class WebServices {
 	public String getToken(String login, String password, boolean isGuest) {
 		String resp = "";
 		try {
+
+			currentAPI = "GetToken";
 
 			String url = this.serverAddress + URLs.GET_TOKEN;
 			Logger.d("|arc-web-services|", "GET TOKEN URL  = " + url);
@@ -371,6 +379,8 @@ public class WebServices {
 		String resp = "";
 		try {
 
+			currentAPI = "GetCheck";
+
 			String url = this.serverAddress + URLs.GET_CHECK;
 			Logger.d("|arc-web-services|", "GET CHECK URL  = " + url);
 			
@@ -388,13 +398,11 @@ public class WebServices {
 			}
 			
 			resp = this.getResponse(url, json.toString(), token);
-			Logger.d("************RETURNING IN GET GETCHECK()");
 
 			Logger.d("|arc-web-services|", "GET CHECK RESP = " + resp);
 			return resp;
 		} catch (Exception e) {
 			
-			Logger.d("************EXCEPTION IN GETCHECK IN GET GETCHECK()");
 
 			(new CreateClientLogTask("WebServices.getCheck", "Exception Caught", "error", e)).execute();
 
@@ -406,6 +414,8 @@ public class WebServices {
 	public String createPayment(String token, CreatePayment newPayment) {
 		String resp = "";
 		try {
+
+			currentAPI = "CreatePayment";
 
 			String url = this.serverAddress + URLs.CREATE_PAYMENT;
 			Logger.d("|arc-web-services|", "CREATE PAYMENT URL  = " + url);
@@ -467,6 +477,7 @@ public class WebServices {
 	public String confirmPayment(String token, String ticketId) {
 		String resp = "";
 		try {
+			currentAPI = "ConfirmPayment";
 
 			String url = this.serverAddress + URLs.CONFIRM_PAYMENT;
 			Logger.d("|arc-web-services|", "CONFIRM PAYMENT URL  = " + url);
@@ -490,6 +501,8 @@ public class WebServices {
 	public String createReview(String token, CreateReview newReview) {
 		String resp = "";
 		try {
+
+			currentAPI = "CreateReview";
 
 			String url = this.serverAddress + URLs.CREATE_REVIEW;
 			Logger.d("|arc-web-services|", "CREATE REVIEW URL  = " + url);

@@ -74,9 +74,12 @@ public class SetServerTask extends AsyncTask<Void, Void, Void> {
 				}
 			}
 		} catch (JSONException e) {
-			(new CreateClientLogTask("GetDutchServers.performTask", "Exception Caught", "error", e)).execute();
+			(new CreateClientLogTask("GetDutchServers.performTask", "JSON Exception Caught", "error", e)).execute();
 
 			Logger.e("Error retrieving merchants, JSON Exception");
+		} catch (Exception e){
+			(new CreateClientLogTask("GetDutchServers.performTask", "Exception Caught", "error", e)).execute();
+
 		}
 	}
 	

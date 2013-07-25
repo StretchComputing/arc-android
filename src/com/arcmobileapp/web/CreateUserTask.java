@@ -133,10 +133,13 @@ public class CreateUserTask extends AsyncTask<Void, Void, Void> {
 			
 			
 		} catch (JSONException e) {
-			(new CreateClientLogTask("CreateUserTask.performTask", "Exception Caught", "error", e)).execute();
 
 			Logger.e("Error retrieving token, JSON Exception");
+		} catch (Exception e){
+			(new CreateClientLogTask("CreateUserTask.performTask", "Exception Caught", "error", e)).execute();
+
 		}
+		
 		// get a token for the prod server
 		//webService = new WebServices(URLs.PROD_SERVER);
 		//mProdResponse = webService.getToken(mLogin, mPassword, mIsGuest);
@@ -196,7 +199,6 @@ public class CreateUserTask extends AsyncTask<Void, Void, Void> {
 				}
 				
 			} catch (JSONException e) {
-				(new CreateClientLogTask("CreateUserTask.checkRegisterConfirmationJSON", "Exception Caught", "error", e)).execute();
 				Logger.e("Error getting confirmation, JSON Exception: " + e.getMessage());
 			}
 			

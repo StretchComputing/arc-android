@@ -66,9 +66,12 @@ public class GetMerchantsTask extends AsyncTask<Void, Void, Void> {
 				}
 			}
 		} catch (JSONException e) {
-			(new CreateClientLogTask("GetMerchantsTask.performTask", "Exception Caught", "error", e)).execute();
+			(new CreateClientLogTask("GetMerchantsTask.performTask", "JSON Exception Caught", "error", e)).execute();
 
 			Logger.e("Error retrieving merchants, JSON Exception");
+		} catch (Exception e){
+			(new CreateClientLogTask("GetMerchantsTask.performTask", "Exception Caught", "error", e)).execute();
+
 		}
 	}
 	

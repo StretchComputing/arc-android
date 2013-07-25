@@ -1,18 +1,5 @@
 package com.arcmobileapp.utils;
 
-import java.security.MessageDigest;
-import java.util.Arrays;
-import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
-import javax.crypto.spec.IvParameterSpec;
- 
-import javax.crypto.Cipher;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
-
-import java.security.MessageDigest;
-
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 
@@ -50,7 +37,8 @@ public class Security {
 		     byte[] decrypted = cipher.doFinal(to_decrypt.getBytes("ISO-8859-1"));
 		     return new String(decrypted);
 		  } catch (Exception e) { 
-				(new CreateClientLogTask("Security.decryptBlowfish", "Exception Caught", "error", e)).execute();
+			  //Errors here are if the PIN entered was incorrect
+				//(new CreateClientLogTask("Security.decryptBlowfish", "Exception Caught", "error", e)).execute();
 
 			  return null;
 

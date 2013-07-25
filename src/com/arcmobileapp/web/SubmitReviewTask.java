@@ -84,9 +84,12 @@ public class SubmitReviewTask extends AsyncTask<Void, Void, Void> {
 				}
 			}
 		} catch (JSONException e) {
-			(new CreateClientLogTask("SubmitReview.performTask", "Exception Caught", "error", e)).execute();
+			(new CreateClientLogTask("SubmitReview.performTask", "JSON Exception Caught", "error", e)).execute();
 
 			Logger.e("Error creating payment, JSON Exception: " + e.getMessage());
+		} catch (Exception e){
+			(new CreateClientLogTask("SubmitReview.performTask", "Exception Caught", "error", e)).execute();
+
 		}
 		
 		

@@ -75,9 +75,12 @@ public class GetServerTask extends AsyncTask<Void, Void, Void> {
 				}
 			}
 		} catch (JSONException e) {
-			(new CreateClientLogTask("GetServer.performTask", "Exception Caught", "error", e)).execute();
+			(new CreateClientLogTask("GetServer.performTask", "JSON Exception Caught", "error", e)).execute();
 
 			Logger.e("Error retrieving merchants, JSON Exception");
+		} catch (Exception e){
+			(new CreateClientLogTask("GetServer.performTask", "Exception Caught", "error", e)).execute();
+
 		}
 	}
 	

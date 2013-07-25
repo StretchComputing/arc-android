@@ -350,56 +350,75 @@ public class GetCheck extends BaseActivity {
 	private class GetXMLTask extends AsyncTask<String, Void, Bitmap> {
         @Override
         protected Bitmap doInBackground(String... urls) {
-            Bitmap map = null;
-            for (String url : urls) {
-                map = downloadImage(url);
-            }
-            return map;
+        	try{
+        		Bitmap map = null;
+                for (String url : urls) {
+                    map = downloadImage(url);
+                }
+                return map;
+        	}catch(Exception e){
+        		return null;
+        	}
+            
         }
  
         // Sets the Bitmap returned by doInBackground
         @Override
         protected void onPostExecute(Bitmap result) {
-            helpImage.setImageBitmap(result);
+        	try{
+        		if (result != null){
+                    helpImage.setImageBitmap(result);
+            	}
+        	}catch(Exception e){
+        		
+        	}
         }
  
         // Creates Bitmap from InputStream and returns it
         private Bitmap downloadImage(String url) {
-            Bitmap bitmap = null;
-            InputStream stream = null;
-            BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-            bmOptions.inSampleSize = 1;
- 
-            try {
-                stream = getHttpConnection(url);
-                bitmap = BitmapFactory.
-                        decodeStream(stream, null, bmOptions);
-                stream.close();
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
-            return bitmap;
+           try{
+        	   Bitmap bitmap = null;
+               InputStream stream = null;
+               BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+               bmOptions.inSampleSize = 1;
+    
+               try {
+                   stream = getHttpConnection(url);
+                   bitmap = BitmapFactory.
+                           decodeStream(stream, null, bmOptions);
+                   stream.close();
+               } catch (IOException e1) {
+                   e1.printStackTrace();
+               }
+               return bitmap;
+           }catch(Exception e){
+        	   return null;
+           }
         }
  
         // Makes HttpURLConnection and returns InputStream
         private InputStream getHttpConnection(String urlString)
                 throws IOException {
-            InputStream stream = null;
-            URL url = new URL(urlString);
-            URLConnection connection = url.openConnection();
- 
-            try {
-                HttpURLConnection httpConnection = (HttpURLConnection) connection;
-                httpConnection.setRequestMethod("GET");
-                httpConnection.connect();
- 
-                if (httpConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                    stream = httpConnection.getInputStream();
-                }
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-            return stream;
+           try{
+        	   InputStream stream = null;
+               URL url = new URL(urlString);
+               URLConnection connection = url.openConnection();
+    
+               try {
+                   HttpURLConnection httpConnection = (HttpURLConnection) connection;
+                   httpConnection.setRequestMethod("GET");
+                   httpConnection.connect();
+    
+                   if (httpConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                       stream = httpConnection.getInputStream();
+                   }
+               } catch (Exception ex) {
+                   ex.printStackTrace();
+               }
+               return stream;
+           }catch(Exception e){
+        	   return null;
+           }
         }
     }
 	

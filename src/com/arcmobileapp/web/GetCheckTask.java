@@ -124,10 +124,10 @@ public class GetCheckTask extends AsyncTask<Void, Void, Void> {
 			}
 		} catch (JSONException e) {
 			
-
+			Logger.e("Error getting check , JSON Exception: " + e.getMessage());
+		}catch (Exception e){
 			(new CreateClientLogTask("GetCheckTask.parseJson", "Exception Caught", "error", e)).execute();
 
-			Logger.e("Error getting check , JSON Exception: " + e.getMessage());
 		}
 		
 		
@@ -178,7 +178,6 @@ public class GetCheckTask extends AsyncTask<Void, Void, Void> {
 				}
 				
 			} catch (JSONException e) {
-				(new CreateClientLogTask("GetCheckTask.checkInvoiceConfirmationJSON", "Exception Caught", "error", e)).execute();
 
 				return false;
 			}

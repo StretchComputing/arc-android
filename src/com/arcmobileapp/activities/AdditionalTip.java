@@ -13,6 +13,7 @@ import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
@@ -28,7 +29,10 @@ import com.arcmobileapp.db.controllers.DBController;
 import com.arcmobileapp.domain.Cards;
 import com.arcmobileapp.domain.Check;
 import com.arcmobileapp.utils.Constants;
+import com.arcmobileapp.utils.CurrencyFilter;
 import com.arcmobileapp.utils.Logger;
+import com.arcmobileapp.web.rskybox.AppActions;
+import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 //import android.view.Menu;
 /*
 import com.actionbarsherlock.view.MenuInflater;
@@ -38,9 +42,6 @@ import com.arcmobileapp.domain.Check;
 import com.arcmobileapp.utils.Constants;
 import com.arcmobileapp.utils.Logger;
 */
-import com.arcmobileapp.utils.Security;
-import com.arcmobileapp.web.rskybox.AppActions;
-import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 
 
 
@@ -96,7 +97,8 @@ public class AdditionalTip extends BaseActivity {
 				
 				myTipText.setText(String.format("%.2f", theBill.getMyBasePayment() * .20));
 			}
-			
+			myTipText.setFilters(new InputFilter[] { new CurrencyFilter() });
+
 			myTipText.addTextChangedListener(new TextWatcher()
 			{
 			 
@@ -189,32 +191,53 @@ public class AdditionalTip extends BaseActivity {
    
 			//set MyTip()
 			
-			AppActions.add("Additional Tip - Continue selected - Additional Tip: " + Double.parseDouble(myTipText.getText().toString()) + ", Total Payment: " + theBill.getMyBasePayment());
 
-			theBill.setMyTip(Double.parseDouble(myTipText.getText().toString()));
-			
-			//Get payment info
-			 cards = DBController.getCards(getContentProvider());
+			if (myTipText.getText().toString() != null){
+				
+				
+				if (myTipText.getText().toString().equals(".")){
+					toastShort("Please enter a tip first");
+					return;
+				}
+				
+				Double myTip = 0.0;
+				
+				if (myTipText.getText().toString().length() > 0){
+					myTip = Double.parseDouble(myTipText.getText().toString());
+				}
+				
+				AppActions.add("Additional Tip - Continue selected - Additional Tip: " + myTip + ", Total Payment: " + theBill.getMyBasePayment());
 
-			if (cards.size() > 0){
+				theBill.setMyTip(myTip);
+				
+				//Get payment info
+				 cards = DBController.getCards(getContentProvider());
 
-				if (cards.size() == 1){
-					//Go straight to Payment screen with this card
-					AppActions.add("Additional Tip - Continue selected - Number of stored cards:1");
-					selectedCard = cards.get(0);
-					goConfirmPayment();
+				if (cards.size() > 0){
+
+					if (cards.size() == 1){
+						//Go straight to Payment screen with this card
+						AppActions.add("Additional Tip - Continue selected - Number of stored cards:1");
+						selectedCard = cards.get(0);
+						goConfirmPayment();
+						
+					}else{
+						showAlertDialog();
+
+					}
 					
 				}else{
-					showAlertDialog();
+					AppActions.add("Additional Tip - Continue selected - Number of stored cards:" + cards.size());
+
+					   showCardIo();
 
 				}
 				
+				
 			}else{
-				AppActions.add("Additional Tip - Continue selected - Number of stored cards:" + cards.size());
-
-				   showCardIo();
-
+				toastShort("Invalid Tip Amount");
 			}
+			
 		} catch (NumberFormatException e) {
 			(new CreateClientLogTask("AdditionalTip.onContinueButtonClicked", "Exception Caught", "error", e)).execute();
 

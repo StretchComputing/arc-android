@@ -112,9 +112,12 @@ public class GetTokenTask extends AsyncTask<Void, Void, Void> {
 			
 			
 		} catch (JSONException e) {
-			(new CreateClientLogTask("GetTokenTask.performTask", "Exception Caught", "error", e)).execute();
+			(new CreateClientLogTask("GetTokenTask.performTask", "JSON Exception Caught", "error", e)).execute();
 
 			Logger.e("Error retrieving token, JSON Exception");
+		} catch (Exception e){
+			(new CreateClientLogTask("GetTokenTask.performTask", "Exception Caught", "error", e)).execute();
+
 		}
 	}
 	

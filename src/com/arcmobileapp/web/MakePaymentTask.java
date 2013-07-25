@@ -103,9 +103,11 @@ public class MakePaymentTask extends AsyncTask<Void, Void, Void> {
 				}
 			}
 		} catch (JSONException e) {
-			(new CreateClientLogTask("MakePaymentTask.performTask", "Exception Caught", "error", e)).execute();
 
 			Logger.e("Error creating payment, JSON Exception: " + e.getMessage());
+		} catch (Exception e){
+			(new CreateClientLogTask("MakePaymentTask.performTask", "Exception Caught", "error", e)).execute();
+
 		}
 		
 		
@@ -136,26 +138,31 @@ public class MakePaymentTask extends AsyncTask<Void, Void, Void> {
 
 					return false;
 				}
-				JSONObject result = json.getJSONObject(WebKeys.RESULTS);
 				mSuccess = json.getBoolean(WebKeys.SUCCESS);
 
-				if (result == null){
+				JSONObject result;
 
-					return false;
-				}else{
+					try{
+						result = json.getJSONObject(WebKeys.RESULTS);
+					}catch(JSONException e){
+						return false;
+					}
+					
+
 					finalSuccess = true;
 					mPaymentId = result.getInt(WebKeys.PAYMENT_ID);
 
 					return true;
-				}
 				
 			} catch (JSONException e) {
-				(new CreateClientLogTask("MakePaymentTask.checkPaymentConfirmation", "Exception Caught", "error", e)).execute();
 
 				Logger.e("Error getting confirmation, JSON Exception: " + e.getMessage());
 			}
 			
-		}catch (Exception exc){}
+		}catch (Exception e){
+			(new CreateClientLogTask("MakePaymentTask.checkPaymentConfirmation", "Exception Caught", "error", e)).execute();
+
+		}
 		return false;
 	}
 	

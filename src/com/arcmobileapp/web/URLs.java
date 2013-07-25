@@ -32,6 +32,9 @@ public final class URLs {
 		if(theUrl == null) {return null;}
 		
 		int index = theUrl.indexOf("//");
-		return theUrl.substring(index+2);
+		int index2 = theUrl.indexOf("/rest/");
+		String finalUrl = theUrl.substring(index+2);
+		finalUrl = finalUrl.substring(0, index2);
+		return finalUrl;
 	}
 }
