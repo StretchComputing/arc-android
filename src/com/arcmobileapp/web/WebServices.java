@@ -47,8 +47,18 @@ public class WebServices {
 	
 	private void handleHttpStatusError(){
 		
-		String errorMsg = "HTTP Status Code: " + httpStatusCode + " for API " + currentAPI + " on " + serverAddress;
-		(new CreateClientLogTask("WebServices.handleHttpStatusError", errorMsg, "error", null)).execute();
+		try{
+			if (httpStatusCode == 401 && currentAPI.equals("GetServer")){
+				
+			}else{
+				String errorMsg = "HTTP Status Code: " + httpStatusCode + " for API " + currentAPI + " on " + serverAddress;
+				(new CreateClientLogTask("WebServices.handleHttpStatusError", errorMsg, "error", null)).execute();
+			}
+		}catch(Exception e){
+			
+		}
+		
+		
 
         
         

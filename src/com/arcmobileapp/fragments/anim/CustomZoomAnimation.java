@@ -3,6 +3,7 @@ package com.arcmobileapp.fragments.anim;
 import android.graphics.Canvas;
 
 import com.arcmobileapp.R;
+import com.arcmobileapp.utils.Logger;
 import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 import com.slidingmenu.lib.SlidingMenu.CanvasTransformer;
 
@@ -15,6 +16,7 @@ public class CustomZoomAnimation extends CustomAnimation {
 			@Override
 			public void transformCanvas(Canvas canvas, float percentOpen) {
 				try {
+
 					float scale = (float) (percentOpen*0.25 + 0.75);
 					canvas.scale(scale, scale, canvas.getWidth()/2, canvas.getHeight()/2);
 				} catch (Exception e) {

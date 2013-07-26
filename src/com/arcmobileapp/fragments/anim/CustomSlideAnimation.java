@@ -14,6 +14,8 @@ public class CustomSlideAnimation extends CustomAnimation {
 		@Override
 		public float getInterpolation(float t) {
 			try {
+				Logger.d("********************************** ANIMATING2");
+
 				t -= 1.0f;
 				return t * t * t + 1.0f;
 			} catch (Exception e) {
@@ -32,6 +34,7 @@ public class CustomSlideAnimation extends CustomAnimation {
 			public void transformCanvas(Canvas canvas, float percentOpen) {
 
 				try {
+
 					canvas.translate(0, canvas.getHeight()*(1-interp.getInterpolation(percentOpen)));
 				} catch (Exception e) {
 					(new CreateClientLogTask("CustomSlideAnimation.transformCanvas", "Exception Caught", "error", e)).execute();

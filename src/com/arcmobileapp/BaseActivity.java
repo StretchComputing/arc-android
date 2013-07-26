@@ -1,11 +1,6 @@
 package com.arcmobileapp;
 
-import java.util.List;
-
-import android.app.ActivityManager;
-import android.app.ActivityManager.RunningTaskInfo;
 import android.app.AlertDialog;
-import android.content.ComponentName;
 import android.content.ContentProviderClient;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -17,6 +12,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
 import android.view.animation.Interpolator;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -74,6 +70,17 @@ public class BaseActivity extends SlidingFragmentActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		try {
 			super.onCreate(savedInstanceState);
+			
+			 Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+			        @Override
+			        public void uncaughtException(Thread paramThread, Throwable paramThrowable) {
+
+						(new CreateClientLogTask("GLOBAL", "Exception Caught: " + paramThrowable.getMessage(), "error", null)).execute();
+
+			        }
+			    });
+			 
+			 
 			setTitle(mTitleRes);
 			// set the Behind View
 			setBehindContentView(R.layout.menu_frame);
@@ -145,6 +152,16 @@ public class BaseActivity extends SlidingFragmentActivity {
 			sm.setBehindScrollScale(0.0f);
 			sm.setBehindCanvasTransformer(mTransformer);
 			sm.setBackgroundColor(0xFF393939);
+			
+			sm.setOnOpenedListener(new SlidingMenu.OnOpenedListener() {
+			    public void onOpened() {
+
+			    	InputMethodManager imm = (InputMethodManager)getSystemService(Context.
+                            INPUT_METHOD_SERVICE);
+			    	imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+		           // ViewCheck.this.goAddTip();
+		    }
+		});
 			// TODO add an image back there that is hidden when the menu covers it (or something cool..random quote, etc)
 		} catch (Exception e) {
 			(new CreateClientLogTask("BaseActivity.initSlidingMenu", "Exception Caught", "error", e)).execute();
