@@ -26,6 +26,16 @@
         
        
     </item>
+    
+     <item
+        android:id="@+id/invoiceRefresh"
+        android:orderInCategory="0"
+        android:showAsAction="always"
+        android:icon="@drawable/refresh"
+        android:title="refresh">
+        
+       
+    </item>
    
     
 

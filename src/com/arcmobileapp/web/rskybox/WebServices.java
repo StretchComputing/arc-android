@@ -157,6 +157,7 @@ public class WebServices {
 			
 			// once env can be chosen in UI by admin, set remoteEndpoint a different way
 			String remoteEndpoint = URLs.getHost(new ArcPreferences(ArcMobileApp.getAppContext()).getServer());
+			
 			json.put(WebKeys.REMOTE_ENDPOINT, remoteEndpoint);
 			
 			List<String> appActions = new ArrayList<String>();

@@ -35,6 +35,8 @@ public final class WebKeys {
 
 	public static final String TOKEN = "Token";
 	public static final String ID = "Id";
+	//public static final String TYPE = "TYPE";
+
 	public static final String NAME = "Name";
 	public static final String STREET = "Street";
 	public static final String CITY = "City";

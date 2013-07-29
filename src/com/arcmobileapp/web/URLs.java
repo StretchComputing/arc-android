@@ -34,7 +34,7 @@ public final class URLs {
 		int index = theUrl.indexOf("//");
 		int index2 = theUrl.indexOf("/rest/");
 		String finalUrl = theUrl.substring(index+2);
-		finalUrl = finalUrl.substring(0, index2);
+		finalUrl = finalUrl.substring(0, index2 - 7);
 		return finalUrl;
 	}
 }

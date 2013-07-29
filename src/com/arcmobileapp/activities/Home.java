@@ -134,6 +134,7 @@ public class Home extends BaseActivity implements ScrollViewListener {
 			if (didLogOut){
 				toastShort("Logout Successful!  You may continue to use Dutch as a guest.");
 			}
+						
 		} catch (NotFoundException e) {
 			(new CreateClientLogTask("Home.onCreate", "Exception Caught", "error", e)).execute();
 

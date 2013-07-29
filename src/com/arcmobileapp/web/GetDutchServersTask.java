@@ -95,14 +95,18 @@ public class GetDutchServersTask extends AsyncTask<Void, Void, Void> {
 				String serverUrl = result.getString(WebKeys.URL);
 				Integer serverId = result.getInt(WebKeys.ID);
 			
+				String type = result.getString(WebKeys.TYPE);
 
 				myServer.serverName = name;
 				myServer.serverId = serverId;
 				myServer.serverUrl = serverUrl;
 				
 				
+				if (type.equals("ASS") || type.equals("ARS")){
+					mServerList.add(myServer);
+
+				}
 				
-				mServerList.add(myServer);
 				
 			}
 		} catch (Exception e) {

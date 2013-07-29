@@ -49,6 +49,8 @@ import com.arcmobileapp.utils.CurrencyFilter;
 import com.arcmobileapp.utils.Keys;
 import com.arcmobileapp.utils.Logger;
 import com.arcmobileapp.utils.PaymentFlags;
+import com.arcmobileapp.web.ErrorCodes;
+import com.arcmobileapp.web.GetCheckTask;
 import com.arcmobileapp.web.MakePaymentTask;
 import com.arcmobileapp.web.rskybox.AppActions;
 import com.arcmobileapp.web.rskybox.CreateClientLogTask;
@@ -58,7 +60,7 @@ public class ViewCheck extends BaseActivity {
 	private TextView myTotalTextView;
 	
 	private RelativeLayout layoutBottom;
-	
+	private Boolean isRefreshing = false;
 	private TextView textSubtotalName;
 	private TextView textTaxName;
 	private TextView textServiceChargeName;
@@ -206,13 +208,16 @@ public class ViewCheck extends BaseActivity {
 			});
 			splitPercentButton.setVisibility(View.GONE);
 
-			
-			
+		
+
+		
 			
 			theBill =  (Check) getIntent().getSerializableExtra(Constants.INVOICE);
-			checkNumber = (String) getIntent().getSerializableExtra(Constants.CHECK_NUM);
-			merchantName = (String) getIntent().getSerializableExtra(Constants.VENUE);
+			checkNumber = (String) getIntent().getStringExtra(Constants.CHECK_NUM);
+			merchantName = (String) getIntent().getStringExtra(Constants.VENUE);
 
+			
+			
 			for (int i = 0; i < theBill.getItems().size(); i++){
 				LineItem item = theBill.getItems().get(i);
 				item.setIsSelected(false);
@@ -272,7 +277,7 @@ public class ViewCheck extends BaseActivity {
 	
 			}
 			
-			
+
 			
 		} catch (Exception e) {
 			(new CreateClientLogTask("ViewCheck.onCreate", "Exception Caught", "error", e)).execute();
@@ -422,7 +427,8 @@ public class ViewCheck extends BaseActivity {
 				nextAboveIdLeft = textServiceChargeName.getId();
 				nextAboveIdRight = textServiceChargeValue.getId();
 				
-				
+				textServiceChargeName.setVisibility(View.VISIBLE);
+				textServiceChargeValue.setVisibility(View.VISIBLE);
 			}else{
 				textServiceChargeName.setVisibility(View.GONE);
 				textServiceChargeValue.setVisibility(View.GONE);
@@ -438,7 +444,8 @@ public class ViewCheck extends BaseActivity {
 				nextAboveIdLeft = textDiscountName.getId();
 				nextAboveIdRight = textDiscountValue.getId();
 				
-				
+				textDiscountName.setVisibility(View.VISIBLE);
+				textDiscountValue.setVisibility(View.VISIBLE);
 			}else{
 				textDiscountName.setVisibility(View.GONE);
 				textDiscountValue.setVisibility(View.GONE);
@@ -455,6 +462,9 @@ public class ViewCheck extends BaseActivity {
 				setAlreadyPaidLayout(nextAboveIdLeft, nextAboveIdRight);
 				nextAboveIdLeft = textAlreadyPaidName.getId();
 				nextAboveIdRight = textAlreadyPaidValue.getId();
+				
+				textAlreadyPaidName.setVisibility(View.VISIBLE);
+				textAlreadyPaidValue.setVisibility(View.VISIBLE);
 			}else{
 				textAlreadyPaidName.setVisibility(View.GONE);
 				textAlreadyPaidValue.setVisibility(View.GONE);
@@ -1782,6 +1792,18 @@ public class ViewCheck extends BaseActivity {
 			showAlreadyPaidDialog();
 			break;
 			
+		case R.id.invoiceRefresh:
+			
+			if (isRefreshing){
+				toastShort("Already refreshing invoice, please wait...");
+			}else{
+				isRefreshing = true;
+				toastShort("Refreshing Invoice...");
+				refreshInvoice();
+
+			}
+			break;
+			
 	
 		}
 		return super.onOptionsItemSelected(item);
@@ -1901,6 +1923,104 @@ public class ViewCheck extends BaseActivity {
 
 		}
 	
+	}
+	
+	public void refreshInvoice(){
+		
+		try {
+			String token = getToken();
+			if (token != null) {
+				GetCheckTask getInvoiceTask = new GetCheckTask(token, theBill.getMerchantId(), checkNumber, getApplicationContext()) {
+					@Override
+					protected void onPostExecute(Void result) {
+						try {
+							
+							isRefreshing = false;
+							super.onPostExecute(result);
+							
+
+							int errorCode = getErrorCode();
+
+							
+							if (getFinalSuccess() && errorCode == 0) {
+
+								AppActions.add("View Check - Get Invoice Successful");
+
+								
+								Check newBill = getTheBill();
+
+								if (theBill == null || theBill.getItems().size() == 0) {
+									toastShort("Could not locate your check");
+									//.setVisibility(View.INVISIBLE);
+									return;
+								}else{
+								
+									theBill = newBill;
+
+									for (int i = 0; i < theBill.getItems().size(); i++){
+										LineItem item = theBill.getItems().get(i);
+										item.setIsSelected(false);
+									}
+									
+
+									displayBill();
+									
+									populateListView();
+									registerClickCallback();
+									
+									showPaidItems();
+								}
+
+							} else {
+								//Not Succes
+								
+								AppActions.add("Get Check - Get Invoice Failed - Error Code:" + errorCode);
+
+								if (errorCode != 0){
+									
+									String errorMsg = "";
+									
+									if(errorCode == ErrorCodes.INVOICE_NOT_FOUND) {
+						                errorMsg = "Can not find invoice.";
+						            } else if(errorCode == ErrorCodes.INVOICE_CLOSED) {
+						                errorMsg = "Invoice closed.";
+						            }else if (errorCode == ErrorCodes.CHECK_IS_LOCKED){
+						                errorMsg = "Invoice being access by your server.  Try again in a few minutes.";
+						            } else if (errorCode == ErrorCodes.NETWORK_ERROR){
+						                errorMsg = "Arc is having problems connecting to the internet.  Please check your connection and try again.  Thank you!";
+						                
+						            } else {
+						                errorMsg = ErrorCodes.ARC_ERROR_MSG;
+						            }
+									
+									
+									
+									toastShort(errorMsg);
+									
+								}else{
+									toastShort("Error retreiving invoice");
+
+								}
+								//.setVisibility(View.INVISIBLE);
+
+							}
+						} catch (Exception e) {
+
+							(new CreateClientLogTask("ViewCheck.getInvoice.onPostExecute", "Exception Caught", "error", e)).execute();
+
+						}
+					}
+				};
+				getInvoiceTask.execute();
+			} else {
+
+			}
+		} catch (Exception e) {
+			(new CreateClientLogTask("ViewCheck.getInvoice", "Exception Caught", "error", e)).execute();
+
+		}
+		
+		
 	}
 	
 }

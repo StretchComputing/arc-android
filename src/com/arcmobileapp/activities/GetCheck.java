@@ -167,18 +167,12 @@ public class GetCheck extends BaseActivity {
 			AppActions.add("Get Check - View Bill Clicked - Check Number:" + checkNum + ", Merchant:" + venueName);
 
 			
-			
 			if(checkNum == null || checkNum.trim().length() == 0) {
 				toastLong("Please enter your check number");
 				return;
 			}
-			Intent viewCheck = new Intent(getApplicationContext(), ViewCheck.class);
-			viewCheck.putExtra(Constants.VENUE, venueName);
-			viewCheck.putExtra(Constants.CHECK_NUM, checkNum);
-			viewCheck.putExtra(Constants.VENUE_ID, merchantId);
 			
-			//.setVisibility(View.VISIBLE);
-
+		
 			loadingDialog.show();
 			
 			getInvoice();
@@ -225,9 +219,12 @@ public class GetCheck extends BaseActivity {
 									return;
 								}else{
 								
-								     
+									String checkNum = invoice.getText().toString();
+
 									Intent viewCheck = new Intent(getApplicationContext(), ViewCheck.class);
 									viewCheck.putExtra(Constants.INVOICE, theBill);
+									viewCheck.putExtra(Constants.VENUE, venueName);
+									viewCheck.putExtra(Constants.CHECK_NUM, checkNum);
 									startActivity(viewCheck);
 
 									

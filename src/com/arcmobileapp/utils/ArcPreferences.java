@@ -38,13 +38,14 @@ public class ArcPreferences {
     
 	// if it's never been setup, return the dev server
 	public String getServer() {
-				
+		//return URLs.DEV_SERVER;
 		String storedServer = getString(Keys.DUTCH_URL);
 		if (storedServer != null && storedServer.length() > 0){
 			return storedServer;
 		}else{
 			return URLs.PROD_SERVER;
 		}
+		
 	}
 
     /**
