@@ -28,7 +28,7 @@ public class AppActions {
 	private static final String QUEUE_BOTTOM = "queueBottom";
 	private static final String ACTION_QUEUE_KEY = "appActionQueue_";
 	private static final String ACTION_TIMESTAMP_QUEUE_KEY = "appActionTimestampQueue_";
-	private static final Integer QUEUE_SIZE = 20;
+	private static final Integer QUEUE_SIZE = 30;
 	
 	private static Integer queueTop = null;     // zero indexed -- indicates offset to the top of the AppAction queue (where first appAction stored)
 	private static Integer queueBottom = null;  // zero indexed -- indicates offset to the bottom of the AppActions queue (where last action stored)

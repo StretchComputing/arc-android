@@ -19,5 +19,7 @@ public final class Table_Funds {
         public static final String CARD_TYPE_ID = "card_type_id";
         public static final String CARD_TYPE_LABEL = "card_type_label";
         public static final String PIN = "pin";
+        public static final String CARD_NAME = "card_name";
+
     }
 }

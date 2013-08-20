@@ -86,20 +86,23 @@ public class GetCheckTask extends AsyncTask<Void, Void, Void> {
 			
 			mSuccess = json.getBoolean(WebKeys.SUCCESS);
 			if(mSuccess) {
-				mRequestId = json.getJSONObject(WebKeys.RESULTS).getString(WebKeys.REQUEST_ID);
-
-				Logger.d("FOUND A REQUEST ID: " + mRequestId);
 				
-				//4, 2, 2, 3, 4, 5, 6, 7, 8, 9, and 10
-				if(!checkInvoiceConfirmation(2000) && mErrorCode == 0) {
+				if (json.has(WebKeys.RESULTS) && json.getJSONObject(WebKeys.RESULTS).has(WebKeys.REQUEST_ID)){
+					mRequestId = json.getJSONObject(WebKeys.RESULTS).getString(WebKeys.REQUEST_ID);
+
+					Logger.d("FOUND A REQUEST ID: " + mRequestId);
+					
+					//4, 2, 2, 3, 4, 5, 6, 7, 8, 9, and 10
 					if(!checkInvoiceConfirmation(2000) && mErrorCode == 0) {
-						if(!checkInvoiceConfirmation(3000) && mErrorCode == 0) {
+						if(!checkInvoiceConfirmation(2000) && mErrorCode == 0) {
 							if(!checkInvoiceConfirmation(3000) && mErrorCode == 0) {
 								if(!checkInvoiceConfirmation(3000) && mErrorCode == 0) {
-									if(!checkInvoiceConfirmation(4000) && mErrorCode == 0) {
-										if(!checkInvoiceConfirmation(5000) && mErrorCode == 0) {
-											if(!checkInvoiceConfirmation(6000) && mErrorCode == 0) {
-												return false;
+									if(!checkInvoiceConfirmation(3000) && mErrorCode == 0) {
+										if(!checkInvoiceConfirmation(4000) && mErrorCode == 0) {
+											if(!checkInvoiceConfirmation(5000) && mErrorCode == 0) {
+												if(!checkInvoiceConfirmation(6000) && mErrorCode == 0) {
+													return false;
+												}
 											}
 										}
 									}
@@ -107,7 +110,10 @@ public class GetCheckTask extends AsyncTask<Void, Void, Void> {
 							}
 						}
 					}
+				}else{
+					return false;
 				}
+				
 				// if we successfulyl got a response ticket, we need to query with the confirm 
 				// call to know if it was successful or not
 			}else{
@@ -158,27 +164,33 @@ public class GetCheckTask extends AsyncTask<Void, Void, Void> {
 					return false;
 				}
 
-				JSONObject result = json.getJSONObject(WebKeys.RESULTS);
 				mFinalSuccess = json.getBoolean(WebKeys.SUCCESS);
 
 				if (mFinalSuccess){
-					String invoiceId = "";
 
-					if (result != null){
-						invoiceId = result.getString(WebKeys.ID);
+					Logger.d("SECOND RESPONSE IS SUCCESS");
+					
+					if (!json.isNull(WebKeys.RESULTS)){
+						JSONObject result = json.getJSONObject(WebKeys.RESULTS);
+
+						String invoiceId = "";
+
+						if (!result.isNull(WebKeys.ID)){
+							invoiceId = result.getString(WebKeys.ID);
+						}
+						
+						if (invoiceId != null && invoiceId.length() > 0){
+							return true;
+						}else{
+							return false;
+						}
 					}
 					
-					if (invoiceId != null && invoiceId.length() > 0){
-						return true;
-					}else{
-						return false;
-					}
 				}else{
 					return false;
 				}
 				
 			} catch (JSONException e) {
-
 				return false;
 			}
 			
@@ -232,7 +244,13 @@ public class GetCheckTask extends AsyncTask<Void, Void, Void> {
 			}catch(Exception e){
 			}
 			
-			theBill = new Check(result.getInt(WebKeys.ID), result.getString(WebKeys.MERCHANT_ID), result.getString(WebKeys.INVOICE_NUMBER), result.getString(WebKeys.TABLE_NUMBER), result.getString(WebKeys.STATUS), result.getString(WebKeys.WAITER_REF), result.getDouble(WebKeys.BASE_AMOUNT), result.getDouble(WebKeys.TAX), result.getString(WebKeys.DATE_CREATED), result.getString(WebKeys.LAST_UPDATED), result.getString(WebKeys.EXPIRATION), amountPaid, null, null);
+			double taxDouble = 0.0;
+			try{
+				taxDouble = result.getDouble(WebKeys.TAX);
+			}catch(Exception e){
+				
+			}
+			theBill = new Check(result.getInt(WebKeys.ID), result.getString(WebKeys.MERCHANT_ID), result.getString(WebKeys.INVOICE_NUMBER), result.getString(WebKeys.TABLE_NUMBER), result.getString(WebKeys.STATUS), result.getString(WebKeys.WAITER_REF), result.getDouble(WebKeys.BASE_AMOUNT), taxDouble, result.getString(WebKeys.DATE_CREATED), result.getString(WebKeys.LAST_UPDATED), result.getString(WebKeys.EXPIRATION), amountPaid, null, null);
 			theBill.setDiscount(discount);
 			theBill.setServiceCharge(serviceCharge);
 			

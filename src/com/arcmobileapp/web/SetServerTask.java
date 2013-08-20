@@ -83,37 +83,6 @@ public class SetServerTask extends AsyncTask<Void, Void, Void> {
 		}
 	}
 	
-	private void parseJSON(JSONObject json) throws JSONException {
-		try {
-			// GET MERCHANTS RESP = {"Success":true,"Results":[{"Id":12,"Name":"Isis Lab","Street":"111 Kidzie St.","City":"Chicago","State":"IL","Zipcode":"60654","Latitude":41.889456,"Longitude":-87.6317749999,"PaymentAccepted":"VNMADZ","TwitterHandler":"@IsisLab","GeoDistance":-1.0,"Status":"A","Accounts":[],"Cards":[]}],"ErrorCodes":[]}
-			JSONArray results = json.getJSONArray(WebKeys.RESULTS);  // get an array of returned results
-			//Logger.d("Results: " + results);
-			mServerList = new ArrayList<ServerObject>();
-
-			for(int i = 0; i < results.length(); i++) {
-				
-				ServerObject myServer = new ServerObject();
-				
-				JSONObject result = results.getJSONObject(i);
-				String name = result.getString(WebKeys.NAME);
-				String serverUrl = result.getString(WebKeys.URL);
-				Integer serverId = result.getInt(WebKeys.ID);
-			
-
-				myServer.serverName = name;
-				myServer.serverId = serverId;
-				myServer.serverUrl = serverUrl;
-				
-				
-				
-				mServerList.add(myServer);
-				
-			}
-		} catch (Exception e) {
-			(new CreateClientLogTask("GetDutchServers.parseJson", "Exception Caught", "error", e)).execute();
-
-		}
-	}
 
 	public String getResponse() {
 		return mResponse;

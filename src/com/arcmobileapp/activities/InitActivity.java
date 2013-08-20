@@ -20,6 +20,7 @@ import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 public class InitActivity extends Activity {
 	
 	private Boolean doesHaveToken;
+	private Boolean tokenDidFail = false;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -70,13 +71,15 @@ public class InitActivity extends Activity {
 								myPrefs.putAndCommitString(Keys.GUEST_ID, getDevCustomerId());
 							}						
 						
+							tokenDidFail = false;
 							doesHaveToken = true;
 						}else{
 							
+							tokenDidFail = true;
 							AppActions.add("Init Activity - Get Token Failed - Error Code:" + errorCode);
 
 							if (errorCode != 0){
-								toast("Unable to retrieve guest token, please try again.", Toast.LENGTH_SHORT);
+								toast("Unable to retrieve guest token, please try again.", 6);
 
 							}
 						}
@@ -100,24 +103,32 @@ public class InitActivity extends Activity {
 		try {
 			//Go Home
 			
-			if (doesHaveToken){
-				
-				AppActions.add("Init Activity - Clicked Start - Have Guest Token");
+			if (tokenDidFail){
+				getGuestToken();
+				toast("Registering you as a guest, please wait a second then try again.", 6);
 
-						
-				ArcPreferences myPrefs = new ArcPreferences(getApplicationContext());
-
-				myPrefs.putAndCommitBoolean(Keys.AGREED_TERMS, true);
-
-				startActivity(new Intent(getApplicationContext(), Home.class));
-				overridePendingTransition(0, 0);
-				finish();
 			}else{
-				
-				AppActions.add("Init Activity - Clicked Start - No Guest Token Yet");
+				if (doesHaveToken){
+					
+					AppActions.add("Init Activity - Clicked Start - Have Guest Token");
 
-				toast("Registering you as a guest, please wait a second then try again.", Toast.LENGTH_SHORT);
+							
+					ArcPreferences myPrefs = new ArcPreferences(getApplicationContext());
+
+					myPrefs.putAndCommitBoolean(Keys.AGREED_TERMS, true);
+
+					startActivity(new Intent(getApplicationContext(), Home.class));
+					overridePendingTransition(0, 0);
+					finish();
+				}else{
+					
+					AppActions.add("Init Activity - Clicked Start - No Guest Token Yet");
+
+					toast("Registering you as a guest, please wait a second then try again.", 6);
+				}
+				
 			}
+			
 		} catch (Exception e) {
 			(new CreateClientLogTask("InitActivity.onStartClicked", "Exception Caught", "error", e)).execute();
 

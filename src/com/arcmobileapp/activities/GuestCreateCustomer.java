@@ -94,6 +94,8 @@ public class GuestCreateCustomer extends BaseActivity {
 
 			Intent goReview = new Intent(getApplicationContext(), Review.class);
 			goReview.putExtra(Constants.INVOICE, theBill);
+			loadingDialog.dismiss();
+
 			startActivity(goReview);
 		} catch (Exception e) {
 			(new CreateClientLogTask("GuestCreateCustomer.onNoThanksClicked", "Exception Caught", "error", e)).execute();
@@ -138,7 +140,8 @@ public class GuestCreateCustomer extends BaseActivity {
 							
 							getCurrentServer();
 
-							
+							loadingDialog.dismiss();
+
 							Intent goReview = new Intent(getApplicationContext(), Review.class);
 							goReview.putExtra(Constants.INVOICE, theBill);
 							startActivity(goReview);

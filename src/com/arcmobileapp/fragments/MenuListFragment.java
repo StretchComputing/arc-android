@@ -12,9 +12,10 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.arcmobileapp.ArcMobileApp;
 import com.arcmobileapp.R;
 import com.arcmobileapp.activities.Funds;
 import com.arcmobileapp.activities.Home;
@@ -35,8 +36,8 @@ public class MenuListFragment extends ListFragment {
 		try {
 			super.onActivityCreated(savedInstanceState);
 			MenuAdapter adapter = new MenuAdapter(getActivity());
-			adapter.add(new MenuItem(Utils.convertModernPicType(ModernPicTypes.World), "Home"));
 			adapter.add(new MenuItem(Utils.convertModernPicType(ModernPicTypes.Guy), "Profile"));
+			adapter.add(new MenuItem(Utils.convertModernPicType(ModernPicTypes.World), "Home"));
 			adapter.add(new MenuItem(Utils.convertModernPicType(ModernPicTypes.Dollar), "Payment"));
 			adapter.add(new MenuItem(Utils.convertModernPicType(ModernPicTypes.Question), "Support"));
 			//adapter.add(new MenuItem(Utils.convertModernPicType(ModernPicTypes.Girl), "Social"));
@@ -79,10 +80,31 @@ public class MenuListFragment extends ListFragment {
 //			ImageView icon = (ImageView) convertView.findViewById(R.id.row_icon);
 //			icon.setImageResource(getItem(position).iconRes);
 				
-				TextView icon = (TextView) convertView.findViewById(R.id.row_icon);
-				icon.setText(getItem(position).icon);
-				icon.setTextSize(75);
-				icon.setTypeface(ArcMobileApp.getModernPicsTypeface());
+				ImageView icon = (ImageView) convertView.findViewById(R.id.iconImage);
+				
+				if (getItem(position).text.equals("Home")){
+					icon.setImageResource(R.drawable.menuhome);
+					LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) icon.getLayoutParams();
+					params.setMargins(10, 10, 25, 0);
+
+				}else if (getItem(position).text.equals("Profile")){
+					icon.setImageResource(R.drawable.profiledefault);
+					LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) icon.getLayoutParams();
+					params.setMargins(0, 10, 15, 0);
+				}else if (getItem(position).text.equals("Payment")){
+					icon.setImageResource(R.drawable.menupayment);
+					LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) icon.getLayoutParams();
+					params.setMargins(10, 10, 25, 0);
+				}else if (getItem(position).text.equals("Support")){
+					icon.setImageResource(R.drawable.menusupport);
+					LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) icon.getLayoutParams();
+					params.setMargins(10, 10, 25, 0);
+				}
+				
+				//TextView icon = (TextView) convertView.findViewById(R.id.row_icon);
+				//icon.setText(getItem(position).icon);
+				//icon.setTextSize(35);
+				//icon.setTypeface(ArcMobileApp.getModernPicsTypeface());
 				TextView title = (TextView) convertView.findViewById(R.id.row_title);
 				title.setText(getItem(position).text);
 				convertView.setOnTouchListener(new OnTouchListener() {
@@ -105,10 +127,10 @@ public class MenuListFragment extends ListFragment {
 			try {
 				switch(position) {
 				case 0:
-					goHome();
+					goToProfile();				
 					break;
 				case 1:
-					goToProfile();				
+					goHome();
 					break;
 				case 2:
 					goToFunds();				

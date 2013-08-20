@@ -61,8 +61,12 @@ public class GetServerTask extends AsyncTask<Void, Void, Void> {
 			JSONObject json =  new JSONObject(mResponse);
 			mSuccess = json.getBoolean(WebKeys.SUCCESS);
 			if(mSuccess) {
-				JSONObject results = json.getJSONObject(WebKeys.RESULTS);
-				setNewUrl(results);
+				
+				if (!json.isNull(WebKeys.RESULTS)){
+					JSONObject results = json.getJSONObject(WebKeys.RESULTS);
+					setNewUrl(results);
+				}
+				
 			
 
 			}else{
@@ -87,7 +91,11 @@ public class GetServerTask extends AsyncTask<Void, Void, Void> {
 	private void setNewUrl(JSONObject results){
 		
 		try{
-			String newServer = results.getString(WebKeys.SERVER);
+			String newServer = "";
+			if (!results.isNull(WebKeys.SERVER)){
+				newServer = results.getString(WebKeys.SERVER);
+
+			}
 			Boolean isSSL = false;
 			
 			try{

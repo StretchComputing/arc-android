@@ -12,6 +12,7 @@ import android.content.res.Resources.NotFoundException;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.CalendarContract.Colors;
 import android.text.InputFilter;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -790,8 +791,8 @@ public class ViewCheck extends BaseActivity {
 				}
 				
 
-				backImageView.setBackgroundColor(Color.BLUE);
-				backImageView2.setBackgroundColor(Color.BLUE);
+				backImageView.setBackgroundColor(getResources().getColor(R.color.dutchblue));
+				backImageView2.setBackgroundColor(getResources().getColor(R.color.dutchblue));
 
 
 				if (currentItem.getIsPaidFor().equals("yes")){
@@ -1430,6 +1431,8 @@ public class ViewCheck extends BaseActivity {
 	}
 	
 	private void goAddTip(){
+	
+		
 		
 		try {
 			
@@ -1852,7 +1855,7 @@ public class ViewCheck extends BaseActivity {
 
 			
 			AlertDialog.Builder builder = new AlertDialog.Builder(ViewCheck.this);
-			builder.setTitle("Remaining Balance");
+			builder.setTitle("Remaining Balance - \n Check #: " + checkNumber);
 			builder.setView(makePaymentView);
 			//builder.setIcon(R.drawable.logo);
 			builder.setPositiveButton("Pay Remaining", new DialogInterface.OnClickListener() {

@@ -23,6 +23,8 @@ public class Cards implements Serializable {
     private String mCardId;
     private String mCardLabel;
     private String mPIN;
+    private String mCardName;
+
     
     public Cards(int id, String mNumber, String month, String year, String zip, String cvv, String cardId, String cardLabel, String pin) {
        
@@ -35,6 +37,7 @@ public class Cards implements Serializable {
         setCardId(cardId);
         setCardLabel(cardLabel);
         setPIN(pin);
+        setCardName("");
     }
     
     public Cards(String mNumber, String month, String year, String zip, String cvv, String cardId, String cardLabel, String pin) {
@@ -72,6 +75,9 @@ public class Cards implements Serializable {
         
         if (CursorUtilities.getString(cursor, FundsColumns.PIN) != null)
             mPIN = decrypt(CursorUtilities.getString(cursor, FundsColumns.PIN));
+        
+        if (CursorUtilities.getString(cursor, FundsColumns.CARD_NAME) != null)
+            mCardName = decrypt(CursorUtilities.getString(cursor, FundsColumns.CARD_NAME));
     }
     
     /**
@@ -135,8 +141,16 @@ public class Cards implements Serializable {
             values.putNull(FundsColumns.PIN);
         }        
         
+        if (mCardName != null) {
+            values.put(FundsColumns.CARD_NAME, encrypt(mCardName));
+        } else {
+            values.putNull(FundsColumns.CARD_NAME);
+        } 
+        
         return values;
     }
+    
+   
    
 	public int getId() {
         return mId;
@@ -197,6 +211,16 @@ public class Cards implements Serializable {
 	public void setCardId(String cardId) {
 		this.mCardId = cardId;
 	}
+	
+	public String getCardName() {
+		return mCardName;
+	}
+
+	public void setCardName(String cardName) {
+		this.mCardName = cardName;
+	}
+	
+	
 
 	public String getCardLabel() {
 		return mCardLabel;

@@ -91,7 +91,7 @@ public class CreateUserTask extends AsyncTask<Void, Void, Void> {
 			JSONObject json =  new JSONObject(mDevResponse);
 			
 			
-			
+
 			mSuccess = json.getBoolean(WebKeys.SUCCESS);
 			if(mSuccess) {
 				//JSONObject result = json.getJSONObject(WebKeys.RESULTS);
@@ -99,18 +99,21 @@ public class CreateUserTask extends AsyncTask<Void, Void, Void> {
 				//mDevToken = result.getString(WebKeys.TOKEN);
 				//String arcNumber = result.getString(WebKeys.ARC_NUMBER);  // do we need this?
 				
-				mResponseTicket = json.getString(WebKeys.RESULTS);
-				Logger.d("Sending with TICKET: " + mResponseTicket);
-				//6, 2, 2, 3, 4, 5, 6, 7, 8, 9, and 10
-				if(!checkRegisterConfirmation(2000) && mErrorCode == 0) {
+				
+				if (json.has(WebKeys.RESULTS)){
+					mResponseTicket = json.getString(WebKeys.RESULTS);
+					Logger.d("Sending with TICKET: " + mResponseTicket);
+					//6, 2, 2, 3, 4, 5, 6, 7, 8, 9, and 10
 					if(!checkRegisterConfirmation(2000) && mErrorCode == 0) {
-						if(!checkRegisterConfirmation(3000) && mErrorCode == 0) {
+						if(!checkRegisterConfirmation(2000) && mErrorCode == 0) {
 							if(!checkRegisterConfirmation(3000) && mErrorCode == 0) {
 								if(!checkRegisterConfirmation(3000) && mErrorCode == 0) {
-									if(!checkRegisterConfirmation(4000) && mErrorCode == 0) {
-										if(!checkRegisterConfirmation(5000) && mErrorCode == 0) {
-											if(!checkRegisterConfirmation(6000) && mErrorCode == 0) {
-												return false;
+									if(!checkRegisterConfirmation(3000) && mErrorCode == 0) {
+										if(!checkRegisterConfirmation(4000) && mErrorCode == 0) {
+											if(!checkRegisterConfirmation(5000) && mErrorCode == 0) {
+												if(!checkRegisterConfirmation(6000) && mErrorCode == 0) {
+													return false;
+												}
 											}
 										}
 									}
@@ -118,7 +121,10 @@ public class CreateUserTask extends AsyncTask<Void, Void, Void> {
 							}
 						}
 					}
+				}else{
+					return false;
 				}
+				
 			}else{
 				JSONArray errorArray = json.getJSONArray(WebKeys.ERROR_CODES);  // get an array of returned results
 				if (errorArray != null && errorArray.length() > 0){

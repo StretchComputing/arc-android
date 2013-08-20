@@ -1,11 +1,14 @@
 package com.arcmobileapp.activities;
 
+import java.util.UUID;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -14,6 +17,7 @@ import com.arcmobileapp.R;
 import com.arcmobileapp.utils.ArcPreferences;
 import com.arcmobileapp.utils.Constants;
 import com.arcmobileapp.utils.Keys;
+import com.arcmobileapp.web.GetTokenTask;
 import com.arcmobileapp.web.rskybox.AppActions;
 import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 
@@ -155,10 +159,7 @@ public class UserProfile extends BaseActivity {
 
 			myPrefs.putAndCommitBoolean(Keys.IS_ADMIN, false);
 
-			Intent goHome = new Intent(getApplicationContext(), Home.class);
-			goHome.putExtra(Constants.LOGGED_OUT, true);
-			goHome.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(goHome);
+			getGuestToken();
 			
 			//Intent social = (new Intent(getApplicationContext(), UserCreate.class));
 			//startActivity(social);
@@ -174,6 +175,66 @@ public class UserProfile extends BaseActivity {
 
 		Intent social = (new Intent(getApplicationContext(), EditServer.class));
 		startActivity(social);
+	}
+
+	
+private void getGuestToken(){
+		
+		try {
+			String uuid = UUID.randomUUID().toString();
+			
+			ArcPreferences myPrefs = new ArcPreferences(getApplicationContext());
+			myPrefs.putAndCommitString(Keys.MY_UUID, uuid);
+			
+			GetTokenTask getTokenTask = new GetTokenTask(uuid, uuid, true, getApplicationContext()) {
+				@Override
+				protected void onPostExecute(Void result) {
+					try {
+						super.onPostExecute(result);
+						
+						int errorCode = getErrorCode();
+
+						
+						
+						if(getSuccess()) {
+							
+							AppActions.add("User Profile - Get Token Succeeded");
+
+							ArcPreferences myPrefs = new ArcPreferences(getApplicationContext());
+
+							if(getDevToken()!=null) {
+
+								myPrefs.putAndCommitString(Keys.GUEST_TOKEN, getDevToken());
+								myPrefs.putAndCommitString(Keys.GUEST_ID, getDevCustomerId());
+							}		
+							
+							Intent goHome = new Intent(getApplicationContext(), Home.class);
+							goHome.putExtra(Constants.LOGGED_OUT, true);
+							goHome.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+							startActivity(goHome);
+						
+						}else{
+							
+							AppActions.add("User Profile - Get Token Failed - Error Code:" + errorCode);
+
+							if (errorCode != 0){
+								toastShort("Unable to complete logout, please try again.");
+
+							}
+						}
+					} catch (Exception e) {
+						(new CreateClientLogTask("InitActivity.getGuestToken.onPostExecute", "Exception Caught", "error", e)).execute();
+
+					}
+				}
+			};
+			getTokenTask.execute();
+		} catch (Exception e) {
+			(new CreateClientLogTask("UserProfile.getGuestToken", "Exception Caught", "error", e)).execute();
+
+		}
+		
+		
 	}
 
 }

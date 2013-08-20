@@ -88,15 +88,20 @@ public class GetTokenTask extends AsyncTask<Void, Void, Void> {
 			JSONObject json =  new JSONObject(mDevResponse);
 			mSuccess = json.getBoolean(WebKeys.SUCCESS);
 			if(mSuccess) {
-				JSONObject result = json.getJSONObject(WebKeys.RESULTS);
-				mDevCustomerId = result.getString(WebKeys.ID);
-				mDevToken = result.getString(WebKeys.TOKEN);
 				
-				try{
-					isAdmin = result.getBoolean(WebKeys.ADMIN);
-				}catch(Exception e){
+				if (!json.isNull(WebKeys.RESULTS)){
 					
+					JSONObject result = json.getJSONObject(WebKeys.RESULTS);
+					mDevCustomerId = result.getString(WebKeys.ID);
+					mDevToken = result.getString(WebKeys.TOKEN);
+					
+					try{
+						isAdmin = result.getBoolean(WebKeys.ADMIN);
+					}catch(Exception e){
+						
+					}
 				}
+				
 				//String arcNumber = result.getString(WebKeys.ARC_NUMBER);  // do we need this?
 			}else{
 				JSONArray errorArray = json.getJSONArray(WebKeys.ERROR_CODES);  // get an array of returned results

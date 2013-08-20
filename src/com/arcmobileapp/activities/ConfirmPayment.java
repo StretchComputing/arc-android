@@ -70,6 +70,7 @@ public class ConfirmPayment extends BaseActivity {
 			myTotalPayment = (TextView) findViewById(R.id.my_total_payment);
 			myPaymentUsed = (TextView) findViewById(R.id.my_payment_used);
 			textEnterPin = (TextView) findViewById(R.id.text_enter_pin);
+			textEnterPin.setFilters(new InputFilter[] { new InputFilter.LengthFilter(6) });
 
 			myPinText = (EditText) findViewById(R.id.confirm_pin_text);
 
@@ -195,7 +196,12 @@ public class ConfirmPayment extends BaseActivity {
 			String expiration = month + "-" + year;
 			String pin = selectedCard.getCVV();
 			String type = PaymentFlags.PaymentType.CREDIT.toString();
-			String cardType = PaymentFlags.CardType.V.toString();
+			
+			String cardType = getCardTypeForNumber(account);
+			
+			
+			
+			
 			String splitType = PaymentFlags.SplitType.DOLLAR.toString();
 			
 
@@ -228,6 +234,7 @@ public class ConfirmPayment extends BaseActivity {
 								
 								AppActions.add("Confirm Payment - Payment Successful as Guest");
 
+								loadingDialog.dismiss();
 								theBill.setPaymentId(getPaymentId());
 								Intent goReview = new Intent(getApplicationContext(), GuestCreateCustomer.class);
 								goReview.putExtra(Constants.INVOICE, theBill);
@@ -244,6 +251,7 @@ public class ConfirmPayment extends BaseActivity {
 								}else{
 									
 									AppActions.add("Confirm Payment - Payment Successful Customer Picked Stored Card");
+									loadingDialog.dismiss();
 
 									theBill.setPaymentId(getPaymentId());
 									Intent goReview = new Intent(getApplicationContext(), Review.class);
@@ -391,7 +399,7 @@ public class ConfirmPayment extends BaseActivity {
 			paymentTitle.setText("You must create a PIN so we can securely encrypt your card information.");
 			input.setGravity(Gravity.CENTER | Gravity.BOTTOM);
 
-			input.setFilters(new InputFilter[] { new CurrencyFilter() });
+			input.setFilters(new InputFilter[] { new CurrencyFilter(), new InputFilter.LengthFilter(6) });
 			TextView remainingBalance = (TextView) makePaymentView.findViewById(R.id.paymentRemaining);
 			remainingBalance.setText("Save your payment info?");
 			//remainingBalance.setVisibility(View.GONE);
@@ -476,6 +484,7 @@ public class ConfirmPayment extends BaseActivity {
 						public void onClick(View view) {
 							
 							try {
+								pinDialog.dismiss();
 								theBill.setPaymentId(myPaymentId);
 								Intent goReview = new Intent(getApplicationContext(), Review.class);
 								goReview.putExtra(Constants.INVOICE, theBill);
@@ -513,6 +522,8 @@ public class ConfirmPayment extends BaseActivity {
 			//save it
 			saveCard();
 			
+			loadingDialog.dismiss();
+			pinDialog.dismiss();
 			//refresh list
 			theBill.setPaymentId(myPaymentId);
 			Intent goReview = new Intent(getApplicationContext(), Review.class);
@@ -558,5 +569,59 @@ public class ConfirmPayment extends BaseActivity {
 
 		}
 	}
+     
+     
+     public String getCardTypeForNumber(String cardNumber){
+    	    
+    	    try {
+    	        
+    	        if (cardNumber.length() > 0) {
+    	            
+    	        	
+    	            String firstOne = cardNumber.substring(0,1);
+    	            String firstTwo = cardNumber.substring(0,2);
+    	            String firstThree =  cardNumber.substring(0,3);
+    	            String firstFour = cardNumber.substring(0,4);
+
+    	            int numberLength = cardNumber.length();
+
+    	            
+    	            if (firstOne.equals("4") && ((numberLength == 15) || (numberLength == 16))) {
+    	                return "V";
+    	            }
+    	            
+    	            
+    	            double cardDigits = Double.parseDouble(firstTwo);
+    	            
+    	            if ((cardDigits >= 51) && (cardDigits <= 55) && (numberLength == 16)) {
+    	                return "M";
+    	            }
+    	            
+    	            if ((firstTwo.equals("34") || firstTwo.equals("37")) && (numberLength == 15)) {
+    	                return "A";
+    	            }
+    	            
+    	            if ((firstTwo.equals("65") || firstFour.equals("6011")) && (numberLength == 16)) {
+    	                return "D";
+    	            }
+    	            
+    	            double threeDigits = Double.parseDouble(firstThree);  
+    	            
+    	            if ((numberLength == 14) && (firstTwo.equals("36") || firstTwo.equals("38") || ((threeDigits >= 300) && (threeDigits <= 305) ))) {
+    	                return "N";
+    	            }
+    	            
+    	            return "UNKOWN";
+    	        }else{
+    	            return "";
+    	        }
+    	    }
+    	    catch (Exception e) {
+    	        return "UNKNOWN";
+    	    }
+    	 
+    	  
+    	}
+
     
 }

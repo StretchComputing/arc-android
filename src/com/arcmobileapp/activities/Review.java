@@ -9,6 +9,7 @@ import android.widget.RatingBar;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.arcmobileapp.BaseActivity;
 import com.arcmobileapp.R;
 import com.arcmobileapp.domain.Check;
@@ -66,7 +67,7 @@ public class Review extends BaseActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getSupportMenuInflater();
-		//inflater.inflate(R.menu.action_bar_menu, menu);
+		inflater.inflate(R.menu.review_menu, menu);
 		return true;
 	}
 	
@@ -75,6 +76,8 @@ public class Review extends BaseActivity {
 		
 	
     	try {
+			loadingDialog.dismiss();
+
 			Intent goBackHome = new Intent(getApplicationContext(), Home.class);
 			goBackHome.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(goBackHome);
@@ -121,6 +124,7 @@ public class Review extends BaseActivity {
 						if (getFinalSuccess()) {
 
 							toastShort("Thank you for your review!");
+							loadingDialog.dismiss();
 
 							Intent goBackHome = new Intent(getApplicationContext(), Home.class);
 							goBackHome.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -149,6 +153,25 @@ public class Review extends BaseActivity {
 	}
 
 
+    @Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+
+		switch (item.getItemId()) {
+
+		case R.id.skipReview:
+			toastShort("Thank you for your purchase!");
+			loadingDialog.dismiss();
+
+			Intent goBackHome = new Intent(getApplicationContext(), Home.class);
+			goBackHome.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(goBackHome);
+			break;
+			
+		}
+		
+		return super.onOptionsItemSelected(item);
+	}
+	
 
 
 

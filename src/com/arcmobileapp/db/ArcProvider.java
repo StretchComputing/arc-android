@@ -59,7 +59,8 @@ public class ArcProvider extends ContentProvider {
 				        + FundsColumns.CVV + " TEXT,"
 				        + FundsColumns.CARD_TYPE_ID + " TEXT,"
 				        + FundsColumns.CARD_TYPE_LABEL + " TEXT,"
-				        + FundsColumns.PIN + " TEXT"
+				        + FundsColumns.PIN + " TEXT,"
+				        + FundsColumns.CARD_NAME + " TEXT"
 				        + ");";
 				
 				database.execSQL(createTableString);

@@ -5,6 +5,8 @@ public final class URLs {
 	
 	public static final String PROD_SERVER = "https://arc.dagher.mobi/rest/v1/";
 	public static final String DEV_SERVER = "http://dev.dagher.mobi/rest/v1/";
+	public static final String GATEWAY_SERVER = "http://gateway.dagher.mobi/rest/v1/";
+			
 	//public static final String DUTCH_SERVER = "https://arc.dagher.mobi";
 
 	//public static final String DEV_SERVER = "http://dtnetwork.asuscomm.com:8700/arc-dev";

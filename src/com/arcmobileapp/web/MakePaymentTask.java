@@ -70,17 +70,30 @@ public class MakePaymentTask extends AsyncTask<Void, Void, Void> {
 
 			mSuccess = json.getBoolean(WebKeys.SUCCESS);
 			if(mSuccess) {
-				mResponseTicket = json.getString(WebKeys.RESULTS);
-				//6, 2, 2, 3, 4, 5, 6, 7, 8, 9, and 10
-				if(!checkPaymentConfirmation(6000) && mErrorCode == 0) {
-					if(!checkPaymentConfirmation(2000) && mErrorCode == 0) {
-						if(!checkPaymentConfirmation(3000) && mErrorCode == 0) {
+				
+				if (!json.isNull(WebKeys.RESULTS)){
+					
+					mResponseTicket = json.getString(WebKeys.RESULTS);
+					//6, 2, 2, 3, 4, 5, 6, 7, 8, 9, 10
+					if(!checkPaymentConfirmation(6000) && mErrorCode == 0) {
+						if(!checkPaymentConfirmation(2000) && mErrorCode == 0) {
 							if(!checkPaymentConfirmation(3000) && mErrorCode == 0) {
 								if(!checkPaymentConfirmation(3000) && mErrorCode == 0) {
 									if(!checkPaymentConfirmation(4000) && mErrorCode == 0) {
 										if(!checkPaymentConfirmation(5000) && mErrorCode == 0) {
 											if(!checkPaymentConfirmation(6000) && mErrorCode == 0) {
-												return false;
+												if(!checkPaymentConfirmation(7000) && mErrorCode == 0) {
+													if(!checkPaymentConfirmation(8000) && mErrorCode == 0) {
+														if(!checkPaymentConfirmation(9000) && mErrorCode == 0) {
+															if(!checkPaymentConfirmation(10000) && mErrorCode == 0) {
+																if(!checkPaymentConfirmation(12000) && mErrorCode == 0) {
+
+																	return false;
+																}
+															}
+														}
+													}
+												}
 											}
 										}
 									}
@@ -88,7 +101,10 @@ public class MakePaymentTask extends AsyncTask<Void, Void, Void> {
 							}
 						}
 					}
+				}else{
+					return false;
 				}
+				
 				// if we successfulyl got a response ticket, we need to query with the confirm 
 				// call to know if it was successful or not
 			}else{
@@ -142,17 +158,25 @@ public class MakePaymentTask extends AsyncTask<Void, Void, Void> {
 
 				JSONObject result;
 
-					try{
-						result = json.getJSONObject(WebKeys.RESULTS);
-					}catch(JSONException e){
-						return false;
-					}
+				if (!json.isNull(WebKeys.RESULTS)){
+					result = json.getJSONObject(WebKeys.RESULTS);
+
+				}else{
+					return false;
+				}
+					
 					
 
-					finalSuccess = true;
+				finalSuccess = true;
+				
+				if (!result.isNull(WebKeys.PAYMENT_ID)){
 					mPaymentId = result.getInt(WebKeys.PAYMENT_ID);
 
-					return true;
+				}else{
+					mPaymentId = 0;
+				}
+
+				return true;
 				
 			} catch (JSONException e) {
 

@@ -220,6 +220,7 @@ public class GetCheck extends BaseActivity {
 								}else{
 								
 									String checkNum = invoice.getText().toString();
+									loadingDialog.dismiss();
 
 									Intent viewCheck = new Intent(getApplicationContext(), ViewCheck.class);
 									viewCheck.putExtra(Constants.INVOICE, theBill);

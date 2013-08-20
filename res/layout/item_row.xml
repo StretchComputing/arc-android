@@ -6,16 +6,16 @@
     <RelativeLayout
         android:id="@+id/back_image_view"
         android:layout_width="match_parent"
-        android:layout_height="22dp"
+        android:layout_height="30dp"
         android:layout_marginLeft="7dp"
         android:layout_marginRight="7dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="1dp"
          />
         
        <RelativeLayout
            android:id="@+id/back_image_view_two"
            android:layout_width="fill_parent"
-           android:layout_height="18dp"
+           android:layout_height="22dp"
            android:layout_below="@+id/back_image_view"
            android:layout_marginLeft="7dp"
            android:layout_marginRight="7dp"

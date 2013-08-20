@@ -61,7 +61,6 @@ public class UpdateCustomerTask extends AsyncTask<Void, Void, Void> {
 		ArcPreferences myPrefs = new ArcPreferences(mContext);
 		String guestToken = myPrefs.getString(Keys.GUEST_TOKEN);
 		
-		Logger.d("SENDING IN GUEST TOKEN: " + guestToken);
 		
 		mDevResponse = webService.updateCustomer(mLogin, mPassword, guestToken);
 		
@@ -70,20 +69,21 @@ public class UpdateCustomerTask extends AsyncTask<Void, Void, Void> {
 			return false;
 		}
 		try {
-			Logger.d("*******UPDATE Response: " + mDevResponse);
 			
 			JSONObject json =  new JSONObject(mDevResponse);
 			mSuccess = json.getBoolean(WebKeys.SUCCESS);
 			if(mSuccess) {
 			
-				mNewCustomerToken = json.getString(WebKeys.RESULTS);
-				mSuccess = json.getBoolean(WebKeys.SUCCESS);
+				mNewCustomerToken="";
+				
+				if (!json.isNull(WebKeys.RESULTS)){
+					mNewCustomerToken = json.getString(WebKeys.RESULTS);
+				}
 
-				if (mNewCustomerToken == null){
+				if (mNewCustomerToken.length() == 0){
 
 					return false;
 				}else{
-					Logger.d("RESULTS " + mNewCustomerToken);
 					
 					
 					finalSuccess = true;

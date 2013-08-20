@@ -15,6 +15,8 @@ public final class Constants {
 	public static final String SELECTED_CARD = "SELECTED_CARD";
 	public static final String JUST_ADD_CARD = "JUST_ADD_CARD";
 	public static final String LOGGED_OUT = "LOGGED_OUT";
+	
+	public static final int NOTIFICATION_ID = 1;
 
 
 

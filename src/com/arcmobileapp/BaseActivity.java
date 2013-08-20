@@ -1,6 +1,9 @@
 package com.arcmobileapp;
 
 import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ContentProviderClient;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -370,12 +373,18 @@ public class BaseActivity extends SlidingFragmentActivity {
 
 	private void toast(String message, int duration) {
 		Toast.makeText(getApplicationContext(), message, duration).show();
+		Toast.makeText(getApplicationContext(), message, duration).show();
+
 	}
 
 	protected void toastShort(String message) {
 		
 		try {
-			toast(message, Toast.LENGTH_SHORT);
+			toast(message, Toast.LENGTH_LONG);
+			
+	
+			
+			
 		} catch (Exception e) {
 			(new CreateClientLogTask("BaseActivity.toastShort", "Exception Caught", "error", e)).execute();
 

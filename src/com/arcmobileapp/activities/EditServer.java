@@ -257,6 +257,8 @@ public class EditServer extends BaseActivity {
 							
 							getCurrentServer();
 
+							loadingDialog.dismiss();
+
 							Intent goBackProfile = new Intent(getApplicationContext(), UserProfile.class);
 							goBackProfile.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 							startActivity(goBackProfile);

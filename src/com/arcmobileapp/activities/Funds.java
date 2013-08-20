@@ -14,34 +14,30 @@ import android.content.Intent;
 import android.content.res.Resources.NotFoundException;
 import android.os.Bundle;
 import android.text.InputFilter;
+import android.text.InputType;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
+import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
-import com.arcmobileapp.ArcMobileApp;
 import com.arcmobileapp.BaseActivity;
 import com.arcmobileapp.R;
 import com.arcmobileapp.db.controllers.DBController;
 import com.arcmobileapp.domain.Cards;
 import com.arcmobileapp.utils.Constants;
-import com.arcmobileapp.utils.Enums.ModernPicTypes;
 import com.arcmobileapp.utils.CurrencyFilter;
 import com.arcmobileapp.utils.Logger;
 import com.arcmobileapp.utils.Security;
-import com.arcmobileapp.utils.Utils;
 import com.arcmobileapp.web.rskybox.AppActions;
 import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 
@@ -55,6 +51,7 @@ public class Funds extends BaseActivity {
 	private String myPIN;
 	private AlertDialog pinDialog;
 	private Cards enteredCard;
+	private Cards cardToName;
 
 	public Funds() {
 		super();
@@ -92,10 +89,11 @@ public class Funds extends BaseActivity {
 			AppActions.add("Funds - initStoredCards - Number of Cards:" + cards.size());
 
 			for(Cards card:cards) {
-				LinearLayout addMe = createCardLayout(card);
+				RelativeLayout addMe = createCardLayout(card);
 				storedCardsView.addView(addMe);
 				storedCardsView.addView(createSpace());
-				//Logger.d(card.getNumber() + " | "  + card.getExpirationMonth()  + " | " + card.getExpirationYear() + " | " + card.getCardId()  + " | " + card.getCardLabel());
+				Logger.d(card.getCardName() + " | " + card.getNumber() + " | "  + card.getExpirationMonth()  + " | " + card.getExpirationYear() + " | " + card.getCardId()  + " | " + card.getCardLabel());
+						
 			}
 		} catch (Exception e) {
 			(new CreateClientLogTask("Funds.initStoredCards", "Exception Caught", "error", e)).execute();
@@ -110,16 +108,22 @@ public class Funds extends BaseActivity {
 		return space;
 	}
 	
-	public LinearLayout createCardLayout(final Cards card) {
+	public RelativeLayout createCardLayout(final Cards card) {
 		try {
 			LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE); 
-			LinearLayout rLayout = (LinearLayout) inflater.inflate(R.layout.card_item, null);
+			RelativeLayout rLayout = (RelativeLayout) inflater.inflate(R.layout.card_item, null);
 			
 			
 			
 			
 			TextView tvCardType = (TextView) rLayout.findViewById(R.id.cardType);
-			tvCardType.setText(card.getCardLabel());
+			
+			if (card.getCardName() != null && card.getCardName().length() > 0){
+				tvCardType.setText(card.getCardName() + " (" + card.getCardLabel() + ")");
+			}else{
+				tvCardType.setText(card.getCardLabel());
+
+			}
 			
 			TextView tvCardNumber = (TextView) rLayout.findViewById(R.id.cardNumber);
 			tvCardNumber.setText(card.getCardId());
@@ -153,14 +157,30 @@ public class Funds extends BaseActivity {
 			
 			//toastLong("clicked " + card.getNumber());
 			AlertDialog.Builder builder = new AlertDialog.Builder(Funds.this);
-			builder.setTitle("Delete card?");
+			builder.setTitle("Edit Card?");
 			//builder.setIcon(R.drawable.logo);
-			builder.setPositiveButton("Yes",
+			builder.setPositiveButton("Name Card",
+					new DialogInterface.OnClickListener() {
+
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							cardToName = card;
+							showNameDialog();
+						}
+					}).setNegativeButton("Cancel",
 					new DialogInterface.OnClickListener() {
 
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							
+
+						}
+					}).setNeutralButton("Delete Card",
+					new DialogInterface.OnClickListener() {
+
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+
 							AppActions.add("Funds - Card Deleted");
 
 							 try {
@@ -170,14 +190,7 @@ public class Funds extends BaseActivity {
 								(new CreateClientLogTask("Funds.cardClicked.onClick", "Exception Caught", "error", e)).execute();
 
 							}
-						}
-					}).setNegativeButton("No",
-					new DialogInterface.OnClickListener() {
-
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							AppActions.add("Funds - Card Not Deleted");
-
+							 
 						}
 					});
 			builder.create().show();
@@ -395,17 +408,17 @@ public class Funds extends BaseActivity {
 			
 			LayoutInflater factory = LayoutInflater.from(this);
 			final View makePaymentView = factory.inflate(R.layout.payment_dialog, null);
-			final EditText input = (EditText) makePaymentView.findViewById(R.id.paymentInput);
-			
+			final EditText input = (EditText) makePaymentView.findViewById(R.id.paymentInput);			
 			
 			
 			TextView paymentTitle = (TextView) makePaymentView.findViewById(R.id.paymentTitle);
-			paymentTitle.setText("Please create a PIN");
+			paymentTitle.setText("Your PIN will be used to securely encrypt your card.");
 			input.setGravity(Gravity.CENTER | Gravity.BOTTOM);
 
-			input.setFilters(new InputFilter[] { new CurrencyFilter() });
+			input.setFilters(new InputFilter[] { new CurrencyFilter(), new InputFilter.LengthFilter(6) });
 			TextView remainingBalance = (TextView) makePaymentView.findViewById(R.id.paymentRemaining);
-			remainingBalance.setVisibility(View.GONE);
+			//remainingBalance.setVisibility(View.GONE);
+			remainingBalance.setText("Please create a PIN");
 			
 			
 			int currentapiVersion = android.os.Build.VERSION.SDK_INT;
@@ -414,6 +427,8 @@ public class Funds extends BaseActivity {
 			if (currentapiVersion <= android.os.Build.VERSION_CODES.GINGERBREAD_MR1){
 
 				paymentTitle.setTextColor(getResources().getColor(R.color.white));
+				remainingBalance.setTextColor(getResources().getColor(R.color.white));
+
 			}
 			
 			
@@ -493,5 +508,131 @@ public class Funds extends BaseActivity {
 
 		}
 	}
+	
+	
+	private void showNameDialog() {
+		try {
+			
+			AppActions.add("Funds -Show PIN Dialog");
+
+			pinDialog = null;
+			
+			LayoutInflater factory = LayoutInflater.from(this);
+			final View makePaymentView = factory.inflate(R.layout.payment_dialog, null);
+			final EditText input = (EditText) makePaymentView.findViewById(R.id.paymentInput);			
+			
+			
+			TextView paymentTitle = (TextView) makePaymentView.findViewById(R.id.paymentTitle);
+			paymentTitle.setText("Enter a name for this card.");
+			input.setGravity(Gravity.CENTER | Gravity.BOTTOM);
+			input.setInputType(InputType.TYPE_CLASS_TEXT);
+
+			//input.setFilters(new InputFilter[] { new CurrencyFilter(), new InputFilter.LengthFilter(6) });
+			TextView remainingBalance = (TextView) makePaymentView.findViewById(R.id.paymentRemaining);
+			remainingBalance.setVisibility(View.GONE);
+			//remainingBalance.setText("Please create a PIN");
+			
+			
+			int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+			
+			//Set colors
+			if (currentapiVersion <= android.os.Build.VERSION_CODES.GINGERBREAD_MR1){
+
+				paymentTitle.setTextColor(getResources().getColor(R.color.white));
+				remainingBalance.setTextColor(getResources().getColor(R.color.white));
+
+			}
+			
+			
+			
+			AlertDialog.Builder builder = new AlertDialog.Builder(Funds.this);
+			builder.setTitle(getString(R.string.app_dialog_title));
+			builder.setView(makePaymentView);
+			//builder.setIcon(R.drawable.logo);
+			builder.setCancelable(true);
+			builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+
+				}
+			});
+			
+			builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+
+				}
+			});
+			
+			
+			builder.setOnCancelListener(new OnCancelListener() {
+
+				@Override
+				public void onCancel(DialogInterface dialog) {
+				}
+			});
+			pinDialog = builder.create();
+			
+			pinDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+
+			pinDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+
+				@Override
+				public void onShow(DialogInterface dialog) {
+
+					Button b = pinDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+					b.setOnClickListener(new View.OnClickListener() {
+
+						@Override
+						public void onClick(View view) {
+							
+							try {
+								if (input.getText().toString().length() < 2){
+									toastShort("Name must be at least 2 digits");
+								}else{
+									String cardName = input.getText().toString();
+									
+									DBController.updateCardName(getContentProvider(), cardToName.getId(), cardName);
+									pinDialog.dismiss();
+									initStoredCards();
+								}
+							} catch (Exception e) {
+								(new CreateClientLogTask("Funds.showNameDialog.onClick", "Exception Caught", "error", e)).execute();
+
+							}
+						
+							
+						}
+					});
+					
+					
+					
+					Button c = pinDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+					c.setOnClickListener(new View.OnClickListener() {
+
+						@Override
+						public void onClick(View view) {
+							
+							pinDialog.dismiss();
+						
+							
+						}
+					});
+					
+					
+					
+				}
+			});
+			pinDialog.show();
+		} catch (NotFoundException e) {
+			(new CreateClientLogTask("Funds.showNameDialog", "Exception Caught", "error", e)).execute();
+
+		}
+		
+	}
+	
+	
 	
 }

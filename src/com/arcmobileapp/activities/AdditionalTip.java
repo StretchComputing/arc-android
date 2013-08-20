@@ -385,7 +385,15 @@ public class AdditionalTip extends BaseActivity {
 			  for (int i = 0; i < cards.size(); i++){
 				  Cards currentCard = cards.get(i);
 				  
-				  listItems.add(currentCard.getCardLabel() + currentCard.getCardId());
+				  
+				  if (currentCard.getCardName() != null && currentCard.getCardName().length() > 0){
+			
+						 listItems.add(currentCard.getCardName() +  " (" + currentCard.getCardLabel() + ") " +currentCard.getCardId());
+
+					}else{
+						  listItems.add(currentCard.getCardLabel() + currentCard.getCardId());
+
+					}
 			  }
 
 			  final CharSequence[] items = listItems.toArray(new CharSequence[listItems.size()]);

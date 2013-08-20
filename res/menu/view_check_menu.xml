@@ -3,7 +3,7 @@
     <item
         android:id="@+id/menu_settings"
         android:orderInCategory="0"
-        android:showAsAction="ifRoom"
+        android:showAsAction="always"
         android:title="split">
         <menu>
             <item
@@ -12,7 +12,7 @@
             
             <item
                 android:id="@+id/splitByPercent"
-                android:title="Split By %"/>
+                android:title="Split By # People"/>
             
         </menu>
        
@@ -21,7 +21,7 @@
      <item
         android:id="@+id/showBalance"
         android:orderInCategory="0"
-        android:showAsAction="ifRoom"
+        android:showAsAction="always"
         android:title="balance">
         
        

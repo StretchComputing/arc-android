@@ -104,7 +104,8 @@ public class UserLogin extends BaseActivity {
 
 								}
 								toastShort("Login Successful!");
-								
+								loadingDialog.dismiss();
+
 								Intent goBackProfile = new Intent(getApplicationContext(), Home.class);
 								goBackProfile.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 								startActivity(goBackProfile);

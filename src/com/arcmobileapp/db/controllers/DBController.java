@@ -10,6 +10,7 @@ import android.os.RemoteException;
 
 import com.arcmobileapp.db.provider.Table_Funds.FundsColumns;
 import com.arcmobileapp.domain.Cards;
+import com.arcmobileapp.utils.Encrypter;
 import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 
 public class DBController {
@@ -34,6 +35,21 @@ public class DBController {
 
         }		
 	}
+	
+	public static synchronized void updateCardName(ContentProviderClient mProvider, int cardId, String cardName) {
+        try {
+        	String whereClause = FundsColumns._ID + " =?";
+            String[] whereArgs = { String.valueOf(cardId) };
+    	    ContentValues myValues = new ContentValues();
+    	    myValues.put(FundsColumns.CARD_NAME, encrypt(cardName));
+    	    mProvider.update(FundsColumns.CONTENT_URI, myValues, whereClause, whereArgs);
+        } catch (RemoteException e) {
+			(new CreateClientLogTask("DBController.updateCard", "Exception Caught", "error", e)).execute();
+
+        }		
+	}
+	
+	
 	
 	public static synchronized void clearCards(ContentProviderClient mProvider) {
         try {
@@ -94,4 +110,19 @@ public class DBController {
 
 		}
     }
+	
+	
+	protected static Encrypter getEncrypter() {
+		Encrypter encrypter = Encrypter.INSTANCE;
+		if (encrypter == null || !encrypter.isReadyToRun()) {
+			encrypter.setupEncrypter();
+		}
+		return encrypter;
+	}
+
+
+	protected static String encrypt(String data) {
+		return getEncrypter().packString(data);
+	}
+	
 }

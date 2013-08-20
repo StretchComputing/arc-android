@@ -251,7 +251,8 @@ public class Home extends BaseActivity implements ScrollViewListener {
 
 			AppActions.add("Home - Carousel Item Clicked - Index:" + pos + ", Merchant Name:" + name);
 
-			
+			loadingDialog.dismiss();
+
 			Intent viewCheck = new Intent(getApplicationContext(), GetCheck.class);
 			viewCheck.putExtra(Constants.VENUE, name);
 			viewCheck.putExtra(Constants.VENUE_ID, theId); 
@@ -340,7 +341,7 @@ public class Home extends BaseActivity implements ScrollViewListener {
 			l2.setLayoutParams(new LayoutParams(currentImageWidth, LayoutParams.MATCH_PARENT));
 			mCarouselContainer.addView(l2);
 			
-			
+			scrollView.scrollTo(0,0);
 			scrollView.setOnTouchListener(new OnTouchListener() {
 				
 				@Override
@@ -461,6 +462,9 @@ public class Home extends BaseActivity implements ScrollViewListener {
 			currentScrollPos = x;
 			int index = getCurrentIndex(x);
 			
+			if (index >= merchants.size()){
+				index = merchants.size() - 1;
+			}
 			MerchantObject merchant = merchants.get(index);
 			
 			currentMerchantText.setText(merchant.merchantName);

@@ -12,14 +12,17 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.arcmobileapp.domain.CreatePayment;
 import com.arcmobileapp.domain.CreateReview;
 import com.arcmobileapp.domain.LineItem;
-import com.arcmobileapp.utils.ArcPreferences;
 import com.arcmobileapp.utils.Logger;
+import com.arcmobileapp.web.rskybox.AppActions;
 import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 
 public class WebServices {
@@ -67,6 +70,11 @@ public class WebServices {
 		StringBuilder reply = null;
 		try {
 
+			try{
+				AppActions.add("POST API Call - URL: " + url + ", JSON INPUT: " + json);
+			}catch(Exception e){
+				
+			}
 			this.httpClient = new DefaultHttpClient();
 			httpPost = new HttpPost(url);
 
@@ -78,7 +86,21 @@ public class WebServices {
 					httpPost.setHeader("Authorization", "Basic " + token);
 				}
 			}
-
+			
+		
+			
+			HttpParams httpParameters = new BasicHttpParams();
+			// Set the timeout in milliseconds until a connection is established.
+			// The default value is zero, that means the timeout is not used. 
+			int timeoutConnection = 15000;
+			HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection);
+			// Set the default socket timeout (SO_TIMEOUT) 
+			// in milliseconds which is the timeout for waiting for data.
+			int timeoutSocket = 15000;
+			HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
+			httpClient.setParams(httpParameters);
+			
+			
 			httpResponse = httpClient.execute(httpPost);
 
 			httpStatusCode = httpResponse.getStatusLine().getStatusCode();
@@ -114,6 +136,13 @@ public class WebServices {
 			return null;
 		}
 
+		
+		try{
+			JSONObject responseJson =  new JSONObject(reply.toString());
+			AppActions.add("RESPONSE JSON: " + responseJson);
+		}catch(Exception e){
+			
+		}
 		return reply.toString();
 	}
 
@@ -123,6 +152,14 @@ public class WebServices {
 		StringBuilder reply = null;
 		try {
 
+			
+			try{
+				AppActions.add("GET API Call - URL: " + url);
+			}catch(Exception e){
+				
+			}
+			
+			
 			this.httpClient = new DefaultHttpClient();
 			httpGet = new HttpGet(url);
 			httpGet.setHeader("Content-type", "application/json");
@@ -130,6 +167,18 @@ public class WebServices {
 				httpGet.setHeader("Authorization", "Basic " + token);
 			}
 		
+			HttpParams httpParameters = new BasicHttpParams();
+			// Set the timeout in milliseconds until a connection is established.
+			// The default value is zero, that means the timeout is not used. 
+			int timeoutConnection = 15000;
+			HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection);
+			// Set the default socket timeout (SO_TIMEOUT) 
+			// in milliseconds which is the timeout for waiting for data.
+			int timeoutSocket = 15000;
+			HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
+			httpClient.setParams(httpParameters);
+			
+			
 			httpResponse = httpClient.execute(httpGet);
 
 			httpStatusCode = httpResponse.getStatusLine().getStatusCode();
@@ -165,6 +214,15 @@ public class WebServices {
 			return null;
 		}
 
+		
+		try{
+			JSONObject responseJson =  new JSONObject(reply.toString());
+			AppActions.add("RESPONSE JSON: " + responseJson);
+		}catch(Exception e){
+			
+		}
+		
+		
 		return reply.toString();
 	}
 	
@@ -211,7 +269,7 @@ public class WebServices {
 		try {
 			currentAPI = "getDutchServers";
 
-			String url = "http://arc-servers.dagher.net.co/rest/v1/servers/list";
+			String url = URLs.GATEWAY_SERVER + "servers/list";
 			Logger.d("|arc-web-services|", "GET SERVERS URL  = " + url);
 			
 			JSONObject json = new JSONObject();
@@ -233,7 +291,7 @@ public class WebServices {
 		try {
 			currentAPI = "setDutchServer";
 
-			String url = "http://arc-servers.dagher.net.co/rest/v1/servers/" + customerId + "/setserver/" + serverId;
+			String url = URLs.GATEWAY_SERVER + "servers/" + customerId + "/setserver/" + serverId;
 			Logger.d("SET SERVER URL: " + url);
 			
 		
@@ -254,7 +312,7 @@ public class WebServices {
 		try {
 			currentAPI = "GetServer";
 
-			String url = "http://gateway.dagher.mobi/rest/v1/servers/assign/current";
+			String url = URLs.GATEWAY_SERVER + "servers/assign/current";
 			Logger.d("|arc-web-services|", "GET SERVER URL  = " + url);
 			
 		

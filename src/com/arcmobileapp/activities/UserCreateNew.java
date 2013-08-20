@@ -302,7 +302,7 @@ public class UserCreateNew extends BaseActivity {
 			paymentTitle.setText("Please create a PIN");
 			input.setGravity(Gravity.CENTER | Gravity.BOTTOM);
 
-			input.setFilters(new InputFilter[] { new CurrencyFilter() });
+			input.setFilters(new InputFilter[] { new CurrencyFilter(), new InputFilter.LengthFilter(6) });
 			TextView remainingBalance = (TextView) makePaymentView.findViewById(R.id.paymentRemaining);
 			remainingBalance.setVisibility(View.GONE);
 			
@@ -503,6 +503,8 @@ public class UserCreateNew extends BaseActivity {
 					try {
 						if (didCancelScan){
 							didCancelScan = false;
+							loadingDialog.dismiss();
+
 							Intent goBackProfile = new Intent(getApplicationContext(), Home.class);
 							goBackProfile.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 							startActivity(goBackProfile);
@@ -539,7 +541,8 @@ public class UserCreateNew extends BaseActivity {
 			//save it
 			saveCard();
 			
-			
+			loadingDialog.dismiss();
+
 			
 			toastShort("Thank you for registering!");
 			Intent goBackProfile = new Intent(getApplicationContext(), Home.class);
