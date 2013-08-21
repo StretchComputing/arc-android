@@ -1,9 +1,6 @@
 package com.arcmobileapp;
 
 import android.app.AlertDialog;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.ContentProviderClient;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -58,17 +55,24 @@ public class BaseActivity extends SlidingFragmentActivity {
 	protected ContentProviderClient mProvider;
 	public ContentResolver contentResolver;
 	private CanvasTransformer mTransformer;
+
 	
 	public String TAG = "BaseActivity";
 
+
+    
+    
+    
 	public BaseActivity() {
 		mTitleRes = R.string.app_name;
+		
 	}
 
 	public BaseActivity(int titleRes) {
 		mTitleRes = titleRes;
 	}
 
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		try {

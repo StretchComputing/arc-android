@@ -4,9 +4,12 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
+import com.arcmobileapp.ArcMobileApp;
 import com.arcmobileapp.BaseActivity;
 import com.arcmobileapp.R;
 import com.arcmobileapp.utils.ArcPreferences;
@@ -16,6 +19,15 @@ import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 
 public class Support extends BaseActivity {
 
+	
+	private TextView titleTextView;
+	private TextView questionTextView;
+	
+	private TextView emailTextView;
+	private TextView phoneTextView;
+	
+	private Button emailButton;
+	private Button phoneButton;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		try {
@@ -25,6 +37,24 @@ public class Support extends BaseActivity {
 			super.onCreate(savedInstanceState);
 			setContentView(R.layout.activity_support);
 			
+			
+			titleTextView = (TextView) findViewById(R.id.item_you_pay);
+			titleTextView.setTypeface(ArcMobileApp.getLatoBoldTypeface());
+			
+			questionTextView = (TextView) findViewById(R.id.current_merchant);
+			questionTextView.setTypeface(ArcMobileApp.getLatoBoldTypeface());
+			
+			emailTextView = (TextView) findViewById(R.id.textView3);
+			emailTextView.setTypeface(ArcMobileApp.getLatoLightTypeface());
+			
+			phoneTextView = (TextView) findViewById(R.id.textView4);
+			phoneTextView.setTypeface(ArcMobileApp.getLatoLightTypeface());
+			
+			emailButton = (Button) findViewById(R.id.button_email);
+			emailButton.setTypeface(ArcMobileApp.getLatoBoldTypeface());
+			
+			phoneButton = (Button) findViewById(R.id.button_call);
+			phoneButton.setTypeface(ArcMobileApp.getLatoBoldTypeface());
 			
 			ArcPreferences myPrefs = new ArcPreferences(getApplicationContext());
 			

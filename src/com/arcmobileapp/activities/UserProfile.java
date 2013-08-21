@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
+import com.arcmobileapp.ArcMobileApp;
 import com.arcmobileapp.BaseActivity;
 import com.arcmobileapp.R;
 import com.arcmobileapp.utils.ArcPreferences;
@@ -28,6 +29,10 @@ public class UserProfile extends BaseActivity {
 	private TextView emailTextView;
 	private TextView passwordTextView;
 	private Button editServerButton;
+	private Button signOutButton;
+	private Button loginButton;
+	private Button createButton;
+	private TextView helpItemText;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -40,10 +45,22 @@ public class UserProfile extends BaseActivity {
 			loggedOutView = (RelativeLayout) findViewById(R.id.logged_out_view);
 			emailTextView = (TextView) findViewById(R.id.email_text);
 			passwordTextView = (TextView) findViewById(R.id.password_text);
-			
+			emailTextView.setTypeface(ArcMobileApp.getLatoBoldTypeface());
+			passwordTextView.setTypeface(ArcMobileApp.getLatoBoldTypeface());
+
+			helpItemText = (TextView) findViewById(R.id.help_item_text);
+			helpItemText.setTypeface(ArcMobileApp.getLatoLightTypeface());
+
 			editServerButton = (Button) findViewById(R.id.edit_server_button);
-			
-		
+			signOutButton = (Button) findViewById(R.id.button1);
+			loginButton = (Button) findViewById(R.id.button2);
+			createButton = (Button) findViewById(R.id.button3);
+
+			editServerButton.setTypeface(ArcMobileApp.getLatoBoldTypeface());
+			signOutButton.setTypeface(ArcMobileApp.getLatoBoldTypeface());
+			loginButton.setTypeface(ArcMobileApp.getLatoBoldTypeface());
+			createButton.setTypeface(ArcMobileApp.getLatoBoldTypeface());
+
 			
 			
 			

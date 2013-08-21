@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.arcmobileapp.ArcMobileApp;
 import com.arcmobileapp.R;
 import com.arcmobileapp.activities.Funds;
 import com.arcmobileapp.activities.Home;
@@ -107,6 +108,7 @@ public class MenuListFragment extends ListFragment {
 				//icon.setTypeface(ArcMobileApp.getModernPicsTypeface());
 				TextView title = (TextView) convertView.findViewById(R.id.row_title);
 				title.setText(getItem(position).text);
+				title.setTypeface(ArcMobileApp.getLatoBoldTypeface());
 				convertView.setOnTouchListener(new OnTouchListener() {
 					
 					@Override

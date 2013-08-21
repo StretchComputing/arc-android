@@ -4,10 +4,12 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
+import com.arcmobileapp.ArcMobileApp;
 import com.arcmobileapp.BaseActivity;
 import com.arcmobileapp.R;
 import com.arcmobileapp.utils.ArcPreferences;
@@ -22,6 +24,7 @@ public class UserLogin extends BaseActivity {
 	private TextView emailTextView;
 	private TextView passwordTextView;
 	private ProgressDialog loadingDialog;
+	private Button loginButton;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -34,6 +37,11 @@ public class UserLogin extends BaseActivity {
 			
 			emailTextView = (TextView) findViewById(R.id.register_email_text);
 			passwordTextView = (TextView) findViewById(R.id.register_password_text);
+			emailTextView.setTypeface(ArcMobileApp.getLatoLightTypeface());
+			passwordTextView.setTypeface(ArcMobileApp.getLatoLightTypeface());
+			
+			loginButton = (Button) findViewById(R.id.button1);
+			loginButton.setTypeface(ArcMobileApp.getLatoBoldTypeface());
 
 			loadingDialog = new ProgressDialog(UserLogin.this);
 			loadingDialog.setTitle("Logging In");

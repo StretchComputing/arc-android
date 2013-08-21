@@ -1,7 +1,6 @@
 package com.arcmobileapp.activities;
 
 import java.util.ArrayList;
-import java.util.UUID;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -16,6 +15,7 @@ import android.graphics.PorterDuff.Mode;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -36,18 +36,17 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
+import com.arcmobileapp.ArcMobileApp;
 import com.arcmobileapp.BaseActivity;
 import com.arcmobileapp.R;
 import com.arcmobileapp.utils.ArcPreferences;
 import com.arcmobileapp.utils.CarouselScrollView;
 import com.arcmobileapp.utils.Constants;
 import com.arcmobileapp.utils.Keys;
-import com.arcmobileapp.utils.Logger;
 import com.arcmobileapp.utils.MerchantObject;
 import com.arcmobileapp.utils.ScrollViewListener;
 import com.arcmobileapp.web.ErrorCodes;
 import com.arcmobileapp.web.GetMerchantsTask;
-import com.arcmobileapp.web.GetTokenTask;
 import com.arcmobileapp.web.rskybox.AppActions;
 import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 
@@ -103,13 +102,17 @@ public class Home extends BaseActivity implements ScrollViewListener {
 					R.anim.login_fade_in));
 			
 			homeTitle = (TextView) findViewById(R.id.home_title);
-			
-			homeTitle.setTextColor(Color.rgb(190,190,190));
+			homeTitle.setTypeface(ArcMobileApp.getLatoLightTypeface());
+			homeTitle.setTextColor(Color.rgb(170,170,170));
 			
 			currentMerchantText = (TextView) findViewById(R.id.current_merchant);
 			currentMerchantText.setText("");
+			currentMerchantText.setTypeface(ArcMobileApp.getLatoBoldTypeface());
 			currentMerchantAddressText = (TextView) findViewById(R.id.current_address);
 			currentMerchantAddressText.setText("");
+			currentMerchantAddressText.setTypeface(ArcMobileApp.getLatoLightTypeface());
+			
+			
 
 			//txtTitle = (TextView) findViewById(R.id.title);
 			//txtTitle.setFocusable(true);
@@ -119,6 +122,7 @@ public class Home extends BaseActivity implements ScrollViewListener {
 			btnPayBill = (Button) findViewById(R.id.pay_bill_button);
 			//btnExplore = (Button) findViewById(R.id.explore_button);
 			btnPayBill.setVisibility(View.VISIBLE);
+			btnPayBill.setTypeface(ArcMobileApp.getLatoBoldTypeface());
 
 
 

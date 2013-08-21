@@ -4,10 +4,12 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
+import com.arcmobileapp.ArcMobileApp;
 import com.arcmobileapp.BaseActivity;
 import com.arcmobileapp.R;
 import com.arcmobileapp.domain.Check;
@@ -25,6 +27,12 @@ public class GuestCreateCustomer extends BaseActivity {
 	private TextView emailTextView;
 	private TextView passwordTextView;
 	private ProgressDialog loadingDialog;
+	private Button button2;
+	private Button button1;
+
+	private TextView titleText;
+	private TextView subText;
+
 
 	@Override
 	public void onBackPressed() {
@@ -44,7 +52,21 @@ public class GuestCreateCustomer extends BaseActivity {
 			theBill =  (Check) getIntent().getSerializableExtra(Constants.INVOICE);
 
 			emailTextView = (TextView) findViewById (R.id.guest_email_textv);
+			emailTextView.setTypeface(ArcMobileApp.getLatoLightTypeface());
 			passwordTextView = (TextView) findViewById (R.id.guest_password_textv);
+			passwordTextView.setTypeface(ArcMobileApp.getLatoLightTypeface());
+			
+			
+			button1 = (Button) findViewById (R.id.button1);
+			button1.setTypeface(ArcMobileApp.getLatoBoldTypeface());
+			button2 = (Button) findViewById (R.id.button2);
+			button2.setTypeface(ArcMobileApp.getLatoBoldTypeface());
+			
+			titleText = (TextView) findViewById(R.id.remainingText);
+			titleText.setTypeface(ArcMobileApp.getLatoBoldTypeface());
+			
+			subText = (TextView) findViewById(R.id.help_item_text);
+			subText.setTypeface(ArcMobileApp.getLatoLightTypeface());
 			
 			loadingDialog = new ProgressDialog(GuestCreateCustomer.this);
 			loadingDialog.setTitle("Creating Account");

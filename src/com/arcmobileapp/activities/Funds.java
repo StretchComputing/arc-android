@@ -30,6 +30,7 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
+import com.arcmobileapp.ArcMobileApp;
 import com.arcmobileapp.BaseActivity;
 import com.arcmobileapp.R;
 import com.arcmobileapp.db.controllers.DBController;
@@ -53,6 +54,9 @@ public class Funds extends BaseActivity {
 	private Cards enteredCard;
 	private Cards cardToName;
 
+	private TextView titleText;
+	private Button addButton;
+	
 	public Funds() {
 		super();
 	}
@@ -72,6 +76,12 @@ public class Funds extends BaseActivity {
 			theView = (LinearLayout) findViewById(R.id.funds_layout);
 			theView.setAnimation(AnimationUtils.loadAnimation(this, R.anim.login_fade_in));
 			storedCardsView = (LinearLayout) findViewById(R.id.stored_cards_layout);
+			
+			titleText = (TextView)findViewById(R.id.home_title);
+			titleText.setTypeface(ArcMobileApp.getLatoLightTypeface());
+			
+			addButton = (Button)findViewById(R.id.add_card_button);
+			addButton.setTypeface(ArcMobileApp.getLatoBoldTypeface());
 
 			initStoredCards();
 		} catch (NotFoundException e) {
@@ -117,7 +127,8 @@ public class Funds extends BaseActivity {
 			
 			
 			TextView tvCardType = (TextView) rLayout.findViewById(R.id.cardType);
-			
+			tvCardType.setTypeface(ArcMobileApp.getLatoBoldTypeface());
+
 			if (card.getCardName() != null && card.getCardName().length() > 0){
 				tvCardType.setText(card.getCardName() + " (" + card.getCardLabel() + ")");
 			}else{
@@ -127,11 +138,13 @@ public class Funds extends BaseActivity {
 			
 			TextView tvCardNumber = (TextView) rLayout.findViewById(R.id.cardNumber);
 			tvCardNumber.setText(card.getCardId());
-			
+			tvCardNumber.setTypeface(ArcMobileApp.getLatoLightTypeface());
+
 			String expiration = card.getExpirationMonth() + "/" + card.getExpirationYear();
 			TextView tvExpiration = (TextView) rLayout.findViewById(R.id.expiration);
 			tvExpiration.setText(expiration);
-			
+			tvExpiration.setTypeface(ArcMobileApp.getLatoLightTypeface());
+
 			rLayout.setOnClickListener(new OnClickListener() {
 				
 				@Override

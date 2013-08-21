@@ -47,6 +47,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/button_email"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
         android:text="@string/dutch_email"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -67,6 +68,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/button_call"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
         android:text="@string/dutch_phone"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 

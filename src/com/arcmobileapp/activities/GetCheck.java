@@ -28,6 +28,7 @@ import android.widget.TextView;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.arcmobileapp.ArcMobileApp;
 import com.arcmobileapp.BaseActivity;
 import com.arcmobileapp.R;
 import com.arcmobileapp.domain.Check;
@@ -77,7 +78,11 @@ public class GetCheck extends BaseActivity {
 			super.onCreate(savedInstanceState);
 			setContentView(R.layout.get_check);
 			invoice = (EditText) findViewById(R.id.invoice);
+			invoice.setTypeface(ArcMobileApp.getLatoBoldTypeface());
+			
 			title = (TextView) findViewById(R.id.title);
+			title.setTypeface(ArcMobileApp.getLatoBoldTypeface());
+			
 			//activityBar = (ProgressBar) findViewById(R.id.activityBar);
 			//activityBar.setVisibility(View.INVISIBLE);
 			
@@ -91,6 +96,7 @@ public class GetCheck extends BaseActivity {
 			title.setText(venueName);
 			textEnter = (TextView) findViewById(R.id.check_enter);
 			textEnter.setTextColor(Color.rgb(190,190,190));
+			textEnter.setTypeface(ArcMobileApp.getLatoLightTypeface());
 
 			loadingDialog = new ProgressDialog(GetCheck.this);
 			loadingDialog.setTitle("Getting Invoice");

@@ -4,22 +4,24 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RatingBar;
+import android.widget.TextView;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.arcmobileapp.ArcMobileApp;
 import com.arcmobileapp.BaseActivity;
 import com.arcmobileapp.R;
 import com.arcmobileapp.domain.Check;
 import com.arcmobileapp.domain.CreateReview;
 import com.arcmobileapp.utils.Constants;
-import com.arcmobileapp.utils.Keys;
 import com.arcmobileapp.web.SubmitReviewTask;
 import com.arcmobileapp.web.rskybox.AppActions;
-//import android.view.Menu;
 import com.arcmobileapp.web.rskybox.CreateClientLogTask;
+//import android.view.Menu;
 
 
 
@@ -30,7 +32,12 @@ public class Review extends BaseActivity {
 	private RatingBar starRating;
 	private Check theBill;
 	private ProgressDialog loadingDialog;
+	
+	private TextView topTextView;
+	private TextView clickTextView;
 
+	private Button submitButton;
+	
 	@Override
 	public void onBackPressed() {
 	}
@@ -45,14 +52,23 @@ public class Review extends BaseActivity {
 			setContentView(R.layout.activity_review);
 
 			theBill =  (Check) getIntent().getSerializableExtra(Constants.INVOICE);
-
 			
 			textAdditionalComments = (EditText) findViewById(R.id.text_additional_comments);
 			textAdditionalComments.setHint(R.string.review_hint);
+			textAdditionalComments.setTypeface(ArcMobileApp.getLatoLightTypeface());
 			
 			starRating = (RatingBar) findViewById(R.id.star_rating);
 
+			topTextView = (TextView) findViewById(R.id.text_enter_pin);
+			topTextView.setTypeface(ArcMobileApp.getLatoBoldTypeface());
+
+			clickTextView = (TextView) findViewById(R.id.current_merchant);
+			clickTextView.setTypeface(ArcMobileApp.getLatoLightTypeface());
+
 			
+			submitButton = (Button) findViewById(R.id.button_email);
+			submitButton.setTypeface(ArcMobileApp.getLatoBoldTypeface());
+
 			loadingDialog = new ProgressDialog(Review.this);
 			loadingDialog.setTitle("Sending Review");
 			loadingDialog.setMessage("Please Wait...");

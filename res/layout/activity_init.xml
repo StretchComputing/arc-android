@@ -91,9 +91,10 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/current_merchant"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="64dp"
         android:text="@string/init_sub_title"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColorHint="@color/black" />
 
     <ImageView
         android:id="@+id/help_dollar_arrow"

@@ -30,7 +30,7 @@
             android:layout_marginLeft="17dp"
             android:layout_toRightOf="@+id/help_dollar_arrow"
             android:text="@string/funds_secure_text"
-            android:textSize="12sp" />
+            android:textSize="13sp" />
 
     </RelativeLayout>
     

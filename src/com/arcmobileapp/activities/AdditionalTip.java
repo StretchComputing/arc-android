@@ -16,6 +16,7 @@ import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -23,6 +24,7 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
+import com.arcmobileapp.ArcMobileApp;
 import com.arcmobileapp.BaseActivity;
 import com.arcmobileapp.R;
 import com.arcmobileapp.db.controllers.DBController;
@@ -62,6 +64,9 @@ public class AdditionalTip extends BaseActivity {
     private boolean didChooseRadio;
     private ArrayList<Cards> cards;
     private boolean justAddedCard;
+    private TextView totalLabel;
+    private TextView tipLabel;
+    private Button continueButton;
 	
     @Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -77,16 +82,27 @@ public class AdditionalTip extends BaseActivity {
 			theBill =  (Check) getIntent().getSerializableExtra(Constants.INVOICE);
 			
 			textTotalPayment = (TextView) findViewById(R.id.text_total_payment);
+			textTotalPayment.setTypeface(ArcMobileApp.getLatoBoldTypeface());
 			myTipText = (EditText) findViewById(R.id.my_tip_text);
+			myTipText.setTypeface(ArcMobileApp.getLatoBoldTypeface());
 
 			radioEightteen = (RadioButton) findViewById(R.id.radio_eightteen);
+			radioEightteen.setTypeface(ArcMobileApp.getLatoBoldTypeface());
 			radioTwenty = (RadioButton) findViewById(R.id.radio_twenty);
+			radioTwenty.setTypeface(ArcMobileApp.getLatoBoldTypeface());
 			radioTwentyTwo = (RadioButton) findViewById(R.id.radio_twenty_two);
+			radioTwentyTwo.setTypeface(ArcMobileApp.getLatoBoldTypeface());
 
 
 			radiogroup1 = (RadioGroup) findViewById(R.id.tip_radio_group);
 			
+			totalLabel = (TextView)findViewById(R.id.text_enter_pin);
+			totalLabel.setTypeface(ArcMobileApp.getLatoBoldTypeface());
+			tipLabel = (TextView)findViewById(R.id.current_merchant);
+			tipLabel.setTypeface(ArcMobileApp.getLatoBoldTypeface());
 			
+			continueButton = (Button)findViewById(R.id.button_email);
+			continueButton.setTypeface(ArcMobileApp.getLatoBoldTypeface());
 			
 			textTotalPayment.setText(String.format("$%.2f", theBill.getMyBasePayment()));
 			

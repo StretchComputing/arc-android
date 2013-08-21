@@ -41,7 +41,6 @@ public class ArcPreferences {
 		
 		//return URLs.DEV_SERVER;
 		
-		
 		String storedServer = getString(Keys.DUTCH_URL);
 		if (storedServer != null && storedServer.length() > 0){
 			return storedServer;

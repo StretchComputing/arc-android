@@ -33,7 +33,7 @@
         android:layout_centerHorizontal="true"
         android:text="@string/review_star_text"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textSize="12sp" />
+        android:textSize="14sp" />
 
     <EditText
         android:id="@+id/text_additional_comments"

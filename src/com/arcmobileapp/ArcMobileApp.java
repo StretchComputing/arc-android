@@ -18,6 +18,10 @@ public class ArcMobileApp extends Application {
 	protected static DateTimeFormatter DTFormatter;
 	private static Context context;
 	private static Typeface modernPics;
+	
+	private static Typeface latoBold;
+	private static Typeface latoLight;
+
 
     public ArcMobileApp() {
         instance = this;
@@ -27,10 +31,21 @@ public class ArcMobileApp extends Application {
  	//http://stackoverflow.com/questions/9797872/use-roboto-font-for-earlier-devices
  	private void initFonts() {
  		modernPics = Typeface.createFromAsset(getAssets(), "fonts/modernpics.otf");  
+ 		
+ 		latoBold = Typeface.createFromAsset(getAssets(), "fonts/Lato-Bol.ttf");  
+ 		latoLight = Typeface.createFromAsset(getAssets(), "fonts/Lato-Lig.ttf"); 
  	}
  	
 	public static Typeface getModernPicsTypeface() {
 		return modernPics;
+	}
+	
+	public static Typeface getLatoBoldTypeface() {
+		return latoBold;
+	}
+	
+	public static Typeface getLatoLightTypeface() {
+		return latoLight;
 	}
     
     public static DateTimeFormatter getFormatter(){

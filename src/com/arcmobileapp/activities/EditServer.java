@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
+import com.arcmobileapp.ArcMobileApp;
 import com.arcmobileapp.BaseActivity;
 import com.arcmobileapp.R;
 import com.arcmobileapp.utils.ArcPreferences;
@@ -34,12 +35,16 @@ public class EditServer extends BaseActivity {
 	private ListView list;
 	private ArrayAdapter<ServerObject> adapter;
 
+	private TextView titleText;
 
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_edit_server);
+		
+		titleText = (TextView)findViewById(R.id.title_text);
+		titleText.setTypeface(ArcMobileApp.getLatoBoldTypeface());
 		
 		loadingDialog = new ProgressDialog(EditServer.this);
 		loadingDialog.setTitle("Getting Dutch Servers");
@@ -199,10 +204,12 @@ public class EditServer extends BaseActivity {
 				// Name
 				TextView serverName = (TextView) itemView.findViewById(R.id.server_name);
 				serverName.setText(currentItem.serverName);
-				
+				serverName.setTypeface(ArcMobileApp.getLatoBoldTypeface());
+
 				// URL:
 				TextView serverUrl = (TextView) itemView.findViewById(R.id.server_url);
 				serverUrl.setText(currentItem.serverUrl);
+				serverUrl.setTypeface(ArcMobileApp.getLatoLightTypeface());
 
 				// CHECK:
 				ImageView serverCheck = (ImageView) itemView.findViewById(R.id.server_check);

@@ -8,8 +8,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.arcmobileapp.ArcMobileApp;
 import com.arcmobileapp.R;
 import com.arcmobileapp.utils.ArcPreferences;
 import com.arcmobileapp.utils.Keys;
@@ -22,6 +25,17 @@ public class InitActivity extends Activity {
 	private Boolean doesHaveToken;
 	private Boolean tokenDidFail = false;
 	
+	private TextView titleText;
+	private TextView subTitleText;
+	private TextView stepOne;
+	private TextView stepTwo;
+	private TextView stepthree;
+	private TextView termsText;
+	
+	private Button startButton;
+	private Button termsButton;
+	private Button privacyButton;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		try {
@@ -30,6 +44,31 @@ public class InitActivity extends Activity {
 			this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
 			setContentView(R.layout.activity_init);
+			
+			titleText = (TextView)findViewById(R.id.current_merchant);
+			titleText.setTypeface(ArcMobileApp.getLatoBoldTypeface());
+			
+			subTitleText = (TextView)findViewById(R.id.item_you_pay);
+			subTitleText.setTypeface(ArcMobileApp.getLatoLightTypeface());
+			
+			stepOne = (TextView)findViewById(R.id.textView3);
+			stepOne.setTypeface(ArcMobileApp.getLatoBoldTypeface());
+			
+			stepTwo = (TextView)findViewById(R.id.amountText);
+			stepTwo.setTypeface(ArcMobileApp.getLatoBoldTypeface());
+			
+			stepthree = (TextView)findViewById(R.id.nameText);
+			stepthree.setTypeface(ArcMobileApp.getLatoBoldTypeface());
+			
+			termsText = (TextView)findViewById(R.id.text_enter_pin);
+			termsText.setTypeface(ArcMobileApp.getLatoLightTypeface());
+			
+			startButton = (Button)findViewById(R.id.button_call);
+			startButton.setTypeface(ArcMobileApp.getLatoBoldTypeface());
+			termsButton = (Button)findViewById(R.id.button_email);
+			termsButton.setTypeface(ArcMobileApp.getLatoLightTypeface());
+			privacyButton = (Button)findViewById(R.id.Button01);
+			privacyButton.setTypeface(ArcMobileApp.getLatoLightTypeface());
 
 			//Get the token
 			

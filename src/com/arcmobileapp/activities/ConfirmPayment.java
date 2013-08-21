@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
+import com.arcmobileapp.ArcMobileApp;
 import com.arcmobileapp.BaseActivity;
 import com.arcmobileapp.R;
 import com.arcmobileapp.db.controllers.DBController;
@@ -53,6 +54,11 @@ public class ConfirmPayment extends BaseActivity {
     private int myPaymentId;
 	private String myPIN;
 
+	private TextView titleText;
+	private TextView paymentLabel;
+	private TextView totalLabel;
+	
+	private Button confirmButton;
    
     
 	@Override
@@ -68,12 +74,28 @@ public class ConfirmPayment extends BaseActivity {
 			justAddedCard = getIntent().getBooleanExtra(Constants.JUST_ADD_CARD, false);
 			
 			myTotalPayment = (TextView) findViewById(R.id.my_total_payment);
+			myTotalPayment.setTypeface(ArcMobileApp.getLatoBoldTypeface());
 			myPaymentUsed = (TextView) findViewById(R.id.my_payment_used);
+			myPaymentUsed.setTypeface(ArcMobileApp.getLatoBoldTypeface());
+			
 			textEnterPin = (TextView) findViewById(R.id.text_enter_pin);
 			textEnterPin.setFilters(new InputFilter[] { new InputFilter.LengthFilter(6) });
 
 			myPinText = (EditText) findViewById(R.id.confirm_pin_text);
+			myPinText.setTypeface(ArcMobileApp.getLatoBoldTypeface());
 
+			
+			titleText = (TextView) findViewById(R.id.text_enter_pin);
+			titleText.setTypeface(ArcMobileApp.getLatoLightTypeface());
+			
+			paymentLabel = (TextView) findViewById(R.id.textView3);
+			paymentLabel.setTypeface(ArcMobileApp.getLatoBoldTypeface());
+			
+			totalLabel = (TextView) findViewById(R.id.current_merchant);
+			totalLabel.setTypeface(ArcMobileApp.getLatoBoldTypeface());
+			
+			confirmButton = (Button) findViewById(R.id.button_email);
+			confirmButton.setTypeface(ArcMobileApp.getLatoBoldTypeface());
 			
 			loadingDialog = new ProgressDialog(ConfirmPayment.this);
 			loadingDialog.setTitle("Making Payment");
@@ -205,7 +227,7 @@ public class ConfirmPayment extends BaseActivity {
 			String splitType = PaymentFlags.SplitType.DOLLAR.toString();
 			
 
-
+			myPinText.setText("");
 			CreatePayment newPayment = new CreatePayment(theBill.getMerchantId(), customerId, String.valueOf(theBill.getId()), theBill.getBaseAmount() + theBill.getTaxAmount(), theBill.getMyBasePayment(), theBill.getMyTip(), account, type, cardType, expiration, pin, null, splitType, null, null, theBill.getMyItems());
 
 			MakePaymentTask task = new MakePaymentTask(token, newPayment, getApplicationContext()) {

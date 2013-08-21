@@ -35,6 +35,7 @@ import android.widget.TextView;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.arcmobileapp.ArcMobileApp;
 import com.arcmobileapp.BaseActivity;
 import com.arcmobileapp.R;
 import com.arcmobileapp.db.controllers.DBController;
@@ -160,20 +161,45 @@ public class ViewCheck extends BaseActivity {
 
 			
 			myTotalTextView = (TextView) findViewById(R.id.myTotalTextView);
+			myTotalTextView.setTypeface(ArcMobileApp.getLatoBoldTypeface());
 			
 			
 			textSubtotalName = (TextView) findViewById(R.id.text_subtotal_name);
+			textSubtotalName.setTypeface(ArcMobileApp.getLatoBoldTypeface());
+			
 			textTaxName = (TextView) findViewById(R.id.text_tax_name);
+			textTaxName.setTypeface(ArcMobileApp.getLatoBoldTypeface());
+
 			textServiceChargeName = (TextView) findViewById(R.id.text_service_charge_name);
+			textServiceChargeName.setTypeface(ArcMobileApp.getLatoBoldTypeface());
+
 			textDiscountName = (TextView) findViewById(R.id.text_discount_name);
+			textDiscountName.setTypeface(ArcMobileApp.getLatoBoldTypeface());
+
 			textAmountDueName = (TextView) findViewById(R.id.text_amount_due_name);
+			textAmountDueName.setTypeface(ArcMobileApp.getLatoBoldTypeface());
+
 			textSubtotalValue = (TextView) findViewById(R.id.text_subtotal_value);
+			textSubtotalValue.setTypeface(ArcMobileApp.getLatoBoldTypeface());
+
 			textTaxValue = (TextView) findViewById(R.id.text_tax_value);
+			textTaxValue.setTypeface(ArcMobileApp.getLatoBoldTypeface());
+
 			textServiceChargeValue = (TextView) findViewById(R.id.text_service_charge_value);
+			textServiceChargeValue.setTypeface(ArcMobileApp.getLatoBoldTypeface());
+
 			textDiscountValue = (TextView) findViewById(R.id.text_discount_value);
+			textDiscountValue.setTypeface(ArcMobileApp.getLatoBoldTypeface());
+
 			textAmountDueValue = (TextView) findViewById(R.id.text_amount_due_value);
+			textAmountDueValue.setTypeface(ArcMobileApp.getLatoBoldTypeface());
+
 			textAlreadyPaidName = (TextView) findViewById(R.id.text_already_paid_name);
+			textAlreadyPaidName.setTypeface(ArcMobileApp.getLatoBoldTypeface());
+
 			textAlreadyPaidValue = (TextView) findViewById(R.id.text_already_paid_value);
+			textAlreadyPaidValue.setTypeface(ArcMobileApp.getLatoBoldTypeface());
+
 
 			myListView = (ListView) findViewById(R.id.invoiceItemList);
 			layoutBottom = (RelativeLayout) findViewById(R.id.invoice_bottom_layout);
@@ -183,6 +209,8 @@ public class ViewCheck extends BaseActivity {
 
 			
 			payBillButton = (Button) findViewById(R.id.invoice_pay_button);
+			payBillButton.setTypeface(ArcMobileApp.getLatoBoldTypeface());
+			
 			payBillButton.setOnClickListener(new Button.OnClickListener() {
 			    public void onClick(View v) {
 			            ViewCheck.this.goAddTip();
@@ -733,21 +761,25 @@ public class ViewCheck extends BaseActivity {
 				
 				// Amount
 				TextView amountText = (TextView) itemView.findViewById(R.id.item_quantity);
+				amountText.setTypeface(ArcMobileApp.getLatoLightTypeface());
 				int amountInt = (int) Math.round(currentItem.getAmount());
 				amountText.setText("" + amountInt);
 				
 				// Name:
 				TextView nameText = (TextView) itemView.findViewById(R.id.item_name);
 				nameText.setText(currentItem.getDescription());
+				nameText.setTypeface(ArcMobileApp.getLatoLightTypeface());
 
 				// Price:
 				TextView priceText = (TextView) itemView.findViewById(R.id.item_price);
 				priceText.setText(String.format("%.2f", currentItem.getValue() * currentItem.getAmount()));
-				
+				priceText.setTypeface(ArcMobileApp.getLatoLightTypeface());
+
 				// You Pay:
 				TextView youPay = (TextView) itemView.findViewById(R.id.item_you_pay);
 				//priceText.setText(String.format("%.2f", currentItem.getValue()));
-				
+				youPay.setTypeface(ArcMobileApp.getLatoLightTypeface());
+
 				Boolean isLarge = false;
 				
 				RelativeLayout backImageView = (RelativeLayout) itemView.findViewById(R.id.back_image_view);

@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
+import com.arcmobileapp.ArcMobileApp;
 import com.arcmobileapp.BaseActivity;
 import com.arcmobileapp.R;
 import com.arcmobileapp.db.controllers.DBController;
@@ -47,6 +48,9 @@ public class UserCreateNew extends BaseActivity {
 	private Cards enteredCard;
 	private String myPIN;
 	private boolean didCancelScan;
+	
+	private TextView titleText;
+	private Button registerButton;
 
 
 
@@ -62,7 +66,15 @@ public class UserCreateNew extends BaseActivity {
 
 			emailTextView = (TextView) findViewById(R.id.new_email_text);
 			passwordTextView = (TextView) findViewById(R.id.new_password_text);
+			emailTextView.setTypeface(ArcMobileApp.getLatoLightTypeface());
+			passwordTextView.setTypeface(ArcMobileApp.getLatoLightTypeface());
 			
+			titleText = (TextView) findViewById(R.id.remainingText);
+			registerButton = (Button)findViewById(R.id.button1);
+			
+			titleText.setTypeface(ArcMobileApp.getLatoLightTypeface());
+			registerButton.setTypeface(ArcMobileApp.getLatoBoldTypeface());
+
 			loadingDialog = new ProgressDialog(UserCreateNew.this);
 			loadingDialog.setTitle("Registering");
 			loadingDialog.setMessage("Please Wait...");
