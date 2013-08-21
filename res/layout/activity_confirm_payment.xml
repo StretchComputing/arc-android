@@ -47,7 +47,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/confirm_pin_text"
-        android:layout_marginLeft="52dp"
+        android:layout_marginLeft="65dp"
         android:layout_marginTop="15dp"
         android:text="@string/confirm_total"
         android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -58,7 +58,8 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/textView3"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="50dp"
+        android:layout_marginRight="60dp"
+        android:gravity="right"
         android:text="Medium Text"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -68,7 +69,8 @@
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/textView3"
         android:layout_alignBottom="@+id/textView3"
-        android:layout_alignLeft="@+id/my_total_payment"
+        android:layout_alignRight="@+id/my_total_payment"
+        android:gravity="right"
         android:text="Medium Text"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 

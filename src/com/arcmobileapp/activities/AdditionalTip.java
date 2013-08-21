@@ -67,6 +67,7 @@ public class AdditionalTip extends BaseActivity {
     private TextView totalLabel;
     private TextView tipLabel;
     private Button continueButton;
+    private TextView dollarSign;
 	
     @Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -86,6 +87,11 @@ public class AdditionalTip extends BaseActivity {
 			myTipText = (EditText) findViewById(R.id.my_tip_text);
 			myTipText.setTypeface(ArcMobileApp.getLatoBoldTypeface());
 
+			
+			dollarSign = (TextView) findViewById(R.id.amountText);
+			dollarSign.setTypeface(ArcMobileApp.getLatoBoldTypeface());
+			
+			
 			radioEightteen = (RadioButton) findViewById(R.id.radio_eightteen);
 			radioEightteen.setTypeface(ArcMobileApp.getLatoBoldTypeface());
 			radioTwenty = (RadioButton) findViewById(R.id.radio_twenty);

@@ -305,7 +305,7 @@ public class UserCreateNew extends BaseActivity {
 			pinDialog = null;
 			
 			LayoutInflater factory = LayoutInflater.from(this);
-			final View makePaymentView = factory.inflate(R.layout.payment_dialog, null);
+			final View makePaymentView = factory.inflate(R.layout.pin_dialog, null);
 			final EditText input = (EditText) makePaymentView.findViewById(R.id.paymentInput);
 			
 			
@@ -314,7 +314,7 @@ public class UserCreateNew extends BaseActivity {
 			paymentTitle.setText("Please create a PIN");
 			input.setGravity(Gravity.CENTER | Gravity.BOTTOM);
 
-			input.setFilters(new InputFilter[] { new CurrencyFilter(), new InputFilter.LengthFilter(6) });
+			input.setFilters(new InputFilter[] { new InputFilter.LengthFilter(6) });
 			TextView remainingBalance = (TextView) makePaymentView.findViewById(R.id.paymentRemaining);
 			remainingBalance.setVisibility(View.GONE);
 			

@@ -79,14 +79,15 @@ public class ConfirmPayment extends BaseActivity {
 			myPaymentUsed.setTypeface(ArcMobileApp.getLatoBoldTypeface());
 			
 			textEnterPin = (TextView) findViewById(R.id.text_enter_pin);
-			textEnterPin.setFilters(new InputFilter[] { new InputFilter.LengthFilter(6) });
-
+			textEnterPin.setTypeface(ArcMobileApp.getLatoLightTypeface());
+			
 			myPinText = (EditText) findViewById(R.id.confirm_pin_text);
 			myPinText.setTypeface(ArcMobileApp.getLatoBoldTypeface());
+			myPinText.setFilters(new InputFilter[] {new InputFilter.LengthFilter(6) });
 
 			
-			titleText = (TextView) findViewById(R.id.text_enter_pin);
-			titleText.setTypeface(ArcMobileApp.getLatoLightTypeface());
+			//titleText = (TextView) findViewById(R.id.text_enter_pin);
+			//titleText.setTypeface(ArcMobileApp.getLatoLightTypeface());
 			
 			paymentLabel = (TextView) findViewById(R.id.textView3);
 			paymentLabel.setTypeface(ArcMobileApp.getLatoBoldTypeface());
@@ -412,7 +413,7 @@ public class ConfirmPayment extends BaseActivity {
 			pinDialog = null;
 			
 			LayoutInflater factory = LayoutInflater.from(this);
-			final View makePaymentView = factory.inflate(R.layout.payment_dialog, null);
+			final View makePaymentView = factory.inflate(R.layout.pin_dialog, null);
 			final EditText input = (EditText) makePaymentView.findViewById(R.id.paymentInput);
 			
 			
@@ -421,7 +422,7 @@ public class ConfirmPayment extends BaseActivity {
 			paymentTitle.setText("You must create a PIN so we can securely encrypt your card information.");
 			input.setGravity(Gravity.CENTER | Gravity.BOTTOM);
 
-			input.setFilters(new InputFilter[] { new CurrencyFilter(), new InputFilter.LengthFilter(6) });
+			input.setFilters(new InputFilter[] { new InputFilter.LengthFilter(6) });
 			TextView remainingBalance = (TextView) makePaymentView.findViewById(R.id.paymentRemaining);
 			remainingBalance.setText("Save your payment info?");
 			//remainingBalance.setVisibility(View.GONE);

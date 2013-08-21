@@ -16,6 +16,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.InputFilter;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -34,6 +35,7 @@ import com.arcmobileapp.R;
 import com.arcmobileapp.domain.Check;
 import com.arcmobileapp.utils.ArcPreferences;
 import com.arcmobileapp.utils.Constants;
+import com.arcmobileapp.utils.CurrencyFilter;
 import com.arcmobileapp.utils.Keys;
 import com.arcmobileapp.utils.Logger;
 import com.arcmobileapp.web.ErrorCodes;
@@ -79,7 +81,8 @@ public class GetCheck extends BaseActivity {
 			setContentView(R.layout.get_check);
 			invoice = (EditText) findViewById(R.id.invoice);
 			invoice.setTypeface(ArcMobileApp.getLatoBoldTypeface());
-			
+			invoice.setFilters(new InputFilter[] { new InputFilter.LengthFilter(6) });
+
 			title = (TextView) findViewById(R.id.title);
 			title.setTypeface(ArcMobileApp.getLatoBoldTypeface());
 			
