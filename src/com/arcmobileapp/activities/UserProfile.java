@@ -33,6 +33,8 @@ public class UserProfile extends BaseActivity {
 	private Button loginButton;
 	private Button createButton;
 	private TextView helpItemText;
+	private boolean isLeaving = false;
+	private boolean isSignout = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -80,7 +82,7 @@ public class UserProfile extends BaseActivity {
 		try {
 			super.onResume();
 			
-
+			isLeaving = false;
 			ArcPreferences myPrefs = new ArcPreferences(getApplicationContext());
 
 			String customerToken = myPrefs.getString(Keys.CUSTOMER_TOKEN);
@@ -137,8 +139,13 @@ public class UserProfile extends BaseActivity {
 			
 			AppActions.add("UserProfile - Login Clicked");
 
-			Intent social = (new Intent(getApplicationContext(), UserLogin.class));
-			startActivity(social);
+			
+			
+			if (!isLeaving){
+				isLeaving = true;
+				Intent social = (new Intent(getApplicationContext(), UserLogin.class));
+				startActivity(social);
+			}
 		} catch (Exception e) {
 			(new CreateClientLogTask("UserProfile.onLoginClicked", "Exception Caught", "error", e)).execute();
 
@@ -152,8 +159,13 @@ public class UserProfile extends BaseActivity {
 			
 			AppActions.add("UserProfile - Create Clicked");
 
-			Intent social = (new Intent(getApplicationContext(), UserCreateNew.class));
-			startActivity(social);
+		
+			
+			if (!isLeaving){
+				isLeaving = true;
+				Intent social = (new Intent(getApplicationContext(), UserCreateNew.class));
+				startActivity(social);
+			}
 		} catch (Exception e) {
 			(new CreateClientLogTask("UserProfile.onCreateNewClicked", "Exception Caught", "error", e)).execute();
 
@@ -165,18 +177,22 @@ public class UserProfile extends BaseActivity {
 
 		try {
 			
-			AppActions.add("UserProfile - Logout Clicked");
+			if (!isSignout){
+				isSignout = true;
+				AppActions.add("UserProfile - Logout Clicked");
 
-			ArcPreferences myPrefs = new ArcPreferences(getApplicationContext());
+				ArcPreferences myPrefs = new ArcPreferences(getApplicationContext());
 
-			myPrefs.putAndCommitString(Keys.CUSTOMER_TOKEN, "");
-			myPrefs.putAndCommitString(Keys.CUSTOMER_ID, "");
-			myPrefs.putAndCommitString(Keys.CUSTOMER_EMAIL, "");
-			myPrefs.putAndCommitString(Keys.DUTCH_URL, "");
+				myPrefs.putAndCommitString(Keys.CUSTOMER_TOKEN, "");
+				myPrefs.putAndCommitString(Keys.CUSTOMER_ID, "");
+				myPrefs.putAndCommitString(Keys.CUSTOMER_EMAIL, "");
+				myPrefs.putAndCommitString(Keys.DUTCH_URL, "");
 
-			myPrefs.putAndCommitBoolean(Keys.IS_ADMIN, false);
+				myPrefs.putAndCommitBoolean(Keys.IS_ADMIN, false);
 
-			getGuestToken();
+				getGuestToken();
+			}
+		
 			
 			//Intent social = (new Intent(getApplicationContext(), UserCreate.class));
 			//startActivity(social);
@@ -190,8 +206,12 @@ public class UserProfile extends BaseActivity {
 		
 		AppActions.add("UserProfile - Edit Server Clicked");
 
-		Intent social = (new Intent(getApplicationContext(), EditServer.class));
-		startActivity(social);
+		if (!isLeaving){
+			isLeaving = true;
+			Intent social = (new Intent(getApplicationContext(), EditServer.class));
+			startActivity(social);
+		}
+		
 	}
 
 	
@@ -209,6 +229,7 @@ private void getGuestToken(){
 					try {
 						super.onPostExecute(result);
 						
+						isSignout = false;
 						int errorCode = getErrorCode();
 
 						

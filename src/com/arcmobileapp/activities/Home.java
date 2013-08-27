@@ -64,7 +64,8 @@ public class Home extends BaseActivity implements ScrollViewListener {
 	private TextView homeTitle;
 	private int currentImageWidth;
 	private TextView currentMerchantAddressText;
-
+	private boolean isGoingRestaurant = false;
+	
 	private LinearLayout mCarouselContainer;
 
 	public Home() {
@@ -127,11 +128,7 @@ public class Home extends BaseActivity implements ScrollViewListener {
 
 
 			 
-			loadingDialog = new ProgressDialog(Home.this);
-			loadingDialog.setTitle("Finding Nearby Merchants");
-			loadingDialog.setMessage("Please Wait...");
-			loadingDialog.setCancelable(false);
-			loadingDialog.show();
+		
 			
 			boolean didLogOut = getIntent().getBooleanExtra(Constants.LOGGED_OUT, false);
 			
@@ -233,6 +230,14 @@ public class Home extends BaseActivity implements ScrollViewListener {
 	protected void onResume() {
 		super.onResume();
 		//getTokensFromWeb();
+		isGoingRestaurant = false;
+		
+		loadingDialog = new ProgressDialog(Home.this);
+		loadingDialog.setTitle("Finding Nearby Merchants");
+		loadingDialog.setMessage("Please Wait...");
+		loadingDialog.setCancelable(false);
+		loadingDialog.show();
+		
 		getMerchantsFromWeb();
 	}
 
@@ -257,10 +262,15 @@ public class Home extends BaseActivity implements ScrollViewListener {
 
 			loadingDialog.dismiss();
 
-			Intent viewCheck = new Intent(getApplicationContext(), GetCheck.class);
-			viewCheck.putExtra(Constants.VENUE, name);
-			viewCheck.putExtra(Constants.VENUE_ID, theId); 
-			startActivity(viewCheck);
+			
+			if (!isGoingRestaurant){
+				isGoingRestaurant = true;
+				Intent viewCheck = new Intent(getApplicationContext(), GetCheck.class);
+				viewCheck.putExtra(Constants.VENUE, name);
+				viewCheck.putExtra(Constants.VENUE_ID, theId); 
+				startActivity(viewCheck);
+			}
+		
 		} catch (Exception e) {
 			(new CreateClientLogTask("Home.clickCarousel", "Exception Caught", "error", e)).execute();
 

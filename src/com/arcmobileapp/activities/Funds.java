@@ -56,6 +56,7 @@ public class Funds extends BaseActivity {
 
 	private TextView titleText;
 	private Button addButton;
+	private boolean isAddingCard = false;
 	
 	public Funds() {
 		super();
@@ -226,6 +227,7 @@ public class Funds extends BaseActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		isAddingCard = false;
 	}
 
 	@Override
@@ -242,16 +244,20 @@ public class Funds extends BaseActivity {
 	public void onAddCardClick(View v) {
 		try {
 			
-			AppActions.add("Funds - Add Card Clicked");
+			if (!isAddingCard){
+				isAddingCard = true;
+				AppActions.add("Funds - Add Card Clicked");
 
-			hideSuccessMessage();
-			Intent scanIntent = new Intent(this, CardIOActivity.class);
-			// required for authentication with card.io
-			scanIntent.putExtra(CardIOActivity.EXTRA_APP_TOKEN, Constants.MY_CARDIO_APP_TOKEN);
-			scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_EXPIRY, true);
-			scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_CVV, true); 
-			scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_ZIP, false); 
-			startActivityForResult(scanIntent, Constants.SCAN_REQUEST_CODE);
+				hideSuccessMessage();
+				Intent scanIntent = new Intent(this, CardIOActivity.class);
+				// required for authentication with card.io
+				scanIntent.putExtra(CardIOActivity.EXTRA_APP_TOKEN, Constants.MY_CARDIO_APP_TOKEN);
+				scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_EXPIRY, true);
+				scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_CVV, true); 
+				scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_ZIP, false); 
+				startActivityForResult(scanIntent, Constants.SCAN_REQUEST_CODE);
+			}
+			
 		} catch (Exception e) {
 			(new CreateClientLogTask("Funds.onAddCardClick", "Exception Caught", "error", e)).execute();
 

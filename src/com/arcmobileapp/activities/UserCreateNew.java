@@ -52,7 +52,7 @@ public class UserCreateNew extends BaseActivity {
 	private TextView titleText;
 	private Button registerButton;
 
-
+	private boolean isCreating = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -75,10 +75,7 @@ public class UserCreateNew extends BaseActivity {
 			titleText.setTypeface(ArcMobileApp.getLatoLightTypeface());
 			registerButton.setTypeface(ArcMobileApp.getLatoBoldTypeface());
 
-			loadingDialog = new ProgressDialog(UserCreateNew.this);
-			loadingDialog.setTitle("Registering");
-			loadingDialog.setMessage("Please Wait...");
-			loadingDialog.setCancelable(false);
+		
 		} catch (Exception e) {
 			(new CreateClientLogTask("UserCreateNew.onCreate", "Exception Caught", "error", e)).execute();
 
@@ -92,18 +89,30 @@ public class UserCreateNew extends BaseActivity {
 		return true;
 	}
 	
-	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		loadingDialog = new ProgressDialog(UserCreateNew.this);
+		loadingDialog.setTitle("Registering");
+		loadingDialog.setMessage("Please Wait...");
+		loadingDialog.setCancelable(false);
+	}
 	public void onRegisterClicked(View view) {
 
 		try {
-			if (emailTextView != null && emailTextView.length() > 0 && passwordTextView != null && passwordTextView.length() > 0 ){
-				//Send the login
-				AppActions.add("User Create New - Register Clicked - Email:" + emailTextView.getText().toString());
+			
+			if (!isCreating){
+				isCreating = true;
+				if (emailTextView != null && emailTextView.length() > 0 && passwordTextView != null && passwordTextView.length() > 0 ){
+					//Send the login
+					AppActions.add("User Create New - Register Clicked - Email:" + emailTextView.getText().toString());
 
-				login();
-			}else{
-				toastShort("Please enter an email address and password.");
+					login();
+				}else{
+					toastShort("Please enter an email address and password.");
+				}
 			}
+			
 		} catch (Exception e) {
 			(new CreateClientLogTask("UserCreateNew.onRegisterClicked", "Exception Caught", "error", e)).execute();
 
@@ -130,7 +139,7 @@ public class UserCreateNew extends BaseActivity {
 					try {
 						super.onPostExecute(result);
 						UserCreateNew.this.loadingDialog.hide();
-						
+						isCreating = false;
 						int errorCode = getErrorCode();
 
 						if (getFinalSuccess() && errorCode == 0){

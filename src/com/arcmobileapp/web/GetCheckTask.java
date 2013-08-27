@@ -148,7 +148,7 @@ public class GetCheckTask extends AsyncTask<Void, Void, Void> {
 			WebServices webService = new WebServices(new ArcPreferences(mContext).getServer());
 			mResponse = webService.getCheck(mToken, mMerchantId, mInvoiceNumber, mRequestId);
 			
-			Logger.d("INVOICE SECOND RESPONSE " + mResponse);
+		//	Logger.d("INVOICE SECOND RESPONSE " + mResponse);
 			
 
 			
@@ -168,7 +168,7 @@ public class GetCheckTask extends AsyncTask<Void, Void, Void> {
 
 				if (mFinalSuccess){
 
-					Logger.d("SECOND RESPONSE IS SUCCESS");
+					//Logger.d("SECOND RESPONSE IS SUCCESS");
 					
 					if (!json.isNull(WebKeys.RESULTS)){
 						JSONObject result = json.getJSONObject(WebKeys.RESULTS);
@@ -204,7 +204,7 @@ public class GetCheckTask extends AsyncTask<Void, Void, Void> {
 	
 	protected void performPostExec() {
 		
-		Logger.d("Response: " + mResponse);
+		//Logger.d("Response: " + mResponse);
 		if(mResponse == null) {
 			return;
 		}

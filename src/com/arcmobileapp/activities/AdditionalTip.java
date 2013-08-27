@@ -68,6 +68,7 @@ public class AdditionalTip extends BaseActivity {
     private TextView tipLabel;
     private Button continueButton;
     private TextView dollarSign;
+    private boolean isGoingConfirm = false;
 	
     @Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -439,16 +440,26 @@ public class AdditionalTip extends BaseActivity {
 
 	}
 	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		isGoingConfirm = false;
+	}
 	
 	private void goConfirmPayment(){
 		
 		try {
-			Intent confirmPayment = new Intent(getApplicationContext(), ConfirmPayment.class);
-			confirmPayment.putExtra(Constants.SELECTED_CARD, selectedCard);
-			confirmPayment.putExtra(Constants.INVOICE, theBill);
-			confirmPayment.putExtra(Constants.JUST_ADD_CARD, justAddedCard);
+			
+			if (!isGoingConfirm){
+				isGoingConfirm = true;
+				Intent confirmPayment = new Intent(getApplicationContext(), ConfirmPayment.class);
+				confirmPayment.putExtra(Constants.SELECTED_CARD, selectedCard);
+				confirmPayment.putExtra(Constants.INVOICE, theBill);
+				confirmPayment.putExtra(Constants.JUST_ADD_CARD, justAddedCard);
 
-			startActivity(confirmPayment);
+				startActivity(confirmPayment);
+			}
+			
 		} catch (Exception e) {
 			(new CreateClientLogTask("AdditionalTip.goConfirmPayment", "Exception Caught", "error", e)).execute();
 

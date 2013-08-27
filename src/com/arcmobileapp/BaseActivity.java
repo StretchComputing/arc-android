@@ -6,6 +6,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Canvas;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -78,6 +79,10 @@ public class BaseActivity extends SlidingFragmentActivity {
 		try {
 			super.onCreate(savedInstanceState);
 			
+	        setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+
+	        
+	        
 			 Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
 			        @Override
 			        public void uncaughtException(Thread paramThread, Throwable paramThrowable) {

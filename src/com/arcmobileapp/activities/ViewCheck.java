@@ -116,6 +116,7 @@ public class ViewCheck extends BaseActivity {
 	private ImageView helpDollarArrow;
 	
 	private int helpStage;
+	private boolean isGoingTip = false;
 	
 	Handler handler = new Handler();
 	    
@@ -151,6 +152,7 @@ public class ViewCheck extends BaseActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		try {
 			
+			Logger.d("*******************VIEW CHECK ON CREATE");
 			AppActions.add("View Check - OnCreate");
 
 			super.onCreate(savedInstanceState);
@@ -393,10 +395,7 @@ public class ViewCheck extends BaseActivity {
 		 }
 
      }
-	@Override
-	protected void onResume() {
-		super.onResume();
-	}
+	
 
 	
 	
@@ -1477,9 +1476,13 @@ public class ViewCheck extends BaseActivity {
 			
 			AppActions.add("View Check - Pay Bill Clicked - My Payment:" + theBill.getMyBasePayment() + ", Number Of Items:" + myItems.size());
 
-			Intent viewCheck = new Intent(getApplicationContext(), AdditionalTip.class);
-			viewCheck.putExtra(Constants.INVOICE, theBill);
-			startActivity(viewCheck);
+			if (!isGoingTip){
+				isGoingTip = true;
+				Intent viewCheck = new Intent(getApplicationContext(), AdditionalTip.class);
+				viewCheck.putExtra(Constants.INVOICE, theBill);
+				startActivity(viewCheck);
+			}
+		
 		} catch (Exception e) {
 			(new CreateClientLogTask("ViewCheck.goAddTip", "Exception Caught", "error", e)).execute();
 
@@ -1965,6 +1968,7 @@ public class ViewCheck extends BaseActivity {
 		try {
 			String token = getToken();
 			if (token != null) {
+				
 				GetCheckTask getInvoiceTask = new GetCheckTask(token, theBill.getMerchantId(), checkNumber, getApplicationContext()) {
 					@Override
 					protected void onPostExecute(Void result) {

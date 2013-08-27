@@ -56,6 +56,7 @@ public class GetCheck extends BaseActivity {
     private static final int DISPLAY_DATA = 1;
     private ImageView helpImage;
     private RelativeLayout helpImageLayout;
+    private boolean isGettingInvoice = false;
     
     Handler handler = new Handler();
     Runnable runnable = new Runnable() {
@@ -101,10 +102,7 @@ public class GetCheck extends BaseActivity {
 			textEnter.setTextColor(Color.rgb(190,190,190));
 			textEnter.setTypeface(ArcMobileApp.getLatoLightTypeface());
 
-			loadingDialog = new ProgressDialog(GetCheck.this);
-			loadingDialog.setTitle("Getting Invoice");
-			loadingDialog.setMessage("Please Wait...");
-			loadingDialog.setCancelable(false);
+			
 			helpImage = (ImageView) findViewById(R.id.help_image);
 			helpImageLayout = (RelativeLayout) findViewById(R.id.help_image_layout);
 			helpImageLayout.setVisibility(View.INVISIBLE);
@@ -162,6 +160,15 @@ public class GetCheck extends BaseActivity {
 		
 	}
 	
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		loadingDialog = new ProgressDialog(GetCheck.this);
+		loadingDialog.setTitle("Getting Invoice");
+		loadingDialog.setMessage("Please Wait...");
+		loadingDialog.setCancelable(false);
+	}
 	 public void hideHelp()
      {
 		helpLayout.setVisibility(View.GONE);
@@ -184,7 +191,10 @@ public class GetCheck extends BaseActivity {
 		
 			loadingDialog.show();
 			
-			getInvoice();
+			if (!isGettingInvoice){
+				isGettingInvoice = true;
+				getInvoice();
+			}
 		} catch (Exception e) {
 			(new CreateClientLogTask("GetCheck.onViewBillClick", "Exception Caught", "error", e)).execute();
 
@@ -213,7 +223,7 @@ public class GetCheck extends BaseActivity {
 
 							loadingDialog.hide();
 							int errorCode = getErrorCode();
-
+							isGettingInvoice = false;
 							
 							if (getFinalSuccess() && errorCode == 0) {
 
@@ -230,6 +240,9 @@ public class GetCheck extends BaseActivity {
 								
 									String checkNum = invoice.getText().toString();
 									loadingDialog.dismiss();
+									
+									Logger.d("*******************GET CHECK START ACTIVITY 1");
+
 
 									Intent viewCheck = new Intent(getApplicationContext(), ViewCheck.class);
 									viewCheck.putExtra(Constants.INVOICE, theBill);

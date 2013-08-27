@@ -35,6 +35,7 @@ public class InitActivity extends Activity {
 	private Button startButton;
 	private Button termsButton;
 	private Button privacyButton;
+	private boolean isLeaving = false;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +81,11 @@ public class InitActivity extends Activity {
 		
 	}
 	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		isLeaving = false;
+	}
 	private void getGuestToken(){
 		
 		try {
@@ -149,16 +155,21 @@ public class InitActivity extends Activity {
 			}else{
 				if (doesHaveToken){
 					
-					AppActions.add("Init Activity - Clicked Start - Have Guest Token");
+					
+					if (!isLeaving){
+						isLeaving = true;
+						AppActions.add("Init Activity - Clicked Start - Have Guest Token");
 
-							
-					ArcPreferences myPrefs = new ArcPreferences(getApplicationContext());
+						
+						ArcPreferences myPrefs = new ArcPreferences(getApplicationContext());
 
-					myPrefs.putAndCommitBoolean(Keys.AGREED_TERMS, true);
+						myPrefs.putAndCommitBoolean(Keys.AGREED_TERMS, true);
 
-					startActivity(new Intent(getApplicationContext(), Home.class));
-					overridePendingTransition(0, 0);
-					finish();
+						startActivity(new Intent(getApplicationContext(), Home.class));
+						overridePendingTransition(0, 0);
+						finish();
+					}
+					
 				}else{
 					
 					AppActions.add("Init Activity - Clicked Start - No Guest Token Yet");
@@ -183,10 +194,15 @@ public class InitActivity extends Activity {
 	public void onTermsClicked(View view){
 		
 		try {
-			AppActions.add("Init Activity - Terms Clicked");
+			
+			if (!isLeaving){
+				isLeaving = true;
+				AppActions.add("Init Activity - Terms Clicked");
 
-			Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://arc.dagher.mobi/html/docs/terms.html"));
-			startActivity(browserIntent);
+				Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://arc.dagher.mobi/html/docs/terms.html"));
+				startActivity(browserIntent);
+			}
+			
 		} catch (Exception e) {
 			(new CreateClientLogTask("InitActivity.onTermsClicked", "Exception Caught", "error", e)).execute();
 
@@ -199,10 +215,15 @@ public class InitActivity extends Activity {
 	public void onPrivacyClicked(View view){
 		
 		try {
-			AppActions.add("Init Activity - Privacy Clicked");
+			
+			if (!isLeaving){
+				isLeaving = true;
+				AppActions.add("Init Activity - Privacy Clicked");
 
-			Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://arc.dagher.mobi/html/docs/privacy.html"));
-			startActivity(browserIntent);
+				Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://arc.dagher.mobi/html/docs/privacy.html"));
+				startActivity(browserIntent);
+			}
+			
 		} catch (Exception e) {
 			(new CreateClientLogTask("InitActivity.onPrivacyClicked", "Exception Caught", "error", e)).execute();
 

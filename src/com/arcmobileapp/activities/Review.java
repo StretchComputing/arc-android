@@ -37,7 +37,7 @@ public class Review extends BaseActivity {
 	private TextView clickTextView;
 
 	private Button submitButton;
-	
+	private boolean isSubmittingReview = false;
 	@Override
 	public void onBackPressed() {
 	}
@@ -69,15 +69,21 @@ public class Review extends BaseActivity {
 			submitButton = (Button) findViewById(R.id.button_email);
 			submitButton.setTypeface(ArcMobileApp.getLatoBoldTypeface());
 
-			loadingDialog = new ProgressDialog(Review.this);
-			loadingDialog.setTitle("Sending Review");
-			loadingDialog.setMessage("Please Wait...");
-			loadingDialog.setCancelable(false);
+		
 		} catch (Exception e) {
 			(new CreateClientLogTask("Review.onCreate", "Exception Caught", "error", e)).execute();
 
 		}
 
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		loadingDialog = new ProgressDialog(Review.this);
+		loadingDialog.setTitle("Sending Review");
+		loadingDialog.setMessage("Please Wait...");
+		loadingDialog.setCancelable(false);
 	}
 
 	@Override
@@ -110,55 +116,66 @@ public class Review extends BaseActivity {
 		
 	
 		try {
-			if (textAdditionalComments.getText().toString().length() == 0){
-				textAdditionalComments.setText("");
-			}
-			
-			String customerId = getId();
-			String token = getToken();
-			double numStars = (double) starRating.getNumStars();
 			
 			
-			AppActions.add("Review - Submitting Review - Num Stars:" + numStars + ", Comments:" + textAdditionalComments.getText().toString());
-
-			
-			loadingDialog.show();
-			CreateReview newReview = new CreateReview(String.valueOf(theBill.getId()), String.valueOf(theBill.getPaymentId()),
-					numStars, customerId, textAdditionalComments.getText().toString());
-			
-			
+			if (!isSubmittingReview){
+				isSubmittingReview = true;
 				
-			
-			SubmitReviewTask task = new SubmitReviewTask(token, newReview, getApplicationContext()) {
-				@Override
-				protected void onPostExecute(Void result) {
-					try {
-						super.onPostExecute(result);
-						
+				
+				if (textAdditionalComments.getText().toString().length() == 0){
+					textAdditionalComments.setText("");
+				}
+				
+				String customerId = getId();
+				String token = getToken();
+				double numStars = (double) starRating.getNumStars();
+				
+				
+				AppActions.add("Review - Submitting Review - Num Stars:" + numStars + ", Comments:" + textAdditionalComments.getText().toString());
 
-						loadingDialog.hide();
-						if (getFinalSuccess()) {
-
-							toastShort("Thank you for your review!");
-							loadingDialog.dismiss();
-
-							Intent goBackHome = new Intent(getApplicationContext(), Home.class);
-							goBackHome.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-							startActivity(goBackHome);
+				
+				loadingDialog.show();
+				CreateReview newReview = new CreateReview(String.valueOf(theBill.getId()), String.valueOf(theBill.getPaymentId()),
+						numStars, customerId, textAdditionalComments.getText().toString());
+				
+				
+					
+				
+				SubmitReviewTask task = new SubmitReviewTask(token, newReview, getApplicationContext()) {
+					@Override
+					protected void onPostExecute(Void result) {
+						try {
+							super.onPostExecute(result);
 							
-							
-						} else {
-							toastShort("Review Failed, please try again.");
+							isSubmittingReview = false;
+
+							loadingDialog.hide();
+							if (getFinalSuccess()) {
+
+								toastShort("Thank you for your review!");
+								loadingDialog.dismiss();
+
+								Intent goBackHome = new Intent(getApplicationContext(), Home.class);
+								goBackHome.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+								startActivity(goBackHome);
+								
+								
+							} else {
+								toastShort("Review Failed, please try again.");
+
+							}
+						} catch (Exception e) {
+							(new CreateClientLogTask("Review.onSubmitClicked.onPostExecute", "Exception Caught", "error", e)).execute();
 
 						}
-					} catch (Exception e) {
-						(new CreateClientLogTask("Review.onSubmitClicked.onPostExecute", "Exception Caught", "error", e)).execute();
-
 					}
-				}
-			};
+				};
+				
+				task.execute();
+				
+				
+			}
 			
-			task.execute();
 		} catch (Exception e) {
 			(new CreateClientLogTask("Review.onSubmitClicked", "Exception Caught", "error", e)).execute();
 

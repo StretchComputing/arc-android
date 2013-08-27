@@ -25,6 +25,7 @@ public class UserLogin extends BaseActivity {
 	private TextView passwordTextView;
 	private ProgressDialog loadingDialog;
 	private Button loginButton;
+	private boolean isLoggingIn = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -43,10 +44,7 @@ public class UserLogin extends BaseActivity {
 			loginButton = (Button) findViewById(R.id.button1);
 			loginButton.setTypeface(ArcMobileApp.getLatoBoldTypeface());
 
-			loadingDialog = new ProgressDialog(UserLogin.this);
-			loadingDialog.setTitle("Logging In");
-			loadingDialog.setMessage("Please Wait...");
-			loadingDialog.setCancelable(false);
+			
 		} catch (Exception e) {
 			(new CreateClientLogTask("UserLogin.onCreate", "Exception Caught", "error", e)).execute();
 
@@ -60,18 +58,31 @@ public class UserLogin extends BaseActivity {
 		return true;
 	}
 	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		loadingDialog = new ProgressDialog(UserLogin.this);
+		loadingDialog.setTitle("Logging In");
+		loadingDialog.setMessage("Please Wait...");
+		loadingDialog.setCancelable(false);
+	}
 	public void onLogInClicked(View view) {
 
 
 		try {
-			if (emailTextView != null && emailTextView.length() > 0 && passwordTextView != null && passwordTextView.length() > 0 ){
-				//Send the login
-				AppActions.add("User Login - Login Clicked - Email: " + emailTextView.getText().toString());
+			
+			if (!isLoggingIn){
+				isLoggingIn = true;
+				if (emailTextView != null && emailTextView.length() > 0 && passwordTextView != null && passwordTextView.length() > 0 ){
+					//Send the login
+					AppActions.add("User Login - Login Clicked - Email: " + emailTextView.getText().toString());
 
-				login();
-			}else{
-				toastShort("Please enter your email address and password.");
+					login();
+				}else{
+					toastShort("Please enter your email address and password.");
+				}
 			}
+			
 		} catch (Exception e) {
 			(new CreateClientLogTask("UserLogin.onLogInClicked", "Exception Caught", "error", e)).execute();
 
@@ -92,6 +103,8 @@ public class UserLogin extends BaseActivity {
 					try {
 						super.onPostExecute(result);
 						UserLogin.this.loadingDialog.hide();
+						
+						isLoggingIn = false;
 						if(getSuccess()) {
 							ArcPreferences myPrefs = new ArcPreferences(getApplicationContext());
 

@@ -32,7 +32,7 @@ public class GuestCreateCustomer extends BaseActivity {
 
 	private TextView titleText;
 	private TextView subText;
-
+	private boolean isCreating = false;
 
 	@Override
 	public void onBackPressed() {
@@ -68,10 +68,7 @@ public class GuestCreateCustomer extends BaseActivity {
 			subText = (TextView) findViewById(R.id.help_item_text);
 			subText.setTypeface(ArcMobileApp.getLatoLightTypeface());
 			
-			loadingDialog = new ProgressDialog(GuestCreateCustomer.this);
-			loadingDialog.setTitle("Creating Account");
-			loadingDialog.setMessage("Please Wait...");
-			loadingDialog.setCancelable(false);
+		
 			
 		}catch(Exception e){
 			(new CreateClientLogTask("GuestCreateCustomer.onCreate", "Exception Caught", "error", e)).execute();
@@ -92,14 +89,19 @@ public class GuestCreateCustomer extends BaseActivity {
 	public void onCreateClicked(View view) {
 
 		try {
-			if (emailTextView != null && emailTextView.length() > 0 && passwordTextView != null && passwordTextView.length() > 0 ){
-				//Send the login
-				AppActions.add("Guest Create Customer - Create Clicked - Email: " + emailTextView.getText().toString());
+			
+			if (!isCreating){
+				isCreating = true;
+				if (emailTextView != null && emailTextView.length() > 0 && passwordTextView != null && passwordTextView.length() > 0 ){
+					//Send the login
+					AppActions.add("Guest Create Customer - Create Clicked - Email: " + emailTextView.getText().toString());
 
-				register();
-			}else{
-				toastShort("Please enter an email address and password.");
+					register();
+				}else{
+					toastShort("Please enter an email address and password.");
+				}
 			}
+			
 		} catch (Exception e) {
 			(new CreateClientLogTask("GuestCreateCustomer.onCreateClicked", "Exception Caught", "error", e)).execute();
 		}
@@ -107,18 +109,33 @@ public class GuestCreateCustomer extends BaseActivity {
 		
 	}
 	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		isCreating = false;
+		loadingDialog = new ProgressDialog(GuestCreateCustomer.this);
+		loadingDialog.setTitle("Creating Account");
+		loadingDialog.setMessage("Please Wait...");
+		loadingDialog.setCancelable(false);
+	}
+	
 	
 	public void onNoThanksClicked(View view) {
 
 		
 		try {
-			AppActions.add("Guest Create Customer - No Thanks Clicked");
+			
+			if (!isCreating){
+				isCreating = true;
+				AppActions.add("Guest Create Customer - No Thanks Clicked");
 
-			Intent goReview = new Intent(getApplicationContext(), Review.class);
-			goReview.putExtra(Constants.INVOICE, theBill);
-			loadingDialog.dismiss();
+				Intent goReview = new Intent(getApplicationContext(), Review.class);
+				goReview.putExtra(Constants.INVOICE, theBill);
+				loadingDialog.dismiss();
 
-			startActivity(goReview);
+				startActivity(goReview);
+			}
+			
 		} catch (Exception e) {
 			(new CreateClientLogTask("GuestCreateCustomer.onNoThanksClicked", "Exception Caught", "error", e)).execute();
 		}
@@ -137,7 +154,7 @@ public class GuestCreateCustomer extends BaseActivity {
 						GuestCreateCustomer.this.loadingDialog.hide();
 						
 						int errorCode = getErrorCode();
-
+						isCreating = false;
 						
 						if (getFinalSuccess()){
 							

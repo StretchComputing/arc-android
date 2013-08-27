@@ -59,6 +59,7 @@ public class ConfirmPayment extends BaseActivity {
 	private TextView totalLabel;
 	
 	private Button confirmButton;
+	private boolean isConfirmingPayment = false;
    
     
 	@Override
@@ -98,10 +99,7 @@ public class ConfirmPayment extends BaseActivity {
 			confirmButton = (Button) findViewById(R.id.button_email);
 			confirmButton.setTypeface(ArcMobileApp.getLatoBoldTypeface());
 			
-			loadingDialog = new ProgressDialog(ConfirmPayment.this);
-			loadingDialog.setTitle("Making Payment");
-			loadingDialog.setMessage("Please Wait...");
-			loadingDialog.setCancelable(false);
+			
 			
 			if (justAddedCard){
 				textEnterPin.setVisibility(View.GONE);
@@ -115,6 +113,15 @@ public class ConfirmPayment extends BaseActivity {
 		}
 
 
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		loadingDialog = new ProgressDialog(ConfirmPayment.this);
+		loadingDialog.setTitle("Making Payment");
+		loadingDialog.setMessage("Please Wait...");
+		loadingDialog.setCancelable(false);
 	}
 	
 	
@@ -132,35 +139,41 @@ public class ConfirmPayment extends BaseActivity {
 	public void onMakePaymentClicked(View view) {
 		
 		try {
-			String cardNumber = "";
 			
-			if (justAddedCard){
-				AppActions.add("Confirm Payment - Make Payment Clicked - Just Added Card");
+			if (!isConfirmingPayment){
+				isConfirmingPayment = true;
+				
+				String cardNumber = "";
+				
+				if (justAddedCard){
+					AppActions.add("Confirm Payment - Make Payment Clicked - Just Added Card");
 
-				decryptedCC = selectedCard.getNumber();
-			}else{
-				try{
-					AppActions.add("Confirm Payment - Make Payment Clicked - Picked Stored Card");
+					decryptedCC = selectedCard.getNumber();
+				}else{
+					try{
+						AppActions.add("Confirm Payment - Make Payment Clicked - Picked Stored Card");
 
-					decryptedCC = decryptCreditCardNumber(selectedCard.getNumber());
+						decryptedCC = decryptCreditCardNumber(selectedCard.getNumber());
 
-				}catch(Exception e){
+					}catch(Exception e){
+						
+					}
+				}
+				
+				
+				if (decryptedCC.length() > 0){
 					
+					AppActions.add("Confirm Payment - Make Payment Clicked - Entered Correct PIN");
+
+					makePayment();
+				}else{
+					
+					AppActions.add("Confirm Payment - Make Payment Clicked - Entered Incorrect PIN");
+
+					toastShort("Invalid PIN, please try again");
 				}
 			}
 			
-			
-			if (decryptedCC.length() > 0){
-				
-				AppActions.add("Confirm Payment - Make Payment Clicked - Entered Correct PIN");
-
-				makePayment();
-			}else{
-				
-				AppActions.add("Confirm Payment - Make Payment Clicked - Entered Incorrect PIN");
-
-				toastShort("Invalid PIN, please try again");
-			}
 		} catch (Exception e) {
 			(new CreateClientLogTask("ConfirmPayment.onMakePaymentClicked", "Exception Caught", "error", e)).execute();
 
@@ -237,6 +250,7 @@ public class ConfirmPayment extends BaseActivity {
 					try {
 						super.onPostExecute(result);
 						
+						isConfirmingPayment = false;
 						int errorCode = getErrorCode();
 
 

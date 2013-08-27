@@ -465,9 +465,11 @@ public class WebServices {
 
 			}
 			
+			//Logger.d("GET CHECKK REQUEST: " + json.toString());
+			
 			resp = this.getResponse(url, json.toString(), token);
 
-			Logger.d("|arc-web-services|", "GET CHECK RESP = " + resp);
+			//Logger.d("|arc-web-services|", "GET CHECK RESP = " + resp);
 			return resp;
 		} catch (Exception e) {
 			
