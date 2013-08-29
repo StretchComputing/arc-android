@@ -306,16 +306,9 @@ public class GetCheck extends BaseActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 
-		switch (item.getItemId()) {
-
-	
-
-		case R.id.showCheckHelp:
-	    	showCheckHelp();
-			break;
-	
-			
-	
+		int itemId = item.getItemId();
+		if (itemId == R.id.showCheckHelp) {
+			showCheckHelp();
 		}
 		return super.onOptionsItemSelected(item);
 	}

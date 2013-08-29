@@ -189,17 +189,13 @@ public class Review extends BaseActivity {
     @Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 
-		switch (item.getItemId()) {
-
-		case R.id.skipReview:
+		int itemId = item.getItemId();
+		if (itemId == R.id.skipReview) {
 			toastShort("Thank you for your purchase!");
 			loadingDialog.dismiss();
-
 			Intent goBackHome = new Intent(getApplicationContext(), Home.class);
 			goBackHome.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(goBackHome);
-			break;
-			
 		}
 		
 		return super.onOptionsItemSelected(item);

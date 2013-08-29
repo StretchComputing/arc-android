@@ -172,26 +172,19 @@ public class AdditionalTip extends BaseActivity {
 			boolean checked = ((RadioButton) view).isChecked();
 
 			didChooseRadio = true;
-			// Check which radio button was clicked
-			switch(view.getId()) {
-			    case R.id.radio_eightteen:
-			        if (checked)
-						AppActions.add("Additional Tip - 18% selected");
-
-						myTipText.setText(String.format("%.2f", theBill.getMyBasePayment() * .18));
-			        break;
-			    case R.id.radio_twenty:
-			        if (checked)
-						AppActions.add("Additional Tip - 20% selected");
-
-						myTipText.setText(String.format("%.2f", theBill.getMyBasePayment() * .20));
-			        break;
-			    case R.id.radio_twenty_two:
-			        if (checked)
-						AppActions.add("Additional Tip - 22% selected");
-
-						myTipText.setText(String.format("%.2f", theBill.getMyBasePayment() * .22));
-			        break;
+			int id = view.getId();
+			if (id == R.id.radio_eightteen) {
+				if (checked)
+					AppActions.add("Additional Tip - 18% selected");
+				myTipText.setText(String.format("%.2f", theBill.getMyBasePayment() * .18));
+			} else if (id == R.id.radio_twenty) {
+				if (checked)
+					AppActions.add("Additional Tip - 20% selected");
+				myTipText.setText(String.format("%.2f", theBill.getMyBasePayment() * .20));
+			} else if (id == R.id.radio_twenty_two) {
+				if (checked)
+					AppActions.add("Additional Tip - 22% selected");
+				myTipText.setText(String.format("%.2f", theBill.getMyBasePayment() * .22));
 			}
 		} catch (Exception e) {
 			(new CreateClientLogTask("AdditionalTip.onRadioButtonClicked", "Exception Caught", "error", e)).execute();

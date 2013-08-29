@@ -92,14 +92,13 @@ public class Login extends BaseActivity {
 
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.main_menu_version:
+		int itemId = item.getItemId();
+		if (itemId == R.id.main_menu_version) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setTitle(R.string.version);
 			builder.setMessage(R.string.version);
 			//builder.setIcon(R.drawable.logo);
 			builder.show();
-			break;
 		}
 		return super.onMenuItemSelected(featureId, item);
 	}

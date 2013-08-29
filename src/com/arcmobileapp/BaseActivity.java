@@ -447,33 +447,23 @@ public class BaseActivity extends SlidingFragmentActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 
-		switch (item.getItemId()) {
-
-		case android.R.id.home:
+		int itemId = item.getItemId();
+		if (itemId == android.R.id.home) {
 			toggle();
 			return true;
-
-		case R.id.whatIsArc:
+		} else if (itemId == R.id.whatIsArc) {
 			AppActions.add("Help Menu - What is Dutch Selected");
 			showOkDialog("What is Dutch?", "Simply put, Dutch speeds up the checkout process.\n\n" + "1. Tell us which restaurant you're at\n" + "2. Input your check number\n" + "3. Split and pay your portion\n\n\n" + "We'll send the payment straight from your phone to the point of sale\n\n\n" + "Wasn't that easy?\n", null);
-			break;
-			
-		case R.id.feedback:
+		} else if (itemId == R.id.feedback) {
 			AppActions.add("Help Menu - Feedback Selected");
-
-		
 			if (!this.getClass().getSimpleName().equals("Support")){
 				Intent about = (new Intent(getApplicationContext(), Support.class));
 				startActivity(about);
-				break;
-
 			}
-
-			
-		//case R.id.changeServer:
-		//	showChangeServerDialog();
-		//	break;
 		}
+//		else if (itemId == R.id.changeServer) {
+//			showChangeServerDialog();
+//		}
 		return super.onOptionsItemSelected(item);
 	}
 

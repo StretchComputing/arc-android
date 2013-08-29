@@ -1813,25 +1813,14 @@ public class ViewCheck extends BaseActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 
-		switch (item.getItemId()) {
-
-	
-
-		case R.id.splitByDollar:
-	    	showPayAmountDialog();
-			break;
-			
-		case R.id.splitByPercent:
-	    	showPayAmountDialogPercent();
-
-			break;
-			
-		case R.id.showBalance:
+		int itemId = item.getItemId();
+		if (itemId == R.id.splitByDollar) {
+			showPayAmountDialog();
+		} else if (itemId == R.id.splitByPercent) {
+			showPayAmountDialogPercent();
+		} else if (itemId == R.id.showBalance) {
 			showAlreadyPaidDialog();
-			break;
-			
-		case R.id.invoiceRefresh:
-			
+		} else if (itemId == R.id.invoiceRefresh) {
 			if (isRefreshing){
 				toastShort("Already refreshing invoice, please wait...");
 			}else{
@@ -1840,9 +1829,6 @@ public class ViewCheck extends BaseActivity {
 				refreshInvoice();
 
 			}
-			break;
-			
-	
 		}
 		return super.onOptionsItemSelected(item);
 	}
