@@ -45,9 +45,9 @@
         android:id="@+id/current_merchant"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@+id/center_layout"
         android:layout_below="@+id/confirm_pin_text"
-        android:layout_marginLeft="65dp"
+        android:layout_marginRight="25dp"
         android:layout_marginTop="15dp"
         android:text="@string/confirm_total"
         android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -57,10 +57,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/textView3"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="60dp"
+        android:layout_toRightOf="@+id/center_layout"
+        android:layout_marginLeft="25dp"
         android:gravity="right"
-        android:text="Medium Text"
+        android:text="$9999.99"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
@@ -71,7 +71,7 @@
         android:layout_alignBottom="@+id/textView3"
         android:layout_alignRight="@+id/my_total_payment"
         android:gravity="right"
-        android:text="Medium Text"
+        android:text="****9999"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <Button
@@ -86,5 +86,14 @@
         android:minHeight="48dp"
         android:onClick="onMakePaymentClicked"
         android:text="@string/confirm_make_payment" />
+
+    <RelativeLayout
+        android:id="@+id/center_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/textView3"
+        android:layout_centerHorizontal="true" >
+
+    </RelativeLayout>
 
 </RelativeLayout>

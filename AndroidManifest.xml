@@ -109,11 +109,14 @@
 
         <activity
             android:name="com.arcmobileapp.activities.AdditionalTip"
-            android:label="@string/title_activity_additional_tip" >
+            android:label="@string/title_activity_additional_tip" 
+            android:configChanges="keyboardHidden|orientation"
+            android:windowSoftInputMode="stateAlwaysVisible" >
         </activity>
         <activity
             android:name="com.arcmobileapp.activities.ConfirmPayment"
-            android:label="@string/title_activity_confirm_payment" >
+            android:label="@string/title_activity_confirm_payment"
+            android:windowSoftInputMode="stateUnspecified" >
         </activity>
         <activity
             android:name="com.arcmobileapp.MainActivity"
@@ -126,6 +129,7 @@
         <activity
             android:name="com.arcmobileapp.activities.Review"
             android:label="@string/title_activity_review"
+            android:windowSoftInputMode="stateVisible"
             android:parentActivityName="com.arcmobileapp.BaseActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -150,10 +154,14 @@
         </activity>
         <activity
             android:name="com.arcmobileapp.activities.UserLogin"
+            android:windowSoftInputMode="stateVisible"
+            
             android:label="@string/title_activity_user_login" >
         </activity>
         <activity
             android:name="com.arcmobileapp.activities.UserCreateNew"
+            android:windowSoftInputMode="stateVisible"
+            
             android:label="@string/title_activity_user_create_new" >
         </activity>
         <activity

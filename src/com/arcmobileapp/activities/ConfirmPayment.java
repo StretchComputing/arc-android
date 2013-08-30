@@ -12,6 +12,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -27,9 +28,7 @@ import com.arcmobileapp.domain.Check;
 import com.arcmobileapp.domain.CreatePayment;
 import com.arcmobileapp.utils.ArcPreferences;
 import com.arcmobileapp.utils.Constants;
-import com.arcmobileapp.utils.CurrencyFilter;
 import com.arcmobileapp.utils.Keys;
-import com.arcmobileapp.utils.Logger;
 import com.arcmobileapp.utils.PaymentFlags;
 import com.arcmobileapp.utils.Security;
 import com.arcmobileapp.web.ErrorCodes;
@@ -104,6 +103,9 @@ public class ConfirmPayment extends BaseActivity {
 			if (justAddedCard){
 				textEnterPin.setVisibility(View.GONE);
 				myPinText.setVisibility(View.GONE);
+				
+			}else{
+				getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 			}
 
 			setLabels();
@@ -242,7 +244,9 @@ public class ConfirmPayment extends BaseActivity {
 			
 
 			myPinText.setText("");
-			CreatePayment newPayment = new CreatePayment(theBill.getMerchantId(), customerId, String.valueOf(theBill.getId()), theBill.getBaseAmount() + theBill.getTaxAmount(), theBill.getMyBasePayment(), theBill.getMyTip(), account, type, cardType, expiration, pin, null, splitType, null, null, theBill.getMyItems());
+			
+			double grandTotal = theBill.getBaseAmount() + theBill.getTaxAmount() + theBill.getServiceCharge() - theBill.getDiscount();
+			CreatePayment newPayment = new CreatePayment(theBill.getMerchantId(), customerId, String.valueOf(theBill.getId()), grandTotal, theBill.getMyBasePayment(), theBill.getMyTip(), account, type, cardType, expiration, pin, null, splitType, null, null, theBill.getMyItems());
 
 			MakePaymentTask task = new MakePaymentTask(token, newPayment, getApplicationContext()) {
 				@Override

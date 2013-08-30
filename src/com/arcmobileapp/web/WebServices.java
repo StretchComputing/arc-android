@@ -4,6 +4,7 @@ package com.arcmobileapp.web;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import org.apache.http.HttpEntity;
@@ -492,7 +493,11 @@ public class WebServices {
 			
 			JSONObject json = new JSONObject();
 			json.put(WebKeys.INVOICE_AMOUNT, newPayment.getTotalAmount());
-			json.put(WebKeys.AMOUNT, newPayment.getPayingAmount());
+			
+			
+			String payAmount = String.format("%.2f", newPayment.getPayingAmount());
+			json.put(WebKeys.AMOUNT, payAmount);
+			
 			json.put(WebKeys.GRATUITY, newPayment.getGratuity());
 			json.put(WebKeys.FUND_SOURCE_ACCOUNT, newPayment.getAccount());
 			json.put(WebKeys.MERCHANT_ID, newPayment.getMerchantId());

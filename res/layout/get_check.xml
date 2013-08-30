@@ -46,7 +46,10 @@
      android:inputType="number"
      android:digits="0123456789"
      android:textSize="25sp"
-     android:gravity="center"/>
+     android:gravity="center">
+     
+          <requestFocus />
+    </EditText>
      
       <Button
           android:id="@+id/get_invoice_button"

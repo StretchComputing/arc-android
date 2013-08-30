@@ -22,7 +22,7 @@ import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 
 public class InitActivity extends Activity {
 	
-	private Boolean doesHaveToken;
+	private Boolean doesHaveToken = false;
 	private Boolean tokenDidFail = false;
 	
 	private TextView titleText;
@@ -160,7 +160,8 @@ public class InitActivity extends Activity {
 						isLeaving = true;
 						AppActions.add("Init Activity - Clicked Start - Have Guest Token");
 
-						
+						overridePendingTransition(0, 0);
+						finish();
 						ArcPreferences myPrefs = new ArcPreferences(getApplicationContext());
 
 						myPrefs.putAndCommitBoolean(Keys.AGREED_TERMS, true);

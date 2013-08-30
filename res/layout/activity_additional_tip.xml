@@ -12,12 +12,12 @@
         android:id="@+id/text_total_payment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@+id/center_layout"
         android:layout_alignParentTop="true"
-        android:layout_marginRight="50dp"
+        android:layout_marginLeft="25dp"
         android:layout_marginTop="5dp"
         android:gravity="right"
-        android:text="Medium Text"
+        android:text="$2932.20"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textSize="22sp" />
 
@@ -38,8 +38,8 @@
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/text_total_payment"
         android:layout_alignBottom="@+id/text_total_payment"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="25dp"
+        android:layout_toLeftOf="@+id/center_layout"
+        android:layout_marginRight="25dp"
         android:gravity="right"
         android:text="@string/additional_tip_my_total"
         android:textAppearance="?android:attr/textAppearanceMedium"
@@ -56,20 +56,6 @@
         android:text="@string/additional_tip_my_tip"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textSize="22sp" />
-
-    <Button
-        android:id="@+id/button_email"
-        style="@style/BlueButton"
-        android:layout_width="204dp"
-        android:layout_height="46dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="215dp"
-        android:background="@drawable/i_button_green"
-        android:minHeight="48dp"
-        android:onClick="onContinueButtonClicked"
-        android:text="@string/continueString"
-        android:width="150dp" />
 
     <RadioGroup
         android:id="@+id/tip_radio_group"
@@ -119,6 +105,33 @@
         android:inputType="numberDecimal"
         android:maxWidth="100dp"
         android:textSize="22sp"
-        android:width="80dp" />
+        android:width="80dp" >
+             
+        <requestFocus />
+    </EditText>
+        
+
+    <Button
+        android:id="@+id/button_email"
+        style="@style/BlueButton"
+        android:layout_width="204dp"
+        android:layout_height="46dp"
+        android:layout_below="@+id/tip_radio_group"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="22dp"
+        android:background="@drawable/i_button_green"
+        android:minHeight="48dp"
+        android:onClick="onContinueButtonClicked"
+        android:text="@string/continueString"
+        android:width="150dp" />
+
+    <RelativeLayout
+        android:id="@+id/center_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/text_total_payment"
+        android:layout_centerHorizontal="true" >
+
+    </RelativeLayout>
 
 </RelativeLayout>

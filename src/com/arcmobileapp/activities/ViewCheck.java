@@ -5,6 +5,7 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
@@ -82,7 +83,8 @@ public class ViewCheck extends BaseActivity {
 	private Double taxPercent;
 	private ArrayList<LineItem> myItems;
 	private ArrayList<PaidItems> currentPaidItemsArray;
-	
+	private ProgressDialog loadingDialog;
+
 	private String checkNumber;
 	private String merchantName;
 	private int currentSelectedIndex;
@@ -318,6 +320,21 @@ public class ViewCheck extends BaseActivity {
 
 	}
 	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		isGoingTip = false;
+		loadingDialog = new ProgressDialog(ViewCheck.this);
+		loadingDialog.setTitle("Refreshing Invoice");
+		loadingDialog.setMessage("Please Wait...");
+		loadingDialog.setCancelable(false);
+	}
+	
+	@Override
+	protected void onPause(){
+		super.onPause();
+		loadingDialog.dismiss();
+	}
 	public void goStage2(){
 		if (helpStage == 1){
 			 helpStage = 2;
@@ -733,6 +750,7 @@ public class ViewCheck extends BaseActivity {
 		
 		
 		try {
+			myPayment = roundUpToNearestPenny(myPayment);
 			myTotalTextView.setText(String.format("My Total: $%.2f", myPayment));
 		} catch (Exception e) {
 			(new CreateClientLogTask("ViewCheck.showMyPayment", "Exception Caught", "error", e)).execute();
@@ -1115,7 +1133,10 @@ public class ViewCheck extends BaseActivity {
 										toastShort("Please enter a number greater than 1");
 										return;
 									}
-									myBill = myPayment = ViewCheck.this.totalBill / numPeople;
+									//roundup
+									myPayment = (ViewCheck.this.totalBill + ViewCheck.this.theBill.getAmountPaid()) / numPeople;
+									myPayment = roundUpToNearestPenny(myPayment);
+									myBill = myPayment;
 									
 									if (myBill > (remainingBill)) {
 										toastShort("Can't pay more than is remaining");
@@ -1822,10 +1843,10 @@ public class ViewCheck extends BaseActivity {
 			showAlreadyPaidDialog();
 		} else if (itemId == R.id.invoiceRefresh) {
 			if (isRefreshing){
-				toastShort("Already refreshing invoice, please wait...");
+
 			}else{
 				isRefreshing = true;
-				toastShort("Refreshing Invoice...");
+
 				refreshInvoice();
 
 			}
@@ -1952,6 +1973,9 @@ public class ViewCheck extends BaseActivity {
 	public void refreshInvoice(){
 		
 		try {
+			
+			loadingDialog.show();
+
 			String token = getToken();
 			if (token != null) {
 				
@@ -1960,6 +1984,8 @@ public class ViewCheck extends BaseActivity {
 					protected void onPostExecute(Void result) {
 						try {
 							
+							loadingDialog.hide();
+
 							isRefreshing = false;
 							super.onPostExecute(result);
 							
@@ -2044,6 +2070,25 @@ public class ViewCheck extends BaseActivity {
 			(new CreateClientLogTask("ViewCheck.getInvoice", "Exception Caught", "error", e)).execute();
 
 		}
+		
+		
+	}
+	
+	private Double roundUpToNearestPenny(Double initialAmount){
+		
+		
+		Integer threePlaceInt = initialAmount.intValue() * 1000;
+		Double threePlaceDouble = threePlaceInt/1000.0;
+		
+		Integer twoPlaceInt = initialAmount.intValue() * 100;
+		Double twoPlaceDouble = twoPlaceInt/100.0;
+		
+		if (threePlaceDouble > twoPlaceDouble){
+			twoPlaceDouble += 0.01;
+		}
+		
+		return twoPlaceDouble;
+
 		
 		
 	}
