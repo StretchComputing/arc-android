@@ -186,11 +186,14 @@ public class BaseActivity extends SlidingFragmentActivity {
 	protected void initActionBar() {
 		try {
 			actionBar = getSupportActionBar();
-			actionBar.setIcon(null);
+			//menuIcon.png(null);
 			//setActionBarIcon(android.R.drawable.ic_menu_view);
-			setActionBarIcon(R.drawable.transparent_action_bar_logo);
+			setActionBarIcon(R.drawable.menuicon);
 			setActionBarTitle("");
-			setActionBarHomeAsUpEnabled(true);
+			setActionBarHomeAsUpEnabled(false);
+
+			actionBar.setHomeButtonEnabled(true);
+
 			// actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#00853c")));
 		} catch (Exception e) {
 			(new CreateClientLogTask("BaseActivity.initActionBar", "Exception Caught", "error", e)).execute();
