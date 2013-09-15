@@ -267,7 +267,7 @@ public class GetCheck extends BaseActivity {
 						            } else if(errorCode == ErrorCodes.INVOICE_CLOSED) {
 						                errorMsg = "Invoice closed.";
 						            }else if (errorCode == ErrorCodes.CHECK_IS_LOCKED){
-						                errorMsg = "Invoice being access by your server.  Try again in a few minutes.";
+						                errorMsg = "Invoice being accessed by your waiter.  Try again in a few minutes.";
 						            } else if (errorCode == ErrorCodes.NETWORK_ERROR){
 						                errorMsg = "Arc is having problems connecting to the internet.  Please check your connection and try again.  Thank you!";
 						                
