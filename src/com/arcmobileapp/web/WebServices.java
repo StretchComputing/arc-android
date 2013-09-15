@@ -496,7 +496,7 @@ public class WebServices {
 			json.put(WebKeys.INVOICE_AMOUNT, Utils.toDollarCents(newPayment.getTotalAmount()));
 			json.put(WebKeys.AMOUNT, Utils.toDollarCents(newPayment.getPayingAmount()));
 			
-			json.put(WebKeys.GRATUITY, newPayment.getGratuity());
+			json.put(WebKeys.GRATUITY, Utils.toDollarCents(newPayment.getGratuity()));
 			json.put(WebKeys.FUND_SOURCE_ACCOUNT, newPayment.getAccount());
 			json.put(WebKeys.MERCHANT_ID, newPayment.getMerchantId());
 			json.put(WebKeys.INVOICE_ID, newPayment.getInvoiceId());

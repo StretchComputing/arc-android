@@ -2076,11 +2076,12 @@ public class ViewCheck extends BaseActivity {
 	
 	private Double roundUpToNearestPenny(Double initialAmount){
 		
-		
-		Integer threePlaceInt = initialAmount.intValue() * 1000;
+		Double temp = initialAmount * 1000;
+		Integer threePlaceInt = temp.intValue();
 		Double threePlaceDouble = threePlaceInt/1000.0;
 		
-		Integer twoPlaceInt = initialAmount.intValue() * 100;
+		temp = initialAmount * 100;
+		Integer twoPlaceInt = temp.intValue();
 		Double twoPlaceDouble = twoPlaceInt/100.0;
 		
 		if (threePlaceDouble > twoPlaceDouble){
