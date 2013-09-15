@@ -132,5 +132,10 @@ public class Utils {
 		}
 		return symbol;
 	}
+	
+	// returns dollar and cents format as a string. Example105.32
+	public static String toDollarCents(Double theRawAmount) {
+		return String.format("%.2f", theRawAmount);
+	}
 
 }

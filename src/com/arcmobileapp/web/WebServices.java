@@ -23,6 +23,7 @@ import com.arcmobileapp.domain.CreatePayment;
 import com.arcmobileapp.domain.CreateReview;
 import com.arcmobileapp.domain.LineItem;
 import com.arcmobileapp.utils.Logger;
+import com.arcmobileapp.utils.Utils;
 import com.arcmobileapp.web.rskybox.AppActions;
 import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 
@@ -492,11 +493,8 @@ public class WebServices {
 			Logger.d("|arc-web-services|", "CREATE PAYMENT URL  = " + url);
 			
 			JSONObject json = new JSONObject();
-			json.put(WebKeys.INVOICE_AMOUNT, newPayment.getTotalAmount());
-			
-			
-			String payAmount = String.format("%.2f", newPayment.getPayingAmount());
-			json.put(WebKeys.AMOUNT, payAmount);
+			json.put(WebKeys.INVOICE_AMOUNT, Utils.toDollarCents(newPayment.getTotalAmount()));
+			json.put(WebKeys.AMOUNT, Utils.toDollarCents(newPayment.getPayingAmount()));
 			
 			json.put(WebKeys.GRATUITY, newPayment.getGratuity());
 			json.put(WebKeys.FUND_SOURCE_ACCOUNT, newPayment.getAccount());
@@ -517,11 +515,10 @@ public class WebServices {
 			for (int i = 0; i < newPayment.getItems().size(); i++){
 				
 				LineItem lineItem = newPayment.getItems().get(i);
-				
 				JSONObject itemJson = new JSONObject();
 				
 				itemJson.put("Percent", lineItem.getPercent());
-				itemJson.put("Amount", lineItem.getAmount());
+				itemJson.put("Amount", Utils.toDollarCents(lineItem.getAmount()));
 				itemJson.put("ItemId", lineItem.getId());
 				
 				myArrayList.add(itemJson);
