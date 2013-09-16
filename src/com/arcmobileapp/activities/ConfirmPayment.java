@@ -171,6 +171,7 @@ public class ConfirmPayment extends BaseActivity {
 				}else{
 					
 					AppActions.add("Confirm Payment - Make Payment Clicked - Entered Incorrect PIN");
+					isConfirmingPayment = false;
 
 					toastShort("Invalid PIN, please try again");
 				}

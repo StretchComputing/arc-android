@@ -13,7 +13,6 @@
     <string-array name="puppies_array">
         <item>@drawable/untitled</item>
         <item>@drawable/union</item>
-        <item>@drawable/rockit</item>
     </string-array>
   
  

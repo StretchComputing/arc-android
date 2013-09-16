@@ -8,7 +8,7 @@
         <menu>
             <item
                 android:id="@+id/splitByDollar"
-                android:title="Split By $"/>
+                android:title="Split By Dollar"/>
             
             <item
                 android:id="@+id/splitByPercent"

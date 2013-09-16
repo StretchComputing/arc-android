@@ -273,7 +273,12 @@ public class GetCheckTask extends AsyncTask<Void, Void, Void> {
 				
 				JSONObject paymentItem = paymentsArray.getJSONObject(i);
 				
-				Payments payment = new Payments(paymentItem.getInt(WebKeys.PAYMENT_ID), 0, paymentItem.getString(WebKeys.NAME), paymentItem.getString(WebKeys.STATUS), paymentItem.getString(WebKeys.CONFIRMATION), paymentItem.getDouble(WebKeys.AMOUNT), null, paymentItem.getString(WebKeys.TYPE), null, paymentItem.getString(WebKeys.ACCOUNT), null);
+				String accountNumber = "";
+				if (paymentItem.has(WebKeys.ACCOUNT)){
+					accountNumber = paymentItem.getString(WebKeys.ACCOUNT);
+				}
+				
+				Payments payment = new Payments(paymentItem.getInt(WebKeys.PAYMENT_ID), 0, paymentItem.getString(WebKeys.NAME), paymentItem.getString(WebKeys.STATUS), paymentItem.getString(WebKeys.CONFIRMATION), paymentItem.getDouble(WebKeys.AMOUNT), null, paymentItem.getString(WebKeys.TYPE), null, accountNumber, null);
 				if(paymentItem.has(WebKeys.CUSTOMER_ID)) {
 					payment.setCustomerId(paymentItem.getInt(WebKeys.CUSTOMER_ID));
 				}

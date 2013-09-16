@@ -9,7 +9,7 @@
         <menu>
             <item
                 android:id="@+id/whatIsArc"
-                android:title="What is Dutch"/>
+                android:title="What is dutch"/>
             
             <item
                 android:id="@+id/feedback"
