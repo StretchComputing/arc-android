@@ -348,12 +348,11 @@ public class GetCheck extends BaseActivity {
 			String url = "http://arc.dagher.mobi/Images/App/Receipts/"+merchantId+ ".jpg";
 			
 			GetXMLTask task = new GetXMLTask();
-	        // Execute the task
+	        // //Execute the task
 	        task.execute(new String[] { url });
 			
 		}catch (Exception e){
             Logger.d("Exception1 " + e.getMessage());
-
 		}
 		
 	}

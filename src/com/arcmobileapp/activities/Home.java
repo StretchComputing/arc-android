@@ -1,5 +1,10 @@
 package com.arcmobileapp.activities;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 
 import android.app.ProgressDialog;
@@ -12,11 +17,13 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff.Mode;
+import android.graphics.BitmapFactory;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -39,13 +46,16 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.arcmobileapp.ArcMobileApp;
 import com.arcmobileapp.BaseActivity;
 import com.arcmobileapp.R;
+import com.arcmobileapp.domain.Check;
 import com.arcmobileapp.utils.ArcPreferences;
 import com.arcmobileapp.utils.CarouselScrollView;
 import com.arcmobileapp.utils.Constants;
 import com.arcmobileapp.utils.Keys;
+import com.arcmobileapp.utils.Logger;
 import com.arcmobileapp.utils.MerchantObject;
 import com.arcmobileapp.utils.ScrollViewListener;
 import com.arcmobileapp.web.ErrorCodes;
+import com.arcmobileapp.web.GetCheckTask;
 import com.arcmobileapp.web.GetMerchantsTask;
 import com.arcmobileapp.web.rskybox.AppActions;
 import com.arcmobileapp.web.rskybox.CreateClientLogTask;
@@ -316,15 +326,26 @@ public class Home extends BaseActivity implements ScrollViewListener {
 			    String imageName = "";
 			    
 			    
-			    if (merchants.get(i).merchantName.equalsIgnoreCase("Isis Lab") || merchants.get(i).merchantName.equalsIgnoreCase("Untitled")){
+			    if (merchants.get(i).merchantId.equalsIgnoreCase("12")){
 			    	imageName = "untitled";
-			    }else{
+
+			    }else if (merchants.get(i).merchantId.equalsIgnoreCase("13")){
 			    	imageName = "union";
+			    }else if (merchants.get(i).merchantId.equalsIgnoreCase("14")){
+			    	imageName = "roka";
+
+			    }else{
+			    	imageName = "silverware";
+			    	
+			    	getImageForIndex(i+1, merchants.get(i).merchantId);
+			        
 			    }
+
 			    
 			    int id = getResources().getIdentifier("com.arcmobileapp:drawable/" + imageName, null, null);
 			    imageItem.setImageResource(id);
 			    
+
 			    // Set the size of the image view to the previously computed value
 			    imageItem.setLayoutParams(new LinearLayout.LayoutParams(imageWidth, imageWidth));
 			  
@@ -348,6 +369,11 @@ public class Home extends BaseActivity implements ScrollViewListener {
 					});
 			    
 			    mCarouselContainer.addView(carouselItem);
+			    
+			    
+			    	 
+			    
+			  
 			}
 			
 			//Padding After
@@ -510,5 +536,165 @@ public class Home extends BaseActivity implements ScrollViewListener {
 			return 0;
 		}
 	}
-   
+	
+	/*
+	 * 
+	 * public RelativeLayout createCarouselItem(ImageView image, String title, int index) {
+		
+		try {
+			//round corners
+			Bitmap bitmap = ((BitmapDrawable)image.getDrawable()).getBitmap();
+			Bitmap newMap = getRoundedCornerBitmap(bitmap);
+			image.setImageBitmap(newMap);
+			
+			LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE); 
+			RelativeLayout rLayout = (RelativeLayout) inflater.inflate(R.layout.carousel_item, null);
+			 
+			 
+			ImageView itemImage = (ImageView) rLayout.findViewById(R.id.itemImage);
+			itemImage.setImageDrawable(image.getDrawable());
+			
+			TextView itemText = (TextView) rLayout.findViewById(R.id.itemText);
+			itemText.setText(title);
+			itemText.setGravity(Gravity.CENTER | Gravity.BOTTOM);
+			itemText.setVisibility(View.INVISIBLE);
+			return rLayout;
+		} catch (Exception e) {
+			(new CreateClientLogTask("Home.createCarouselItem", "Exception Caught", "error", e)).execute();
+			return null;
+
+		}
+	}
+	 */
+	
+	
+	private void getImageForIndex(int index, String merchantId){
+		
+		try{
+			
+			AppActions.add("Home - Get Image For Index: + " + index + " and MerchantId: " + merchantId);
+
+			
+			
+			HomeXMLTask imageTask = new HomeXMLTask(index) {
+				@Override
+		        protected void onPostExecute(Bitmap result) {
+					
+					try{
+						if (result != null){
+							int theIndex = getCurrentIndex();
+							
+							RelativeLayout myView = (RelativeLayout)mCarouselContainer.getChildAt(theIndex);
+							
+							
+							ImageView itemImage = (ImageView) myView.findViewById(R.id.itemImage);
+							
+							itemImage.setImageBitmap(result);
+						}
+					}catch(Exception e){
+						(new CreateClientLogTask("Home.getImageForIndex.onPostExecute", "Exception Caught", "error", e)).execute();
+
+					}
+					
+					
+
+				}
+			};
+			
+			String url = "http://arc.dagher.mobi/Images/App/Logos/"+merchantId+ ".jpg";
+			imageTask.execute(new String[] { url });
+		}catch(Exception e){
+			(new CreateClientLogTask("Home.getImageForIndex", "Exception Caught", "error", e)).execute();
+
+		}
+	
+	}
+	
+	private class HomeXMLTask extends AsyncTask<String, Void, Bitmap> {
+		
+		private int mcurrentIndex;
+		
+		public int getCurrentIndex(){
+			return mcurrentIndex;
+		}
+		
+		public HomeXMLTask(int index) {
+			super();
+			mcurrentIndex = index;
+		}
+		
+        @Override
+        protected Bitmap doInBackground(String... urls) {
+        	try{
+        		Bitmap map = null;
+                for (String url : urls) {
+                    map = downloadImage(url);
+                }
+                return map;
+        	}catch(Exception e){
+        		return null;
+        	}
+            
+        }
+ 
+        // Sets the Bitmap returned by doInBackground
+        @Override
+        protected void onPostExecute(Bitmap result) {
+        	try{
+        		if (result != null){
+                    //helpImage.setImageBitmap(result);
+            	}
+        	}catch(Exception e){
+        		
+        	}
+        }
+ 
+        // Creates Bitmap from InputStream and returns it
+        private Bitmap downloadImage(String url) {
+           try{
+        	   Bitmap bitmap = null;
+               InputStream stream = null;
+               BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+               bmOptions.inSampleSize = 1;
+    
+               try {
+                   stream = getHttpConnection(url);
+                   bitmap = BitmapFactory.
+                           decodeStream(stream, null, bmOptions);
+                   stream.close();
+               } catch (IOException e1) {
+                   e1.printStackTrace();
+               }
+               return bitmap;
+           }catch(Exception e){
+        	   return null;
+           }
+        }
+ 
+        // Makes HttpURLConnection and returns InputStream
+        private InputStream getHttpConnection(String urlString)
+                throws IOException {
+           try{
+        	   InputStream stream = null;
+               URL url = new URL(urlString);
+               URLConnection connection = url.openConnection();
+    
+               try {
+                   HttpURLConnection httpConnection = (HttpURLConnection) connection;
+                   httpConnection.setRequestMethod("GET");
+                   httpConnection.connect();
+    
+                   if (httpConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                       stream = httpConnection.getInputStream();
+                   }
+               } catch (Exception ex) {
+                   ex.printStackTrace();
+               }
+               return stream;
+           }catch(Exception e){
+        	   return null;
+           }
+        }
+    }
+
 }

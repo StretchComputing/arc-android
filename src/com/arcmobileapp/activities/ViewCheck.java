@@ -628,8 +628,16 @@ public class ViewCheck extends BaseActivity {
 							
 							if (clickedItem.getIsPaidFor().equals("maybe")){
 
-								toastShort("This Item has already been partially paid for.  If you wish to pay for part of it, press and hold the item.");
+								//toastShort("This Item has already been partially paid for.  If you wish to pay for part of it, press and hold the item.");
 
+								currentSelectedIndex = position;
+
+								if (clickedItem.getAmount() > 1){
+									showHowManyDialog();
+								}else{
+							
+									showHowMuchDialog();
+								}
 								
 							}else if (clickedItem.getAmount() > 1){
 								currentSelectedIndex = position;
@@ -1885,7 +1893,12 @@ public class ViewCheck extends BaseActivity {
 					
 					nameText.setText("Name: " + payment.getCustomerName());
 					amountText.setText(String.format("Amount: $%.2f", payment.getAmount()));
-					notesText.setText("Notes: " + payment.getNotes());
+					
+					if (payment.getNotes() != null){
+						notesText.setText("Notes: " + payment.getNotes());
+					}else{
+						notesText.setText("");
+					}
 					
 					child.addView(paymentView);
 

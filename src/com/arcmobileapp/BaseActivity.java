@@ -456,7 +456,7 @@ public class BaseActivity extends SlidingFragmentActivity {
 			return true;
 		} else if (itemId == R.id.whatIsArc) {
 			AppActions.add("Help Menu - What is Dutch Selected");
-			showOkDialog("What is Dutch?", "Simply put, Dutch speeds up the checkout process.\n\n" + "1. Tell us which restaurant you're at\n" + "2. Input your check number\n" + "3. Split and pay your portion\n\n\n" + "We'll send the payment straight from your phone to the point of sale\n\n\n" + "Wasn't that easy?\n", null);
+			showOkDialog("What is dutch?", "Simply put, dutch speeds up the payment process.\n\n" + "1. Select your restaurant\n" + "2. Input your check number\n" + "3. Split and pay your portion!\n\n\n" + "We'll send a receipt to your email address.\n\n\n" + "Wasn't that easy?\n", null);
 		} else if (itemId == R.id.feedback) {
 			AppActions.add("Help Menu - Feedback Selected");
 			if (!this.getClass().getSimpleName().equals("Support")){
