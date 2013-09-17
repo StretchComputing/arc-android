@@ -3,7 +3,7 @@ package com.arcmobileapp.fragments.anim;
 import android.graphics.Canvas;
 import android.view.animation.Interpolator;
 
-import com.arcmobileapp.R;
+import com.dutchmobileapp.R;
 import com.arcmobileapp.utils.Logger;
 import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 import com.slidingmenu.lib.SlidingMenu.CanvasTransformer;

@@ -87,8 +87,12 @@ public class MakePaymentTask extends AsyncTask<Void, Void, Void> {
 														if(!checkPaymentConfirmation(9000) && mErrorCode == 0) {
 															if(!checkPaymentConfirmation(10000) && mErrorCode == 0) {
 																if(!checkPaymentConfirmation(12000) && mErrorCode == 0) {
+																	if(!checkPaymentConfirmation(15000) && mErrorCode == 0) {
+																		if(!checkPaymentConfirmation(15000) && mErrorCode == 0) {
 
-																	return false;
+																			return false;
+																		}
+																	}
 																}
 															}
 														}

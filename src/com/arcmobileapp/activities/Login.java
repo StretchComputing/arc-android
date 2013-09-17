@@ -14,7 +14,7 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.arcmobileapp.BaseActivity;
-import com.arcmobileapp.R;
+import com.dutchmobileapp.R;
 import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 
 public class Login extends BaseActivity {

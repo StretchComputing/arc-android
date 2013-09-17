@@ -17,7 +17,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.arcmobileapp.ArcMobileApp;
 import com.arcmobileapp.BaseActivity;
-import com.arcmobileapp.R;
+import com.dutchmobileapp.R;
 import com.arcmobileapp.utils.ArcPreferences;
 import com.arcmobileapp.utils.Keys;
 import com.arcmobileapp.utils.Logger;

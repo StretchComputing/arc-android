@@ -7,7 +7,7 @@ import android.view.View;
 
 import com.actionbarsherlock.view.MenuItem;
 import com.arcmobileapp.BaseActivity;
-import com.arcmobileapp.R;
+import com.dutchmobileapp.R;
 import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 import com.slidingmenu.lib.SlidingMenu;
 

@@ -17,7 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.arcmobileapp.ArcMobileApp;
-import com.arcmobileapp.R;
+import com.dutchmobileapp.R;
 import com.arcmobileapp.activities.Funds;
 import com.arcmobileapp.activities.Home;
 import com.arcmobileapp.activities.Support;

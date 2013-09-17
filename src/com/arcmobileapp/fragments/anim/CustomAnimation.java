@@ -3,7 +3,7 @@ package com.arcmobileapp.fragments.anim;
 import android.os.Bundle;
 
 import com.arcmobileapp.BaseActivity;
-import com.arcmobileapp.R;
+import com.dutchmobileapp.R;
 import com.arcmobileapp.fragments.MenuListFragment;
 import com.arcmobileapp.web.rskybox.CreateClientLogTask;
 import com.slidingmenu.lib.SlidingMenu;

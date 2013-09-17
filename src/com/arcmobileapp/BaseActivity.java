@@ -32,6 +32,7 @@ import com.arcmobileapp.utils.Utils;
 import com.arcmobileapp.web.GetServerTask;
 import com.arcmobileapp.web.rskybox.AppActions;
 import com.arcmobileapp.web.rskybox.CreateClientLogTask;
+import com.dutchmobileapp.R;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.GoogleAnalytics;
 import com.google.analytics.tracking.android.Tracker;

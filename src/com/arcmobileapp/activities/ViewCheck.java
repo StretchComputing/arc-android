@@ -38,7 +38,7 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.arcmobileapp.ArcMobileApp;
 import com.arcmobileapp.BaseActivity;
-import com.arcmobileapp.R;
+import com.dutchmobileapp.R;
 import com.arcmobileapp.db.controllers.DBController;
 import com.arcmobileapp.domain.Cards;
 import com.arcmobileapp.domain.Check;

@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.arcmobileapp.R;
+import com.dutchmobileapp.R;
 
 public class ColorMenuFragment extends ListFragment {
 

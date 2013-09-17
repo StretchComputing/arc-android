@@ -45,7 +45,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.arcmobileapp.ArcMobileApp;
 import com.arcmobileapp.BaseActivity;
-import com.arcmobileapp.R;
+import com.dutchmobileapp.R;
 import com.arcmobileapp.domain.Check;
 import com.arcmobileapp.utils.ArcPreferences;
 import com.arcmobileapp.utils.CarouselScrollView;
@@ -324,8 +324,7 @@ public class Home extends BaseActivity implements ScrollViewListener {
 			   // imageItem.setImageResource(puppyResourcesTypedArray.getResourceId(0, -1));
 
 			    String imageName = "";
-			    
-			    
+			    			    
 			    if (merchants.get(i).merchantId.equalsIgnoreCase("12")){
 			    	imageName = "untitled";
 
@@ -342,7 +341,7 @@ public class Home extends BaseActivity implements ScrollViewListener {
 			    }
 
 			    
-			    int id = getResources().getIdentifier("com.arcmobileapp:drawable/" + imageName, null, null);
+			    int id = getResources().getIdentifier("com.dutchmobileapp:drawable/" + imageName, null, null);
 			    imageItem.setImageResource(id);
 			    
 
@@ -428,6 +427,7 @@ public class Home extends BaseActivity implements ScrollViewListener {
 			return rLayout;
 		} catch (Exception e) {
 			(new CreateClientLogTask("Home.createCarouselItem", "Exception Caught", "error", e)).execute();
+			e.printStackTrace();
 			return null;
 
 		}
