@@ -785,7 +785,7 @@ public class ViewCheck extends BaseActivity {
 				
 				
 				// Amount
-				TextView amountText = (TextView) itemView.findViewById(R.id.item_quantity);
+				TextView amountText = (TextView) itemView.findViewById(R.id.p_merchant_name);
 				amountText.setTypeface(ArcMobileApp.getLatoLightTypeface());
 				int amountInt = (int) Math.round(currentItem.getAmount());
 				amountText.setText("" + amountInt);
@@ -796,12 +796,12 @@ public class ViewCheck extends BaseActivity {
 				nameText.setTypeface(ArcMobileApp.getLatoLightTypeface());
 
 				// Price:
-				TextView priceText = (TextView) itemView.findViewById(R.id.item_price);
+				TextView priceText = (TextView) itemView.findViewById(R.id.p_total_payment);
 				priceText.setText(String.format("%.2f", currentItem.getValue() * currentItem.getAmount()));
 				priceText.setTypeface(ArcMobileApp.getLatoLightTypeface());
 
 				// You Pay:
-				TextView youPay = (TextView) itemView.findViewById(R.id.item_you_pay);
+				TextView youPay = (TextView) itemView.findViewById(R.id.p_date);
 				//priceText.setText(String.format("%.2f", currentItem.getValue()));
 				youPay.setTypeface(ArcMobileApp.getLatoLightTypeface());
 

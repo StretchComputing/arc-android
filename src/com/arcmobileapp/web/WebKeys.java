@@ -21,6 +21,7 @@ public final class WebKeys {
 
 	public static final String ADMIN = "Admin";
 
+	public static final String MERCHANT = "Merchant";
 	public static final String URL = "URL";
 
 	public static final String GET_MERCHANT_ID = "Id";
@@ -76,6 +77,8 @@ public final class WebKeys {
 	public static final String PAYMENT_ID = "PaymentId";
 	public static final String CUSTOMER_ID = "CustomerId";
 	public static final String CONFIRMATION = "Confirmation";
+	public static final String CARD = "Card";
+
 	public static final String GRATUITY = "Gratuity";
 	public static final String TYPE = "Type";
 	public static final String NOTES = "Notes";
@@ -105,5 +108,17 @@ public final class WebKeys {
 	public static final String FOOD = "Food";
 	public static final String SERVICE = "Service";
 	public static final String MOOD = "Mood";
+	
+	
+	//AppInfo
+
+	public static final String APP_INFO = "AppInfo";
+	public static final String APP = "App";
+	public static final String OS = "OS";
+	public static final String VERSION = "Version";
+	
+
+    
+    
 
 }

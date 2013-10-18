@@ -17,8 +17,10 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.arcmobileapp.ArcMobileApp;
 import com.arcmobileapp.domain.CreatePayment;
 import com.arcmobileapp.domain.CreateReview;
 import com.arcmobileapp.domain.LineItem;
@@ -254,6 +256,7 @@ public class WebServices {
 			
 			JSONObject json = new JSONObject();
 			//json.put("id","12");
+			json.put(WebKeys.APP_INFO, getAppInfoObject());
 			
 			resp = this.getResponse(url, json.toString(), null);
 			Logger.d("|arc-web-services|", "GET MERCHANTS RESP = " + resp);
@@ -352,6 +355,8 @@ public class WebServices {
 			json.put(WebKeys.ACCEPT_TERMS, true);
 
 
+			json.put(WebKeys.APP_INFO, getAppInfoObject());
+
 			
 			resp = this.getResponse(url, json.toString(), null);
 			Logger.d("|arc-web-services|", "REGISTER RESP = " + resp);
@@ -377,6 +382,7 @@ public class WebServices {
 			json.put(WebKeys.PASSWORD,password);
 			json.put(WebKeys.IS_GUEST, false);
 
+			json.put(WebKeys.APP_INFO, getAppInfoObject());
 
 			
 			resp = this.getResponse(url, json.toString(), token);
@@ -401,7 +407,8 @@ public class WebServices {
 			
 			JSONObject json = new JSONObject();
 			json.put(WebKeys.TICKET_ID, ticketId);
-			
+			json.put(WebKeys.APP_INFO, getAppInfoObject());
+
 			Logger.d("CONFIRM PAYMENT JSON =\n\n" + json.toString());
 			
 			resp = this.getResponse(url, json.toString(), null);
@@ -433,7 +440,8 @@ public class WebServices {
 			if (isGuest){
 				json.put("GuestKey", "Forgetmenot00");
 			}
-			
+			json.put(WebKeys.APP_INFO, getAppInfoObject());
+
 			resp = this.getResponse(url, json.toString(), null);
 			Logger.d("|arc-web-services|", "GET TOKEN RESP = " + resp);
 			return resp;
@@ -468,7 +476,8 @@ public class WebServices {
 			}
 			
 			//Logger.d("GET CHECKK REQUEST: " + json.toString());
-			
+			json.put(WebKeys.APP_INFO, getAppInfoObject());
+
 			resp = this.getResponse(url, json.toString(), token);
 
 			//Logger.d("|arc-web-services|", "GET CHECK RESP = " + resp);
@@ -529,7 +538,8 @@ public class WebServices {
 			JSONArray jsonArray = new JSONArray(myArrayList);
 			
 			json.put(WebKeys.ITEMS, jsonArray);
-			
+			json.put(WebKeys.APP_INFO, getAppInfoObject());
+
 			String jsonString = json.toString();
 			jsonString = jsonString.replace("\\", "");
 
@@ -556,7 +566,8 @@ public class WebServices {
 			
 			JSONObject json = new JSONObject();
 			json.put(WebKeys.TICKET_ID, ticketId);
-			
+			json.put(WebKeys.APP_INFO, getAppInfoObject());
+
 			Logger.d("CONFIRM PAYMENT JSON =\n\n" + json.toString());
 			
 			resp = this.getResponse(url, json.toString(), token);
@@ -592,7 +603,8 @@ public class WebServices {
 			json.put(WebKeys.SERVICE, newReview.getReviewRating());
 			json.put(WebKeys.FOOD, newReview.getReviewRating());
 
-		
+			json.put(WebKeys.APP_INFO, getAppInfoObject());
+
 
 
 			
@@ -610,4 +622,76 @@ public class WebServices {
 	}
 	
 	
+	//Payment History
+	
+	public String getPaymentHistory(String token, String customerId) {
+		String resp = "";
+		try {
+			currentAPI = "GetPaymentHistory";
+			String url = this.serverAddress + URLs.PAYMENT_HISTORY;
+			Logger.d("|arc-web-services|", "GET Payments URL  = " + url);
+			
+			JSONObject json = new JSONObject();
+			json.put(WebKeys.CUSTOMER_ID, customerId);
+			json.put(WebKeys.APP_INFO, getAppInfoObject());
+			
+			resp = this.getResponse(url, json.toString(), token);
+			Logger.d("|arc-web-services|", "GET Payments RESP = " + resp);
+			return resp;
+		} catch (Exception e) {
+			(new CreateClientLogTask("WebServices.getPaymentHistory", "Exception Caught", "error", e)).execute();
+
+			setError(e.getMessage());
+			return resp;
+		}
+	}
+	
+	
+	
+	public String sendEmailReceipt(String token, String ticketId) {
+		String resp = "";
+		try {
+			currentAPI = "SendEmailReceipt";
+			String url = this.serverAddress + URLs.SEND_RECEIPT;
+			Logger.d("|arc-web-services|", "SEND RECEIPT URL  = " + url);
+			
+			JSONObject json = new JSONObject();
+			json.put(WebKeys.TICKET_ID, ticketId);
+			json.put(WebKeys.APP_INFO, getAppInfoObject());
+			
+			resp = this.getResponse(url, json.toString(), token);
+			Logger.d("|arc-web-services|", "SEND RECEIPT RESP = " + resp);
+			return resp;
+		} catch (Exception e) {
+			(new CreateClientLogTask("WebServices.sendEmailReceipt", "Exception Caught", "error", e)).execute();
+
+			setError(e.getMessage());
+			return resp;
+		}
+	}
+	
+	
+	
+	private JSONObject getAppInfoObject(){
+		
+		JSONObject json = new JSONObject();
+		
+		String version = "" + ArcMobileApp.getVersion();
+		try {
+			json.put(WebKeys.VERSION, version);
+			json.put(WebKeys.OS, "Android");
+			json.put(WebKeys.APP, "DUTCH");
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		
+		
+		return json;
+		
+		
+	
+		
+	}
 }

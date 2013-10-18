@@ -9,7 +9,7 @@
     tools:context=".Support" >
 
     <TextView
-        android:id="@+id/item_you_pay"
+        android:id="@+id/p_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -22,7 +22,7 @@
         android:id="@+id/current_merchant"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/item_you_pay"
+        android:layout_below="@+id/p_date"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="24dp"
         android:gravity="center_horizontal"
@@ -42,7 +42,7 @@
         android:text="@string/send_email_button" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/merchantNameText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/button_email"
@@ -55,7 +55,7 @@
         android:id="@+id/button_call"
         android:layout_width="150dp"
         android:layout_height="46dp"
-        android:layout_below="@+id/textView3"
+        android:layout_below="@+id/merchantNameText"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="36dp"
         android:background="@drawable/i_button_grey"
@@ -63,7 +63,7 @@
         android:text="@string/call_string" />
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/dateText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/button_call"

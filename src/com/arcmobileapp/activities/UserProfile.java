@@ -32,6 +32,8 @@ public class UserProfile extends BaseActivity {
 	private Button signOutButton;
 	private Button loginButton;
 	private Button createButton;
+	private Button paymentHistoryButton;
+
 	private TextView helpItemText;
 	private boolean isLeaving = false;
 	private boolean isSignout = false;
@@ -54,10 +56,11 @@ public class UserProfile extends BaseActivity {
 			helpItemText.setTypeface(ArcMobileApp.getLatoLightTypeface());
 
 			editServerButton = (Button) findViewById(R.id.edit_server_button);
-			signOutButton = (Button) findViewById(R.id.button1);
+			signOutButton = (Button) findViewById(R.id.resendButton);
 			loginButton = (Button) findViewById(R.id.button2);
 			createButton = (Button) findViewById(R.id.button3);
-
+			paymentHistoryButton = (Button)findViewById(R.id.Button01);
+			
 			editServerButton.setTypeface(ArcMobileApp.getLatoBoldTypeface());
 			signOutButton.setTypeface(ArcMobileApp.getLatoBoldTypeface());
 			loginButton.setTypeface(ArcMobileApp.getLatoBoldTypeface());
@@ -201,6 +204,20 @@ public class UserProfile extends BaseActivity {
 
 		}
 	}
+	
+	public void onViewPaymentHistoryClicked(View view) {
+
+		try {
+	
+			Intent history = (new Intent(getApplicationContext(), PaymentHistory.class));
+			startActivity(history);
+			
+		} catch (Exception e) {
+			(new CreateClientLogTask("UserProfile.onViewPaymentHistoryClicked", "Exception Caught", "error", e)).execute();
+
+		}
+	}
+	
 	
 	public void onEditServerClicked(View view) {
 		

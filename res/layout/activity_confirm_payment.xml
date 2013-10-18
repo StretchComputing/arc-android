@@ -32,7 +32,7 @@
     </EditText>
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/merchantNameText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignRight="@+id/current_merchant"
@@ -56,7 +56,7 @@
         android:id="@+id/my_total_payment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/textView3"
+        android:layout_above="@+id/merchantNameText"
         android:layout_toRightOf="@+id/center_layout"
         android:layout_marginLeft="25dp"
         android:gravity="right"
@@ -67,8 +67,8 @@
         android:id="@+id/my_payment_used"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textView3"
-        android:layout_alignBottom="@+id/textView3"
+        android:layout_alignBaseline="@+id/merchantNameText"
+        android:layout_alignBottom="@+id/merchantNameText"
         android:layout_alignRight="@+id/my_total_payment"
         android:gravity="right"
         android:text="****9999"
@@ -79,7 +79,7 @@
         style="@style/CustomButton"
         android:layout_width="204dp"
         android:layout_height="46dp"
-        android:layout_below="@+id/textView3"
+        android:layout_below="@+id/merchantNameText"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="14dp"
         android:background="@drawable/i_button_green"
@@ -91,7 +91,7 @@
         android:id="@+id/center_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/textView3"
+        android:layout_above="@+id/merchantNameText"
         android:layout_centerHorizontal="true" >
 
     </RelativeLayout>

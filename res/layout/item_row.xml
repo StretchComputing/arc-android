@@ -22,11 +22,11 @@
             />
        
     <TextView
-        android:id="@+id/item_price"
+        android:id="@+id/p_total_payment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/item_quantity"
-        android:layout_alignBottom="@+id/item_quantity"
+        android:layout_alignBaseline="@+id/p_merchant_name"
+        android:layout_alignBottom="@+id/p_merchant_name"
         android:layout_alignParentRight="true"
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
@@ -36,7 +36,7 @@
         android:textSize="15sp" />
 
     <TextView
-        android:id="@+id/item_quantity"
+        android:id="@+id/p_merchant_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -51,10 +51,10 @@
         android:id="@+id/item_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/item_quantity"
-        android:layout_alignBottom="@+id/item_quantity"
+        android:layout_alignBaseline="@+id/p_merchant_name"
+        android:layout_alignBottom="@+id/p_merchant_name"
         android:layout_marginLeft="15dp"
-        android:layout_toRightOf="@+id/item_quantity"
+        android:layout_toRightOf="@+id/p_merchant_name"
         android:maxHeight="20dp"
         android:maxWidth="180dp"
         android:minHeight="0dp"
@@ -64,7 +64,7 @@
         android:textSize="15sp" />
 
     <TextView
-        android:id="@+id/item_you_pay"
+        android:id="@+id/p_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/item_name"

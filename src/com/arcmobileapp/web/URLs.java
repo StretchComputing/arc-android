@@ -27,6 +27,9 @@ public final class URLs {
 	
 	public static final String CREATE_PAYMENT = "payments/create";
 	public static final String CONFIRM_PAYMENT = "payments/confirm";
+	public static final String SEND_RECEIPT = "payments/sendreceipt";
+	public static final String PAYMENT_HISTORY = "payments/list";
+
 	
 	public static final String CREATE_REVIEW = "reviews/new";
 

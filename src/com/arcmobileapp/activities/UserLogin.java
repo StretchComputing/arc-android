@@ -41,7 +41,7 @@ public class UserLogin extends BaseActivity {
 			emailTextView.setTypeface(ArcMobileApp.getLatoLightTypeface());
 			passwordTextView.setTypeface(ArcMobileApp.getLatoLightTypeface());
 			
-			loginButton = (Button) findViewById(R.id.button1);
+			loginButton = (Button) findViewById(R.id.resendButton);
 			loginButton.setTypeface(ArcMobileApp.getLatoBoldTypeface());
 
 			

@@ -57,7 +57,7 @@ public class GuestCreateCustomer extends BaseActivity {
 			passwordTextView.setTypeface(ArcMobileApp.getLatoLightTypeface());
 			
 			
-			button1 = (Button) findViewById (R.id.button1);
+			button1 = (Button) findViewById (R.id.resendButton);
 			button1.setTypeface(ArcMobileApp.getLatoBoldTypeface());
 			button2 = (Button) findViewById (R.id.button2);
 			button2.setTypeface(ArcMobileApp.getLatoBoldTypeface());

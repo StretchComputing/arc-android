@@ -34,7 +34,7 @@
         android:inputType="textPassword" />
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/resendButton"
         android:layout_width="120dp"
         android:layout_height="46dp"
         android:layout_alignRight="@+id/register_email_text"

@@ -70,7 +70,7 @@ public class UserCreateNew extends BaseActivity {
 			passwordTextView.setTypeface(ArcMobileApp.getLatoLightTypeface());
 			
 			titleText = (TextView) findViewById(R.id.remainingText);
-			registerButton = (Button)findViewById(R.id.button1);
+			registerButton = (Button)findViewById(R.id.resendButton);
 			
 			titleText.setTypeface(ArcMobileApp.getLatoLightTypeface());
 			registerButton.setTypeface(ArcMobileApp.getLatoBoldTypeface());

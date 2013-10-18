@@ -38,16 +38,16 @@ public class Support extends BaseActivity {
 			setContentView(R.layout.activity_support);
 			
 			
-			titleTextView = (TextView) findViewById(R.id.item_you_pay);
+			titleTextView = (TextView) findViewById(R.id.p_date);
 			titleTextView.setTypeface(ArcMobileApp.getLatoBoldTypeface());
 			
 			questionTextView = (TextView) findViewById(R.id.current_merchant);
 			questionTextView.setTypeface(ArcMobileApp.getLatoBoldTypeface());
 			
-			emailTextView = (TextView) findViewById(R.id.textView3);
+			emailTextView = (TextView) findViewById(R.id.merchantNameText);
 			emailTextView.setTypeface(ArcMobileApp.getLatoLightTypeface());
 			
-			phoneTextView = (TextView) findViewById(R.id.textView4);
+			phoneTextView = (TextView) findViewById(R.id.dateText);
 			phoneTextView.setTypeface(ArcMobileApp.getLatoLightTypeface());
 			
 			emailButton = (Button) findViewById(R.id.button_email);

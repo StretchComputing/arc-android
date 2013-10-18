@@ -1,0 +1,214 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".PaymentDetail" >
+
+    <Button
+        android:id="@+id/resendButton"
+        android:layout_width="220dp"
+        android:layout_height="44dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="50dp"
+        android:onClick="onResendClick"
+        android:text="@string/resendEmailString" />
+
+    <TextView
+        android:id="@+id/copyLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp"
+        android:text="@string/copyEmailString"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/darkGray"
+        android:textSize="10sp" />
+
+    <TextView
+        android:id="@+id/totalAmountText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/merchantNameText"
+        android:layout_alignParentTop="true"
+        android:layout_alignRight="@+id/merchantNameText"
+        android:layout_marginTop="0dp"
+        android:gravity="center_horizontal"
+        android:text="Large Text"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/green"
+        android:textSize="35sp" />
+
+    <TextView
+        android:id="@+id/merchantNameText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/dateText"
+        android:layout_alignRight="@+id/dateText"
+        android:layout_below="@+id/totalAmountText"
+        android:layout_marginTop="5dp"
+        android:gravity="center_horizontal"
+        android:text="Medium Text"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="25sp" />
+
+    <TextView
+        android:id="@+id/dateText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/merchantNameText"
+        android:layout_centerInParent="false"
+        android:gravity="center_horizontal"
+        android:text="Medium Text"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/baseAmountLabel"
+        android:layout_width="110dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/dateText"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="58dp"
+        android:gravity="right"
+        android:text="@string/baseAmountString"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/tipLabel"
+        android:layout_width="110dp"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/baseAmountLabel"
+        android:layout_below="@+id/baseAmountLabel"
+        android:gravity="right"
+        android:text="@string/tipString"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/paymentLabel"
+        android:layout_width="110dp"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/tipLabel"
+        android:layout_below="@+id/tipLabel"
+        android:gravity="right"
+        android:text="@string/paymentString"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/checkNumberLabel"
+        android:layout_width="110dp"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/paymentLabel"
+        android:layout_below="@+id/paymentLabel"
+        android:gravity="right"
+        android:text="@string/checkNumberString"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/confirmationNumberLabel"
+        android:layout_width="110dp"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/checkNumberLabel"
+        android:layout_below="@+id/checkNumberLabel"
+        android:gravity="right"
+        android:text="@string/confirmationNumber"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/notesLabel"
+        android:layout_width="110dp"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/confirmationNumberLabel"
+        android:layout_below="@+id/confirmationNumberLabel"
+        android:gravity="right"
+        android:text="@string/notesString"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/baseAmountValue"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/baseAmountLabel"
+        android:layout_alignBottom="@+id/baseAmountLabel"
+        android:layout_marginLeft="16dp"
+        android:layout_toRightOf="@+id/baseAmountLabel"
+        android:gravity="left"
+        android:text="@string/confirmationNumber"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/dutchblue"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/tipValue"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/paymentLabel"
+        android:layout_alignLeft="@+id/baseAmountValue"
+        android:gravity="left"
+        android:text="@string/confirmationNumber"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/dutchblue"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/paymentValue"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/checkNumberLabel"
+        android:layout_alignLeft="@+id/tipValue"
+        android:gravity="left"
+        android:text="@string/confirmationNumber"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/dutchblue"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/checkNumberValue"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/confirmationNumberLabel"
+        android:layout_alignLeft="@+id/paymentValue"
+        android:gravity="left"
+        android:text="@string/confirmationNumber"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/dutchblue"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/confirmationNumberValue"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/notesLabel"
+        android:layout_alignLeft="@+id/checkNumberValue"
+        android:gravity="left"
+        android:text="@string/confirmationNumber"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/dutchblue"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/notesValue"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/notesLabel"
+        android:layout_alignBottom="@+id/notesLabel"
+        android:layout_alignLeft="@+id/confirmationNumberValue"
+        android:text="TextView"
+        android:textColor="@color/dutchblue"
+        android:textSize="15sp" />
+
+</RelativeLayout>

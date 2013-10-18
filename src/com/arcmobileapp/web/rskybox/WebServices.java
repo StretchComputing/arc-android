@@ -177,12 +177,13 @@ public class WebServices {
 			if(theException != null) {
 				JSONArray steJsonArray = new JSONArray();
 				for(StackTraceElement ste : theException.getStackTrace()) {
+					Logger.d("Stack TRACE****** " + ste.toString());
 					steJsonArray.put(ste.toString());
 				}
 				json.put(WebKeys.STACK_BACK_TRACE, steJsonArray);
 			}
 			
-			resp = this.getResponse(url, json.toString());
+			//resp = this.getResponse(url, json.toString());
 			Logger.d("|rskybox-web-services|", "CREATE CLIENT JSON INPUT = " + json.toString());
 			Logger.d("|rskybox-web-services|", "CREATE CLIENT LOG RESP = " + resp);
 			return resp;

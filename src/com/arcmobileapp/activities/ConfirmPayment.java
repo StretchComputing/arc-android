@@ -89,7 +89,7 @@ public class ConfirmPayment extends BaseActivity {
 			//titleText = (TextView) findViewById(R.id.text_enter_pin);
 			//titleText.setTypeface(ArcMobileApp.getLatoLightTypeface());
 			
-			paymentLabel = (TextView) findViewById(R.id.textView3);
+			paymentLabel = (TextView) findViewById(R.id.merchantNameText);
 			paymentLabel.setTypeface(ArcMobileApp.getLatoBoldTypeface());
 			
 			totalLabel = (TextView) findViewById(R.id.current_merchant);

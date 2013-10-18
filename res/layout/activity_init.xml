@@ -44,8 +44,8 @@
         android:id="@+id/amountText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView3"
-        android:layout_below="@+id/textView3"
+        android:layout_alignLeft="@+id/merchantNameText"
+        android:layout_below="@+id/merchantNameText"
         android:layout_marginTop="20dp"
         android:text="@string/step_two_text"
         android:textAppearance="?android:attr/textAppearanceMedium"
@@ -63,11 +63,11 @@
         android:textColor="@color/black" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/merchantNameText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/button_email"
-        android:layout_below="@+id/item_you_pay"
+        android:layout_below="@+id/p_date"
         android:layout_marginTop="50dp"
         android:text="@string/step_one_text"
         android:textAppearance="?android:attr/textAppearanceMedium"
@@ -86,7 +86,7 @@
         android:text="@string/start_using_string" />
 
     <TextView
-        android:id="@+id/item_you_pay"
+        android:id="@+id/p_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/current_merchant"

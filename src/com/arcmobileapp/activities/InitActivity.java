@@ -49,10 +49,10 @@ public class InitActivity extends Activity {
 			titleText = (TextView)findViewById(R.id.current_merchant);
 			titleText.setTypeface(ArcMobileApp.getLatoBoldTypeface());
 			
-			subTitleText = (TextView)findViewById(R.id.item_you_pay);
+			subTitleText = (TextView)findViewById(R.id.p_date);
 			subTitleText.setTypeface(ArcMobileApp.getLatoLightTypeface());
 			
-			stepOne = (TextView)findViewById(R.id.textView3);
+			stepOne = (TextView)findViewById(R.id.merchantNameText);
 			stepOne.setTypeface(ArcMobileApp.getLatoBoldTypeface());
 			
 			stepTwo = (TextView)findViewById(R.id.amountText);
