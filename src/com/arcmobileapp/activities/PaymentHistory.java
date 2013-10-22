@@ -37,6 +37,7 @@ public class PaymentHistory extends BaseActivity {
 	private ArrayList<PaymentHistoryObject> payments;
 	private ArrayAdapter<PaymentHistoryObject> adapter;
 
+	private TextView noPaymentsText;
 	private ListView list;
 
 	@Override
@@ -48,6 +49,9 @@ public class PaymentHistory extends BaseActivity {
 			list = (ListView) findViewById(R.id.paymentsList);
 
 			isFirstLoad = true;
+			
+			noPaymentsText = (TextView) findViewById(R.id.no_payments_text);
+			noPaymentsText.setVisibility(View.INVISIBLE);
 			
 		} catch (NotFoundException e) {
 
@@ -164,16 +168,34 @@ public class PaymentHistory extends BaseActivity {
 						
 
 						loadingDialog.hide();
-						if (payments != null && payments.size() > 0){
 						
+						if (getSuccess()){
+							
+							
 							AppActions.add("Home - Get Payments Succeeded - Number Of Payments:" + payments.size());
 
-							Logger.d("POPULATING LIST VIEW **********");
-							PaymentHistory.this.populateListView();
-							PaymentHistory.this.registerClickCallback();
+							if (payments.size() > 0){
+								noPaymentsText.setVisibility(View.INVISIBLE);
+
+								Logger.d("POPULATING LIST VIEW **********");
+								PaymentHistory.this.populateListView();
+								PaymentHistory.this.registerClickCallback();
+							}else{
+								noPaymentsText.setVisibility(View.VISIBLE);
+
+								toastShort("No payments were found in your history.");
+								noPaymentsText.setText("No payments found.");
+
+							}
+						
+							
 
 										        
 						}else{
+							noPaymentsText.setVisibility(View.VISIBLE);
+							noPaymentsText.setText("Error retreiving payment history.");
+
+							
 							AppActions.add("Home - Get Payments Failed - Error Code:" + errorCode);
 
 							//Remove carousel view?

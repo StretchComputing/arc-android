@@ -1,16 +1,19 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/funds_layout"
-    style="@style/ParentView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".activities.Funds" >
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".Funds" >
 
     <RelativeLayout
+        android:id="@+id/relativeLayout1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="false"
+        android:layout_alignParentTop="true" >
 
         <ImageView
             android:id="@+id/help_dollar_arrow"
@@ -31,16 +34,17 @@
             android:layout_toRightOf="@+id/help_dollar_arrow"
             android:text="@string/funds_secure_text"
             android:textSize="13sp" />
-
     </RelativeLayout>
-    
+
+   
+
     <Button
         android:id="@+id/add_card_button"
         style="@style/CustomButton"
         android:layout_width="204dp"
         android:layout_height="46dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="30dp"
+        android:layout_below="@+id/relativeLayout1"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
         android:background="@drawable/i_button_green"
         android:minHeight="48dp"
@@ -48,16 +52,35 @@
         android:paddingTop="10dp"
         android:text="@string/add_card" />
     
-    <ScrollView android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-	    <LinearLayout 
-	    android:id="@+id/stored_cards_layout"
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:orientation="vertical">
-	    </LinearLayout>
-	 </ScrollView>
-     
-  
+    <Button
+             android:id="@+id/Button01"
+             android:layout_width="220dp"
+             android:layout_height="46dp"
+             android:layout_alignParentBottom="true"
+             android:layout_centerHorizontal="true"
+             android:layout_marginTop="20dp"
+             android:background="@drawable/i_button_grey"
+             android:onClick="onViewPaymentHistoryClicked"
+             android:text="@string/paymentHistoryString"
+             android:textColor="@color/black"
+             android:textColorHint="@color/darkGray" />
     
-</LinearLayout>
+    
+     <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/Button01"
+        android:layout_below="@id/add_card_button"
+        android:layout_marginTop="10dp" >
+
+        <LinearLayout
+            android:id="@+id/stored_cards_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+        </LinearLayout>
+    </ScrollView>
+    
+     
+
+</RelativeLayout>

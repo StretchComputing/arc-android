@@ -32,19 +32,20 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.arcmobileapp.ArcMobileApp;
 import com.arcmobileapp.BaseActivity;
-import com.dutchmobileapp.R;
 import com.arcmobileapp.db.controllers.DBController;
 import com.arcmobileapp.domain.Cards;
+import com.arcmobileapp.utils.ArcPreferences;
 import com.arcmobileapp.utils.Constants;
-import com.arcmobileapp.utils.CurrencyFilter;
+import com.arcmobileapp.utils.Keys;
 import com.arcmobileapp.utils.Logger;
 import com.arcmobileapp.utils.Security;
 import com.arcmobileapp.web.rskybox.AppActions;
 import com.arcmobileapp.web.rskybox.CreateClientLogTask;
+import com.dutchmobileapp.R;
 
 public class Funds extends BaseActivity {
 
-	private LinearLayout theView;
+	private RelativeLayout theView;
 	private LinearLayout storedCardsView;
 	private TextView addCardSuccess;
 	private TextView addCardSuccessMsg;
@@ -57,7 +58,8 @@ public class Funds extends BaseActivity {
 	private TextView titleText;
 	private Button addButton;
 	private boolean isAddingCard = false;
-	
+	private Button paymentHistoryButton;
+       
 	public Funds() {
 		super();
 	}
@@ -74,8 +76,8 @@ public class Funds extends BaseActivity {
 
 			super.onCreate(savedInstanceState);
 			setContentView(R.layout.funds);
-			theView = (LinearLayout) findViewById(R.id.funds_layout);
-			theView.setAnimation(AnimationUtils.loadAnimation(this, R.anim.login_fade_in));
+			//theView = (RelativeLayout) findViewById(R.id.funds_layout);
+			//theView.setAnimation(AnimationUtils.loadAnimation(this, R.anim.login_fade_in));
 			storedCardsView = (LinearLayout) findViewById(R.id.stored_cards_layout);
 			
 			titleText = (TextView)findViewById(R.id.home_title);
@@ -83,6 +85,13 @@ public class Funds extends BaseActivity {
 			
 			addButton = (Button)findViewById(R.id.add_card_button);
 			addButton.setTypeface(ArcMobileApp.getLatoBoldTypeface());
+			
+			paymentHistoryButton = (Button)findViewById(R.id.Button01);
+			
+			
+			
+			
+			
 
 			initStoredCards();
 		} catch (NotFoundException e) {
@@ -652,5 +661,32 @@ public class Funds extends BaseActivity {
 	}
 	
 	
+	public void onViewPaymentHistoryClicked(View view) {
+
+		try {
+	
+			ArcPreferences myPrefs = new ArcPreferences(getApplicationContext());
+
+			String customerToken = myPrefs.getString(Keys.CUSTOMER_TOKEN);
+
+			//Show "logged in" or "logged out" view
+			if (customerToken != null && customerToken.length() > 0){
+						
+				Intent history = (new Intent(getApplicationContext(), PaymentHistory.class));
+				startActivity(history);
+				
+			}else{
+				
+				toastShort("You must be logged in to view your payment history.  Please log in or create an account from the 'Profile' menu itme.");
+			}
+			
+			
+		
+			
+		} catch (Exception e) {
+			(new CreateClientLogTask("UserProfile.onViewPaymentHistoryClicked", "Exception Caught", "error", e)).execute();
+
+		}
+	}
 	
 }

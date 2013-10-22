@@ -55,18 +55,7 @@
             android:onClick="onEditServerClicked"
             android:text="@string/edit_server_string" />
 
-        <Button
-            android:id="@+id/Button01"
-            android:layout_width="220dp"
-            android:layout_height="46dp"
-            android:layout_below="@+id/password_text"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="100dp"
-            android:background="@drawable/i_button_grey"
-            android:onClick="onViewPaymentHistoryClicked"
-            android:text="@string/paymentHistoryString"
-            android:textColor="@color/black"
-            android:textColorHint="@color/darkGray" />
+   
 
     </RelativeLayout>
 

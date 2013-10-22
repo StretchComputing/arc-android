@@ -183,7 +183,7 @@ public class WebServices {
 				json.put(WebKeys.STACK_BACK_TRACE, steJsonArray);
 			}
 			
-			//resp = this.getResponse(url, json.toString());
+			resp = this.getResponse(url, json.toString());
 			Logger.d("|rskybox-web-services|", "CREATE CLIENT JSON INPUT = " + json.toString());
 			Logger.d("|rskybox-web-services|", "CREATE CLIENT LOG RESP = " + resp);
 			return resp;

@@ -139,4 +139,8 @@ public class GetPaymentHistoryTask extends AsyncTask<Void, Void, Void> {
 	public int getErrorCode(){
 		return mErrorCode;
 	}
+	
+	public Boolean getSuccess(){
+		return mSuccess;
+	}
 }
